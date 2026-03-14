@@ -1,4 +1,10 @@
 import React from "react";
+import MetaLogo from './assets/Logos/Meta.jpeg';
+import StanfordLogo from './assets/Logos/Standford.webp';
+import GoogleLogo from './assets/Logos/google.jpeg';
+import HarvardLogo from './assets/Logos/Harvard.webp';
+import AmazonLogo from './assets/Logos/Amazon.jpeg';
+import AILogo from './assets/Logos/AI.webp';
 
 function Courses() {
   const courses = [
@@ -7,42 +13,42 @@ function Courses() {
       provider: "Meta",
       duration: "8 weeks",
       rating: "4.8 ⭐",
-      image: "https://source.unsplash.com/400x250/?reactjs"
+      image: MetaLogo
     },
     {
       title: "Cyber Security",
       provider: "Stanford University",
       duration: "10 weeks",
       rating: "4.7 ⭐",
-      image: "https://source.unsplash.com/400x250/?cybersecurity"
+      image: StanfordLogo
     },
     {
       title: "Cloud Computing",
       provider: "Amazon Web Services",
       duration: "6 weeks",
       rating: "4.6 ⭐",
-      image: "https://source.unsplash.com/400x250/?cloud-computing"
+      image: AmazonLogo
     },
     {
       title: "Artificial Intelligence",
       provider: "MIT",
       duration: "12 weeks",
       rating: "4.9 ⭐",
-      image: "https://source.unsplash.com/400x250/?artificial-intelligence"
+      image: AILogo
     },
     {
       title: "Data Science",
       provider: "Harvard University",
       duration: "9 weeks",
       rating: "4.8 ⭐",
-      image: "https://source.unsplash.com/400x250/?data-science"
+      image: HarvardLogo
     },
     {
       title: "Software Engineering",
       provider: "Google",
       duration: "8 weeks",
       rating: "4.7 ⭐",
-      image: "https://source.unsplash.com/400x250/?programming"
+      image: GoogleLogo
     }
   ];
 
