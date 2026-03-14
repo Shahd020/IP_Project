@@ -3,6 +3,7 @@ import { FaGoogle, FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 function LoginPage({ onLogin }) {
   const [isActive, setIsActive] = useState(false);
+  const [role, setRole] = useState("admin");
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#c9d6ff] bg-gradient-to-r from-[#e2e2e2] to-[#c9d6ff] font-['Montserrat',_sans-serif]">
@@ -56,12 +57,22 @@ function LoginPage({ onLogin }) {
 
             <span className="text-[12px]">or use your email password</span>
 
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full"
+            >
+              <option value="admin">Admin</option>
+              <option value="instructor">Instructor</option>
+              <option value="student">Student</option>
+            </select>
+
             <input type="email" placeholder="Email" className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full" />
             <input type="password" placeholder="Password" className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full" />
 
             <button
               type="button"
-              onClick={onLogin}
+              onClick={() => onLogin(role)}
               className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-[12px] py-[10px] px-[45px] rounded-[8px] mt-[10px]"
             >
               Sign In
