@@ -13,8 +13,14 @@ import Contact from "./Contact";
 import Categories from "./Categories";
 import Pages from "./Pages";
 import Blog from "./Blog";
-import Student from "./Student";
 
+// Import for Student components
+import StudentLayout from "./Student/StudentLayout";
+import Student from "./Student/Student";
+import StudentCourses from "./Student/StudentCourses";
+import CourseDetail from "./Student/CourseDetail";
+import CourseStudy from "./Student/CourseStudy";
+import Flashcards from "./Student/Flashcards"; 
 
 import InstructorLayout from "./Instructor/InstructorLayout";
 import InstructorDashboard from "./Instructor/InstructorDashboard";
@@ -25,50 +31,53 @@ import CreateQuiz from "./Instructor/CreateQuiz";
 import CoursesList from "./Instructor/CoursesList";
 
 function App() {
-
   const [loggedIn, setLoggedIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const location = useLocation();
   const navigate = useNavigate();
+  
   const isInstructorRoute = location.pathname === "/instructor" || location.pathname.startsWith("/instructor/");
-
-  // Public website routes
+  
+  // Public website routes (Now simply allows anything starting with /student)
   const isPublicRoute = [
-    "/", "/Home", "/login", "/student",
+    "/", "/Home", "/login",
     "/categories", "/pages",
     "/blog", "/contact"
-  ].includes(location.pathname);
+  ].includes(location.pathname) || location.pathname.startsWith("/student");
 
   const handleLogin = (role) => {
-
     if (role === "admin") {
       setLoggedIn(true);
       navigate("/dashboard");
       return;
     }
-
     if (role === "instructor") {
       navigate("/instructor");
       return;
     }
-
     navigate("/student");
   };
 
-  // PUBLIC WEBSITE
   if (isPublicRoute || isInstructorRoute) {
     return (
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-        <Route path="/student" element={<Student />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/pages" element={<Pages />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/student" element={<Student />} />
+        
+        {/* NEW STUDENT NESTED ROUTES */}
+        <Route path="/student" element={<StudentLayout />}>
+          <Route index element={<Student />} /> {/* Loads at /student */}
+          <Route path="courses" element={<StudentCourses />} /> {/* Loads at /student/courses */}
+          <Route path="courses/:courseId" element={<CourseDetail />} /> {/* Loads at /student/courses/:courseId */}
+          <Route path="courses/:courseId/study" element={<CourseStudy />} /> {/* Loads at /student/courses/:courseId/study */}
+          <Route path="flashcards" element={<Flashcards />} /> {/* Loads at /student/flashcards */}
+        </Route>
 
         <Route path="/instructor" element={<InstructorLayout />}>
           <Route index element={<InstructorDashboard />} />
@@ -82,82 +91,56 @@ function App() {
     );
   }
 
-  // ADMIN LOGIN CHECK
   if (!loggedIn) {
     return <LoginPage onLogin={handleLogin} />;
   }
 
   return (
     <div className="flex min-h-screen bg-[#0f172a] text-white">
-
-      {/* Sidebar */}
       <div className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300`}>
-
-        {/* Header */}
         <div className="flex justify-between items-center mb-10">
-
           {sidebarOpen && <h1 className="text-xl font-bold">Admin</h1>}
-
           <button onClick={() => setSidebarOpen(!sidebarOpen)}>
             <Menu size={20} />
           </button>
-
         </div>
-
-        {/* Navigation */}
         <nav className="space-y-6">
-
-          {/* ADMIN */}
-            <Link to="/Home" className="flex items-center gap-3 hover:text-blue-400">
+          <Link to="/Home" className="flex items-center gap-3 hover:text-blue-400">
             <Home size={18} />
             {sidebarOpen && "Home"}
           </Link>
-
           <Link to="/dashboard" className="flex items-center gap-3 hover:text-blue-400">
             <LayoutDashboard size={18} />
             {sidebarOpen && "Dashboard"}
           </Link>
-
           <Link to="/users" className="flex items-center gap-3 hover:text-blue-400">
             <Users size={18} />
             {sidebarOpen && "Manage Users"}
           </Link>
-
           <Link to="/courses" className="flex items-center gap-3 hover:text-blue-400">
             <FileText size={18} />
             {sidebarOpen && "Courses"}
           </Link>
-
           <Link to="/calendar" className="flex items-center gap-3 hover:text-blue-400">
             <CalendarIcon size={18} />
             {sidebarOpen && "Calendar"}
           </Link>
-
           <Link to="/help" className="flex items-center gap-3 hover:text-blue-400">
             <HelpCircle size={18} />
             {sidebarOpen && "Help"}
           </Link>
-
         </nav>
-
       </div>
 
-      {/* Page Content */}
       <div className="flex-1 p-8 w-full">
-
         <Routes>
-
-          {/* ADMIN */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<ManageUsers />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/help" element={<Help />} />
-
         </Routes>
-
       </div>
-
     </div>
   );
 }
