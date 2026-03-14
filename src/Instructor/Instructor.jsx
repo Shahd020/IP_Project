@@ -297,6 +297,26 @@ function Instructor({ roleLabel = "Instructor", pageTitle = "Instructor Course C
             {sidebarOpen && "Home"}
           </Link>
 
+          <Link to="/categories" className="flex items-center gap-3 hover:text-blue-400">
+            <BookOpen size={18} />
+            {sidebarOpen && "Categories"}
+          </Link>
+
+          <Link to="/pages" className="flex items-center gap-3 hover:text-blue-400">
+            <ClipboardCheck size={18} />
+            {sidebarOpen && "Pages"}
+          </Link>
+
+          <Link to="/blog" className="flex items-center gap-3 hover:text-blue-400">
+            <BarChart3 size={18} />
+            {sidebarOpen && "Blog"}
+          </Link>
+
+          <Link to="/contact" className="flex items-center gap-3 hover:text-blue-400">
+            <CheckCircle2 size={18} />
+            {sidebarOpen && "Contact"}
+          </Link>
+
         </nav>
 
       </div>

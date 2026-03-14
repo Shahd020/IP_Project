@@ -13,44 +13,76 @@ import Contact from "./Contact";
 import Categories from "./Categories";
 import Pages from "./Pages";
 import Blog from "./Blog";
-import Instructor from "./Instructor";
 import Student from "./Student";
+
+
+import InstructorLayout from "./Instructor/InstructorLayout";
+import InstructorDashboard from "./Instructor/InstructorDashboard";
+import CreateCourse from "./Instructor/CreateCourse";
+import AddModules from "./Instructor/AddModules";
+import LearningMaterials from "./Instructor/LearningMaterials";
+import CreateQuiz from "./Instructor/CreateQuiz";
+import CoursesList from "./Instructor/CoursesList";
 
 function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
   const location = useLocation();
   const navigate = useNavigate();
-  const isCommonHomeRoute = ["/", "/login", "/student", "/instructor", "/categories", "/pages", "/blog", "/contact"].includes(location.pathname);
+  const isInstructorRoute = location.pathname === "/instructor" || location.pathname.startsWith("/instructor/");
+
+  // Public website routes
+  const isPublicRoute = [
+    "/", "/Home", "/login", "/student",
+    "/categories", "/pages",
+    "/blog", "/contact"
+  ].includes(location.pathname);
 
   const handleLogin = (role) => {
+
     if (role === "admin") {
       setLoggedIn(true);
       navigate("/dashboard");
       return;
     }
 
-    setLoggedIn(false);
-    navigate(role === "instructor" ? "/instructor" : "/student");
+    if (role === "instructor") {
+      navigate("/instructor");
+      return;
+    }
+
+    navigate("/student");
   };
 
-  if (isCommonHomeRoute) {
+  // PUBLIC WEBSITE
+  if (isPublicRoute || isInstructorRoute) {
     return (
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/Home" element={<HomePage />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/student" element={<Student />} />
-        <Route path="/instructor" element={<Instructor />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/pages" element={<Pages />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/student" element={<Student />} />
+
+        <Route path="/instructor" element={<InstructorLayout />}>
+          <Route index element={<InstructorDashboard />} />
+          <Route path="create-course" element={<CreateCourse />} />
+          <Route path="modules" element={<AddModules />} />
+          <Route path="materials" element={<LearningMaterials />} />
+          <Route path="quiz" element={<CreateQuiz />} />
+          <Route path="courses" element={<CoursesList />} />
+        </Route>
       </Routes>
     );
   }
 
-  // Login check
+  // ADMIN LOGIN CHECK
   if (!loggedIn) {
     return <LoginPage onLogin={handleLogin} />;
   }
@@ -61,7 +93,7 @@ function App() {
       {/* Sidebar */}
       <div className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300`}>
 
-        {/* Sidebar Header */}
+        {/* Header */}
         <div className="flex justify-between items-center mb-10">
 
           {sidebarOpen && <h1 className="text-xl font-bold">Admin</h1>}
@@ -75,15 +107,16 @@ function App() {
         {/* Navigation */}
         <nav className="space-y-6">
 
-          <Link to="/" className="flex items-center gap-3 hover:text-blue-400">
+          {/* ADMIN */}
+            <Link to="/Home" className="flex items-center gap-3 hover:text-blue-400">
             <Home size={18} />
             {sidebarOpen && "Home"}
           </Link>
 
-       <Link to="/dashboard" className="flex items-center gap-3 hover:text-blue-400">
-  <LayoutDashboard size={18} />
-  {sidebarOpen && "Dashboard"}
-</Link>
+          <Link to="/dashboard" className="flex items-center gap-3 hover:text-blue-400">
+            <LayoutDashboard size={18} />
+            {sidebarOpen && "Dashboard"}
+          </Link>
 
           <Link to="/users" className="flex items-center gap-3 hover:text-blue-400">
             <Users size={18} />
@@ -109,24 +142,20 @@ function App() {
 
       </div>
 
-
       {/* Page Content */}
       <div className="flex-1 p-8 w-full">
 
-     <Routes>
+        <Routes>
 
-  {/* Dashboard */}
-  <Route path="/dashboard" element={<Dashboard />} />
+          {/* ADMIN */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/users" element={<ManageUsers />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/help" element={<Help />} />
 
-  <Route path="/users" element={<ManageUsers />} />
-  <Route path="/courses" element={<Courses />} />
-  <Route path="/categories" element={<Categories />} />
-  <Route path="/pages" element={<Pages />} />
-  <Route path="/blog" element={<Blog />} />
-  <Route path="/calendar" element={<Calendar />} />
-  <Route path="/help" element={<Help />} />
+        </Routes>
 
-</Routes>
       </div>
 
     </div>
