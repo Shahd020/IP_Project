@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { LayoutDashboard, Home, Users, FileText, Calendar as CalendarIcon, HelpCircle, Menu } from "lucide-react";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +21,7 @@ import Student from "./Student/Student";
 import StudentCourses from "./Student/StudentCourses";
 import CourseDetail from "./Student/CourseDetail";
 import CourseStudy from "./Student/CourseStudy";
-import Flashcards from "./Student/Flashcards"; 
+import Flashcards from "./Student/Flashcards";
 
 import InstructorLayout from "./Instructor/InstructorLayout";
 import InstructorDashboard from "./Instructor/InstructorDashboard";
@@ -36,15 +37,22 @@ function App() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  
-  const isInstructorRoute = location.pathname === "/instructor" || location.pathname.startsWith("/instructor/");
-  
-  // Public website routes (Now simply allows anything starting with /student)
-  const isPublicRoute = [
-    "/", "/Home", "/login",
-    "/categories", "/pages",
-    "/blog", "/contact"
-  ].includes(location.pathname) || location.pathname.startsWith("/student");
+
+  const isInstructorRoute =
+    location.pathname === "/instructor" ||
+    location.pathname.startsWith("/instructor/");
+
+  const isPublicRoute =
+    [
+      "/",
+      "/Home",
+      "/login",
+      "/categories",
+      "/pages",
+      "/blog",
+      "/contact"
+    ].includes(location.pathname) ||
+    location.pathname.startsWith("/student");
 
   const handleLogin = (role) => {
     if (role === "admin") {
@@ -52,10 +60,12 @@ function App() {
       navigate("/dashboard");
       return;
     }
+
     if (role === "instructor") {
       navigate("/instructor");
       return;
     }
+
     navigate("/student");
   };
 
@@ -69,16 +79,17 @@ function App() {
         <Route path="/pages" element={<Pages />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
-        
-        {/* NEW STUDENT NESTED ROUTES */}
+
+        {/* STUDENT ROUTES */}
         <Route path="/student" element={<StudentLayout />}>
-          <Route index element={<Student />} /> {/* Loads at /student */}
-          <Route path="courses" element={<StudentCourses />} /> {/* Loads at /student/courses */}
-          <Route path="courses/:courseId" element={<CourseDetail />} /> {/* Loads at /student/courses/:courseId */}
-          <Route path="courses/:courseId/study" element={<CourseStudy />} /> {/* Loads at /student/courses/:courseId/study */}
-          <Route path="flashcards" element={<Flashcards />} /> {/* Loads at /student/flashcards */}
+          <Route index element={<Student />} />
+          <Route path="courses" element={<StudentCourses />} />
+          <Route path="courses/:courseId" element={<CourseDetail />} />
+          <Route path="courses/:courseId/study" element={<CourseStudy />} />
+          <Route path="flashcards" element={<Flashcards />} />
         </Route>
 
+        {/* INSTRUCTOR ROUTES */}
         <Route path="/instructor" element={<InstructorLayout />}>
           <Route index element={<InstructorDashboard />} />
           <Route path="create-course" element={<CreateCourse />} />
@@ -97,35 +108,63 @@ function App() {
 
   return (
     <div className="flex min-h-screen bg-[#0f172a] text-white">
-      <div className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300`}>
+      <div
+        className={`${
+          sidebarOpen ? "w-64" : "w-20"
+        } bg-[#1f2937] p-6 transition-all duration-300`}
+      >
         <div className="flex justify-between items-center mb-10">
           {sidebarOpen && <h1 className="text-xl font-bold">Admin</h1>}
           <button onClick={() => setSidebarOpen(!sidebarOpen)}>
             <Menu size={20} />
           </button>
         </div>
+
         <nav className="space-y-6">
-          <Link to="/Home" className="flex items-center gap-3 hover:text-blue-400">
+          <Link
+            to="/Home"
+            className="flex items-center gap-3 hover:text-blue-400"
+          >
             <Home size={18} />
             {sidebarOpen && "Home"}
           </Link>
-          <Link to="/dashboard" className="flex items-center gap-3 hover:text-blue-400">
+
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-3 hover:text-blue-400"
+          >
             <LayoutDashboard size={18} />
             {sidebarOpen && "Dashboard"}
           </Link>
-          <Link to="/users" className="flex items-center gap-3 hover:text-blue-400">
+
+          <Link
+            to="/users"
+            className="flex items-center gap-3 hover:text-blue-400"
+          >
             <Users size={18} />
             {sidebarOpen && "Manage Users"}
           </Link>
-          <Link to="/courses" className="flex items-center gap-3 hover:text-blue-400">
+
+          <Link
+            to="/courses"
+            className="flex items-center gap-3 hover:text-blue-400"
+          >
             <FileText size={18} />
             {sidebarOpen && "Courses"}
           </Link>
-          <Link to="/calendar" className="flex items-center gap-3 hover:text-blue-400">
+
+          <Link
+            to="/calendar"
+            className="flex items-center gap-3 hover:text-blue-400"
+          >
             <CalendarIcon size={18} />
             {sidebarOpen && "Calendar"}
           </Link>
-          <Link to="/help" className="flex items-center gap-3 hover:text-blue-400">
+
+          <Link
+            to="/help"
+            className="flex items-center gap-3 hover:text-blue-400"
+          >
             <HelpCircle size={18} />
             {sidebarOpen && "Help"}
           </Link>
