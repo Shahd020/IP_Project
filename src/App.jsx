@@ -15,7 +15,7 @@ import Categories from "./Categories";
 import Pages from "./Pages";
 import Blog from "./Blog";
 
-// Import for Student components
+/* STUDENT */
 import StudentLayout from "./Student/StudentLayout";
 import Student from "./Student/Student";
 import StudentCourses from "./Student/StudentCourses";
@@ -23,6 +23,7 @@ import CourseDetail from "./Student/CourseDetail";
 import CourseStudy from "./Student/CourseStudy";
 import Flashcards from "./Student/Flashcards";
 
+/* INSTRUCTOR */
 import InstructorLayout from "./Instructor/InstructorLayout";
 import InstructorDashboard from "./Instructor/InstructorDashboard";
 import CreateCourse from "./Instructor/CreateCourse";
@@ -31,7 +32,11 @@ import LearningMaterials from "./Instructor/LearningMaterials";
 import CreateQuiz from "./Instructor/CreateQuiz";
 import CoursesList from "./Instructor/CoursesList";
 
+/* NEW IMPORT FOR PREVIEW */
+import CoursePreview from "./Instructor/CoursePreview";
+
 function App() {
+
   const [loggedIn, setLoggedIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -55,6 +60,7 @@ function App() {
     location.pathname.startsWith("/student");
 
   const handleLogin = (role) => {
+
     if (role === "admin") {
       setLoggedIn(true);
       navigate("/dashboard");
@@ -72,6 +78,8 @@ function App() {
   if (isPublicRoute || isInstructorRoute) {
     return (
       <Routes>
+
+        {/* PUBLIC WEBSITE */}
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
@@ -82,22 +90,40 @@ function App() {
 
         {/* STUDENT ROUTES */}
         <Route path="/student" element={<StudentLayout />}>
+
           <Route index element={<Student />} />
+
           <Route path="courses" element={<StudentCourses />} />
+
           <Route path="courses/:courseId" element={<CourseDetail />} />
+
           <Route path="courses/:courseId/study" element={<CourseStudy />} />
+
           <Route path="flashcards" element={<Flashcards />} />
+
         </Route>
 
         {/* INSTRUCTOR ROUTES */}
         <Route path="/instructor" element={<InstructorLayout />}>
+
           <Route index element={<InstructorDashboard />} />
+
           <Route path="create-course" element={<CreateCourse />} />
+
           <Route path="modules" element={<AddModules />} />
+
           <Route path="materials" element={<LearningMaterials />} />
+
           <Route path="quiz" element={<CreateQuiz />} />
+
           <Route path="courses" element={<CoursesList />} />
+
+          {/* NEW PREVIEW PAGE */}
+          <Route path="courses/:courseId" element={<CoursePreview />} />
+               <Route path="courses/:courseId/preview" element={<CourseDetail />} />
+
         </Route>
+
       </Routes>
     );
   }
@@ -108,11 +134,11 @@ function App() {
 
   return (
     <div className="flex min-h-screen bg-[#0f172a] text-white">
+
       <div
-        className={`${
-          sidebarOpen ? "w-64" : "w-20"
-        } bg-[#1f2937] p-6 transition-all duration-300`}
+        className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300`}
       >
+
         <div className="flex justify-between items-center mb-10">
           {sidebarOpen && <h1 className="text-xl font-bold">Admin</h1>}
           <button onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -121,57 +147,42 @@ function App() {
         </div>
 
         <nav className="space-y-6">
-          <Link
-            to="/Home"
-            className="flex items-center gap-3 hover:text-blue-400"
-          >
+
+          <Link to="/Home" className="flex items-center gap-3 hover:text-blue-400">
             <Home size={18} />
             {sidebarOpen && "Home"}
           </Link>
 
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-3 hover:text-blue-400"
-          >
+          <Link to="/dashboard" className="flex items-center gap-3 hover:text-blue-400">
             <LayoutDashboard size={18} />
             {sidebarOpen && "Dashboard"}
           </Link>
 
-          <Link
-            to="/users"
-            className="flex items-center gap-3 hover:text-blue-400"
-          >
+          <Link to="/users" className="flex items-center gap-3 hover:text-blue-400">
             <Users size={18} />
             {sidebarOpen && "Manage Users"}
           </Link>
 
-          <Link
-            to="/courses"
-            className="flex items-center gap-3 hover:text-blue-400"
-          >
+          <Link to="/courses" className="flex items-center gap-3 hover:text-blue-400">
             <FileText size={18} />
             {sidebarOpen && "Courses"}
           </Link>
 
-          <Link
-            to="/calendar"
-            className="flex items-center gap-3 hover:text-blue-400"
-          >
+          <Link to="/calendar" className="flex items-center gap-3 hover:text-blue-400">
             <CalendarIcon size={18} />
             {sidebarOpen && "Calendar"}
           </Link>
 
-          <Link
-            to="/help"
-            className="flex items-center gap-3 hover:text-blue-400"
-          >
+          <Link to="/help" className="flex items-center gap-3 hover:text-blue-400">
             <HelpCircle size={18} />
             {sidebarOpen && "Help"}
           </Link>
+
         </nav>
       </div>
 
       <div className="flex-1 p-8 w-full">
+
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<ManageUsers />} />
@@ -179,7 +190,9 @@ function App() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/help" element={<Help />} />
         </Routes>
+
       </div>
+
     </div>
   );
 }

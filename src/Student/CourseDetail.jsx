@@ -1,11 +1,33 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, PlayCircle, CheckCircle, Clock, Star, FileText, Download, Award } from "lucide-react";
 
 import HarvardLogo from '../assets/Logos/Harvard.webp';
 
 function CourseDetail() {
   const { courseId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const fallbackBackPath = location.pathname.startsWith("/instructor")
+    ? "/instructor/courses"
+    : "/student/courses";
+
+  const handleBack = () => {
+    const returnTo = location.state?.from;
+
+    if (typeof returnTo === "string" && returnTo.length > 0) {
+      navigate(returnTo);
+      return;
+    }
+
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate(fallbackBackPath, { replace: true });
+  };
 
   // Mock data tailored to your Game Dev project
   const course = {
@@ -43,10 +65,14 @@ function CourseDetail() {
       
       {/* Breadcrumb Navigation */}
       <div className="mb-6 flex items-center gap-2 text-sm font-medium text-gray-400">
-        <Link to="/student/courses" className="hover:text-blue-400 flex items-center gap-1 transition-colors">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="hover:text-blue-400 flex items-center gap-1 transition-colors"
+        >
           <ArrowLeft size={16} />
           Back to Courses
-        </Link>
+        </button>
         <span>/</span>
         <span className="text-gray-200">{course.title}</span>
       </div>
