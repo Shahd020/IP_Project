@@ -1,18 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function CreateQuiz() {
 
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [quiz, setQuiz] = useState([]);
-
-  // Load saved quiz
-  useEffect(() => {
-    const saved = localStorage.getItem("quiz");
-    if (saved) {
-      setQuiz(JSON.parse(saved));
+  const [quiz, setQuiz] = useState(() => {
+    try {
+      const saved = localStorage.getItem("quiz");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
-  }, []);
+  });
 
   const addQuestion = () => {
 

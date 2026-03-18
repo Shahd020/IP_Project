@@ -55,15 +55,15 @@ function LoginPage({ onLogin }) {
     
     if (validateForm()) {
       // 1. Tell App.jsx we are logged in so it unlocks the routes
-      if (onLogin) onLogin();
+      if (onLogin) onLogin(formData.role.toLowerCase());
 
       // 2. Navigate based on the selected role!
       if (formData.role === 'Student') {
-        navigate('/student/courses');
+        navigate('/student');
       } else if (formData.role === 'Instructor') {
-        navigate('/instructor/courses'); 
+        navigate('/instructor'); 
       } else if (formData.role === 'Admin') {
-        navigate('/'); 
+        navigate('/dashboard'); 
       }
     }
   };

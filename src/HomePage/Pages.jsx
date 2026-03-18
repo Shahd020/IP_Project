@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Search, User } from "lucide-react";
+import { User } from "lucide-react";
 
 function Pages() {
   const pages = [
@@ -43,28 +43,36 @@ function Pages() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
+    <div className="min-h-screen bg-[#0f172a] text-white pt-20">
 
      
 
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-10 py-4 bg-[#1f2937] shadow">
-       
-        {/* Nav Links */}
-        <div className="flex gap-8 text-gray-300 font-medium">
-          <Link to="/" className="hover:text-blue-400">Home</Link>
-          <Link to="/categories" className="hover:text-blue-400">Categories</Link>
-          <Link to="/pages" className="hover:text-blue-400 text-blue-400">Pages</Link>
-          <Link to="/blog" className="hover:text-blue-400">Blog</Link>
-          <Link to="/contact" className="hover:text-blue-400">Contact</Link>
-        </div>
-        {/* Right Icons */}
-        <div className="flex items-center gap-5 text-gray-300">
-          <Search size={20} className="cursor-pointer hover:text-blue-400" />
-          <Link to="/login" className="flex items-center gap-1 hover:text-blue-400">
-            <User size={20} />
-            Login
-          </Link>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1f2937] shadow border-b border-gray-800">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center px-10 py-4">
+          <div className="justify-self-start text-xl font-bold text-white tracking-wide">
+            <Link to="/">
+              <span className="text-blue-500">Edu</span>Platform
+            </Link>
+          </div>
+
+          <div className="justify-self-center flex gap-8 text-gray-300 font-medium">
+            <Link to="/" className="hover:text-blue-400 transition-colors">Home</Link>
+            <Link to="/categories" className="hover:text-blue-400 transition-colors">Categories</Link>
+            <Link to="/pages" className="hover:text-blue-400 transition-colors text-blue-400">Pages</Link>
+            <Link to="/blog" className="hover:text-blue-400 transition-colors">Blog</Link>
+            <Link to="/contact" className="hover:text-blue-400 transition-colors">Contact</Link>
+          </div>
+
+          <div className="justify-self-end flex items-center gap-6 text-gray-300">
+            <Link
+              to="/login"
+              className="flex items-center gap-2 hover:text-blue-400 font-medium transition-colors bg-gray-800 px-4 py-2 rounded-lg border border-gray-700"
+            >
+              <User size={18} />
+              Login
+            </Link>
+          </div>
         </div>
       </nav>
 

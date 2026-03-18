@@ -1,7 +1,75 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Star, Clock, CheckCircle, Award, FileText, MonitorPlay, Infinity } from 'lucide-react';
-import { catalogData } from './CourseCatalog'; // Import the shared data!
+import { ArrowLeft, Star, Clock, CheckCircle, Award, FileText, MonitorPlay, Infinity as InfinityIcon } from 'lucide-react';
+
+const catalogData = {
+  'web-dev': {
+    id: 'web-dev',
+    title: 'Web Development Bootcamp',
+    description: 'Master HTML, CSS, JavaScript, React, and deployment workflows from scratch.',
+    rating: 4.8,
+    instructor: 'John Carter',
+    price: '$89.99',
+    color: 'blue',
+    learn: [
+      'Build responsive web pages with modern CSS',
+      'Create interactive UI with React fundamentals',
+      'Manage app state and API integration',
+      'Deploy production-ready projects'
+    ],
+    modules: [
+      'HTML & Semantic Foundations',
+      'CSS Layouts and Responsive Design',
+      'JavaScript Essentials and DOM',
+      'React Components and Routing',
+      'Project Build and Deployment'
+    ]
+  },
+  'machine-learning': {
+    id: 'machine-learning',
+    title: 'Machine Learning Essentials',
+    description: 'Learn ML fundamentals, model training, evaluation, and practical deployment basics.',
+    rating: 4.9,
+    instructor: 'Dr. Elena Morris',
+    price: '$129.99',
+    color: 'green',
+    learn: [
+      'Understand supervised and unsupervised learning',
+      'Prepare and transform real-world datasets',
+      'Train and evaluate common ML models',
+      'Apply model tuning and validation'
+    ],
+    modules: [
+      'Introduction to Machine Learning',
+      'Data Preparation and Feature Engineering',
+      'Classification and Regression Models',
+      'Model Evaluation and Optimization',
+      'Mini Project and Deployment Basics'
+    ]
+  },
+  'data-science': {
+    id: 'data-science',
+    title: 'Data Science in Practice',
+    description: 'Analyze datasets, visualize insights, and communicate results for business impact.',
+    rating: 4.7,
+    instructor: 'Sophia Reed',
+    price: '$99.99',
+    color: 'purple',
+    learn: [
+      'Clean and analyze structured data effectively',
+      'Create clear charts and dashboards',
+      'Identify patterns and business insights',
+      'Present findings with confidence'
+    ],
+    modules: [
+      'Data Wrangling Fundamentals',
+      'Exploratory Data Analysis',
+      'Visualization and Storytelling',
+      'Statistics for Data Science',
+      'Capstone Analysis Project'
+    ]
+  }
+};
 
 function CourseOverview() {
   const { courseId } = useParams();
@@ -95,7 +163,7 @@ function CourseOverview() {
               <ul className="space-y-3 text-sm text-gray-300">
                 <li className="flex items-center gap-3"><MonitorPlay size={16} className="text-gray-400" /> 24 hours on-demand video</li>
                 <li className="flex items-center gap-3"><FileText size={16} className="text-gray-400" /> 12 downloadable resources</li>
-                <li className="flex items-center gap-3"><Infinity size={16} className="text-gray-400" /> Full lifetime access</li>
+                <li className="flex items-center gap-3"><InfinityIcon size={16} className="text-gray-400" /> Full lifetime access</li>
                 <li className="flex items-center gap-3"><Award size={16} className="text-gray-400" /> Certificate of completion</li>
               </ul>
             </div>

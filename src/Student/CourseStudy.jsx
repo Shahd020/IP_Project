@@ -1,12 +1,11 @@
 import React, { useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { 
   ArrowLeft, PlayCircle, MessageSquare, CheckCircle, Award, 
   BookmarkPlus, Send, Download, Star, AlertCircle 
 } from "lucide-react";
 
 function CourseStudy() {
-  const { courseId } = useParams();
   const videoRef = useRef(null);
 
   // Layout State

@@ -16,6 +16,7 @@ function AddModules() {
         <input
           type="text"
           placeholder="Module Name"
+          value={module}
           className="w-full p-3 rounded bg-[#0f172a]"
           onChange={(e)=>setModule(e.target.value)}
         />

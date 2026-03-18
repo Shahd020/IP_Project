@@ -8,10 +8,10 @@ function StudentLayout() {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-screen bg-[#0f172a] text-white">
+    <div className="flex min-h-screen bg-[#0f172a] text-white overflow-x-hidden">
 
       {/* The One True Sidebar */}
-      <div className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300 flex flex-col`}>
+      <div className={`fixed top-0 left-0 h-screen ${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300 flex flex-col`}>
         <div className="flex justify-between items-center mb-10">
           {sidebarOpen && <h1 className="text-xl font-bold">Student</h1>}
           <button onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -47,7 +47,7 @@ function StudentLayout() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 p-8 w-full overflow-y-auto">
+      <div className={`flex-1 min-w-0 p-8 overflow-y-auto transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
         <Outlet />
       </div>
 

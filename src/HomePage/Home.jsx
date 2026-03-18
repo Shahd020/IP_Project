@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
-import { Search, User, ArrowRight } from "lucide-react"; 
+import { User, ArrowRight } from "lucide-react"; 
 
-import wideBookHero from './assets/Logos/wide_book_hero.png'; 
+import wideBookHero from '../assets/Logos/wide_book_hero.png'; 
+import webDevelopmentIcon from '../assets/Logos/webDevelopment.jpeg';
+import machineLearningIcon from '../assets/Logos/MachineLearning .jpeg';
+import dataScienceIcon from '../assets/Logos/DataScience.jpeg';
 
 function Home() {
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white overflow-hidden">
+    <div className="min-h-screen bg-[#0f172a] text-white overflow-hidden pt-20">
 
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-10 py-4 bg-[#1f2937] shadow border-b border-gray-800">
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-10 py-4 bg-[#1f2937] shadow border-b border-gray-800">
         
         {/* Logo Placeholder */}
         <div className="text-xl font-bold text-white tracking-wide">
@@ -26,7 +29,6 @@ function Home() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-6 text-gray-300">
-          <Search size={20} className="cursor-pointer hover:text-blue-400 transition-colors" />
           <Link to="/login" className="flex items-center gap-2 hover:text-blue-400 font-medium transition-colors bg-gray-800 px-4 py-2 rounded-lg border border-gray-700">
             <User size={18} />
             Login
@@ -35,9 +37,9 @@ function Home() {
 
       </nav>
 
-      {/* ========================================================== */}
+
       {/* HERO SECTION */}
-      {/* ========================================================== */}
+     
       <div className="flex flex-col lg:flex-row items-center justify-between gap-8 px-10 lg:px-20 py-24 relative">
         
         <div className="absolute top-20 right-20 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
@@ -111,9 +113,8 @@ function Home() {
         </div>
       </div>
 
-      {/* ========================================================== */}
+      
       {/* POPULAR COURSES SECTION */}
-      {/* ========================================================== */}
       <div className="px-20 py-24">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-4">Popular Courses</h2>
@@ -126,10 +127,13 @@ function Home() {
           
           {/* Card 1: Web Development */}
           <div className="bg-[#1f2937] rounded-2xl p-6 hover:-translate-y-2 transition-transform duration-300 border border-gray-800 shadow-xl flex flex-col">
-            <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-full h-40 rounded-xl mb-6 flex items-center justify-center shadow-inner">
-              <span className="text-5xl">💻</span>
-            </div>
-            
+           <div className="w-full h-40 rounded-xl mb-6 overflow-hidden shadow-inner">
+    <img 
+      src={webDevelopmentIcon} 
+      alt="Web Development" 
+      className="w-full h-full object-cover"
+    />
+  </div>
             <div className="flex justify-between items-start mb-2">
               <h3 className="text-xl font-bold text-white">Web Development</h3>
               <span className="text-yellow-400 font-bold flex items-center gap-1 text-sm">4.8 ⭐</span>
@@ -147,9 +151,13 @@ function Home() {
 
           {/* Card 2: Machine Learning */}
           <div className="bg-[#1f2937] rounded-2xl p-6 hover:-translate-y-2 transition-transform duration-300 border border-gray-800 shadow-xl flex flex-col">
-            <div className="bg-gradient-to-br from-green-500 to-green-700 w-full h-40 rounded-xl mb-6 flex items-center justify-center shadow-inner">
-              <span className="text-5xl">🤖</span>
-            </div>
+            <div className="w-full h-40 rounded-xl mb-6 overflow-hidden shadow-inner">
+    <img 
+      src={machineLearningIcon} 
+      alt="Machine Learning" 
+      className="w-full h-full object-cover"
+    />
+  </div>
             
             <div className="flex justify-between items-start mb-2">
               <h3 className="text-xl font-bold text-white">Machine Learning</h3>
@@ -168,9 +176,13 @@ function Home() {
 
           {/* Card 3: Data Science */}
           <div className="bg-[#1f2937] rounded-2xl p-6 hover:-translate-y-2 transition-transform duration-300 border border-gray-800 shadow-xl flex flex-col">
-            <div className="bg-gradient-to-br from-purple-500 to-purple-700 w-full h-40 rounded-xl mb-6 flex items-center justify-center shadow-inner">
-              <span className="text-5xl">📊</span>
-            </div>
+                  <div className="w-full h-40 rounded-xl mb-6 overflow-hidden shadow-inner">
+    <img 
+      src={dataScienceIcon} 
+      alt="Data Science" 
+      className="w-full h-full object-cover"
+    />
+  </div>
             
             <div className="flex justify-between items-start mb-2">
               <h3 className="text-xl font-bold text-white">Data Science</h3>

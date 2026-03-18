@@ -60,7 +60,7 @@ function CreateCourse() {
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="bg-[#1f2937] p-6 rounded-xl space-y-6 max-w-3xl"
+        className="bg-[#1f2937] p-8 rounded-xl space-y-6 w-full max-w-6xl"
       >
 
         {/* Course Title */}

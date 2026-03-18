@@ -1,17 +1,18 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FileText, Download, Trash2 } from "lucide-react";
 
 function LearningMaterials() {
 
   const [selectedFile, setSelectedFile] = useState(null);
-  const [materials, setMaterials] = useState([]);
-
-  // Load saved materials when page opens
-  useEffect(() => {
-    const savedMaterials = JSON.parse(localStorage.getItem("materials")) || [];
-    setMaterials(savedMaterials);
-  }, []);
+  const [materials, setMaterials] = useState(() => {
+    try {
+      const savedMaterials = JSON.parse(localStorage.getItem("materials"));
+      return Array.isArray(savedMaterials) ? savedMaterials : [];
+    } catch {
+      return [];
+    }
+  });
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);

@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import MetaLogo from './assets/Logos/Meta.jpeg';
-import StanfordLogo from './assets/Logos/Standford.webp';
-import GoogleLogo from './assets/Logos/google.jpeg';
-import HarvardLogo from './assets/Logos/Harvard.webp';
-import AmazonLogo from './assets/Logos/Amazon.jpeg';
-import AILogo from './assets/Logos/AI.webp';
+import MetaLogo from '../assets/Logos/Meta.jpeg';
+import StanfordLogo from '../assets/Logos/Standford.webp';
+import GoogleLogo from '../assets/Logos/google.jpeg';
+import HarvardLogo from '../assets/Logos/Harvard.webp';
+import AmazonLogo from '../assets/Logos/Amazon.jpeg';
+import AILogo from '../assets/Logos/AI.webp';
 
 function Courses() {
   const courses = [

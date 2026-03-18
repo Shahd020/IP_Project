@@ -1,21 +1,20 @@
-
 import React, { useState } from "react";
 import { LayoutDashboard, Home, Users, FileText, Calendar as CalendarIcon, HelpCircle, Menu } from "lucide-react";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 
 import LoginPage from "./LoginPage";
-import ManageUsers from "./ManageUsers";
-import Courses from "./Courses";
-import Calendar from "./Calendar";
-import Help from "./Help";
-import Dashboard from "./Dashboard";
-import HomePage from "./Home";
-import Contact from "./Contact";
-import Categories from "./Categories";
-import Pages from "./Pages";
-import Blog from "./Blog";
-import CourseCatalog from "./CourseCatalog";
-import CourseOverview from "./CourseOverview";
+import ManageUsers from "./Admin/ManageUsers";
+import Courses from "./Admin/Courses";
+import Calendar from "./Admin/Calendar";
+import Help from "./Admin/Help";
+import Dashboard from "./Admin/Dashboard";
+import HomePage from "./HomePage/Home";
+import Contact from "./HomePage/Contact";
+import Categories from "./HomePage/Categories";
+import Pages from "./HomePage/Pages";
+import Blog from "./HomePage/Blog";
+import CourseCatalog from "./HomePage/CourseCatalogPage";
+import CourseOverview from "./HomePage/CourseCatalog";
 
 /* STUDENT */
 import StudentLayout from "./Student/StudentLayout";
@@ -54,12 +53,14 @@ function App() {
       "/",
       "/Home",
       "/login",
+      "/catalog",
       "/categories",
       "/pages",
       "/blog",
       "/contact"
     ].includes(location.pathname) ||
-    location.pathname.startsWith("/student");
+    location.pathname.startsWith("/student") ||
+    location.pathname.startsWith("/course/");
 
   const handleLogin = (role) => {
 
@@ -140,7 +141,7 @@ function App() {
     <div className="flex min-h-screen bg-[#0f172a] text-white">
 
       <div
-        className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300`}
+        className={`fixed top-0 left-0 h-screen ${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300`}
       >
 
         <div className="flex justify-between items-center mb-10">
@@ -185,7 +186,7 @@ function App() {
         </nav>
       </div>
 
-      <div className="flex-1 p-8 w-full">
+      <div className={`flex-1 min-w-0 p-8 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
 
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
@@ -202,3 +203,4 @@ function App() {
 }
 
 export default App;
+
