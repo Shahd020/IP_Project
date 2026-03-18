@@ -14,6 +14,8 @@ import Contact from "./Contact";
 import Categories from "./Categories";
 import Pages from "./Pages";
 import Blog from "./Blog";
+import CourseCatalog from "./CourseCatalog";
+import CourseOverview from "./CourseOverview";
 
 /* STUDENT */
 import StudentLayout from "./Student/StudentLayout";
@@ -84,6 +86,8 @@ function App() {
         <Route path="/Home" element={<HomePage />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/categories" element={<Categories />} />
+        <Route path="/catalog" element={<CourseCatalog />} />
+        <Route path="/course/:courseId" element={<CourseOverview />} />
         <Route path="/pages" element={<Pages />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />

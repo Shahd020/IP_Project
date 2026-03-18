@@ -1,116 +1,200 @@
-import React, { useState } from "react";
-import { FaGoogle, FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
+import React, { useState } from 'react';
+import { Mail, Lock, User, Briefcase, ArrowRight, BookOpen } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage({ onLogin }) {
-  const [isActive, setIsActive] = useState(false);
-  const [role, setRole] = useState("admin");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: ''
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (isSignUp && !formData.name.trim()) {
+      newErrors.name = 'Name is required.';
+    }
+    
+    if (!formData.email) {
+      newErrors.email = 'Email is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      // ---> UPDATED: Clearer error message for any domain <---
+      newErrors.email = 'Please enter a valid email (e.g., name@gmail.com).';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required.';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters.';
+    }
+
+    if (!formData.role) {
+      newErrors.role = 'Please select a role.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (validateForm()) {
+      // 1. Tell App.jsx we are logged in so it unlocks the routes
+      if (onLogin) onLogin();
+
+      // 2. Navigate based on the selected role!
+      if (formData.role === 'Student') {
+        navigate('/student/courses');
+      } else if (formData.role === 'Instructor') {
+        navigate('/instructor/courses'); 
+      } else if (formData.role === 'Admin') {
+        navigate('/'); 
+      }
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#c9d6ff] bg-gradient-to-r from-[#e2e2e2] to-[#c9d6ff] font-['Montserrat',_sans-serif]">
+    <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center p-6 relative overflow-hidden font-sans">
+      
+      {/* Decorative Background Glows */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none"></div>
 
-      {/* Main Container */}
-      <div className="bg-white rounded-[30px] shadow-[0_5px_15px_rgba(0,0,0,0.35)] relative overflow-hidden w-[768px] max-w-full min-h-[480px]">
-
-        {/* SIGN UP */}
-        <div
-          className={`absolute top-0 h-full transition-all duration-[600ms] ease-in-out left-0 w-1/2 ${
-            isActive ? "translate-x-full opacity-100 z-[5]" : "opacity-0 z-[1]"
-          }`}
-        >
-          <form className="bg-white flex flex-col items-center justify-center px-[40px] h-full text-center">
-            <h1 className="font-bold text-3xl">Create Account</h1>
-
-            <div className="my-[20px] flex gap-2">
-              <a className="border border-[#ccc] rounded-[20%] flex justify-center items-center w-[40px] h-[40px]"><FaGoogle /></a>
-              <a className="border border-[#ccc] rounded-[20%] flex justify-center items-center w-[40px] h-[40px]"><FaFacebookF /></a>
-              <a className="border border-[#ccc] rounded-[20%] flex justify-center items-center w-[40px] h-[40px]"><FaGithub /></a>
-              <a className="border border-[#ccc] rounded-[20%] flex justify-center items-center w-[40px] h-[40px]"><FaLinkedinIn /></a>
+      {/* Main Sliding Container */}
+      <div className="relative w-full max-w-4xl h-[600px] bg-[#1f2937] rounded-3xl shadow-2xl border border-gray-800 overflow-hidden z-10 hidden md:block">
+        
+        {/* ================= SIGN UP FORM (Left Side) ================= */}
+        <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-100 z-50' : 'opacity-0 z-10 pointer-events-none'}`}>
+          <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Create Account</h2>
+          <p className="text-gray-400 text-sm text-center mb-8">Join 100K+ students and start learning.</p>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><User size={18} /></div>
+                <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Full Name" className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.name ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors`} />
+              </div>
+              {errors.name && <p className="text-red-400 text-xs mt-1 ml-1">{errors.name}</p>}
             </div>
 
-            <span className="text-[12px]">or use your email for registration</span>
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Mail size={18} /></div>
+                <input type="text" name="email" value={formData.email} onChange={handleChange} placeholder="Email Address" className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.email ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors`} />
+              </div>
+              {errors.email && <p className="text-red-400 text-xs mt-1 ml-1">{errors.email}</p>}
+            </div>
 
-            <input type="text" placeholder="Name" className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full" />
-            <input type="email" placeholder="Email" className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full" />
-            <input type="password" placeholder="Password" className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full" />
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Lock size={18} /></div>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password (Min. 6 chars)" className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.password ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors`} />
+              </div>
+              {errors.password && <p className="text-red-400 text-xs mt-1 ml-1">{errors.password}</p>}
+            </div>
 
-            <button className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-[12px] py-[10px] px-[45px] rounded-[8px] mt-[10px]">
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Briefcase size={18} /></div>
+                <select name="role" value={formData.role} onChange={handleChange} className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.role ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors appearance-none cursor-pointer`}>
+                  <option value="" disabled>Select your role</option>
+                  <option value="Student">Student</option>
+                  <option value="Instructor">Instructor</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
+              {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
+            </div>
+
+            {/* ---> UPDATED: Darker Button Colors <--- */}
+            <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 mt-2">
               Sign Up
             </button>
           </form>
         </div>
 
-        {/* SIGN IN */}
-        <div
-          className={`absolute top-0 h-full transition-all duration-[600ms] ease-in-out left-0 w-1/2 z-[2] bg-white ${
-            isActive ? "translate-x-full" : ""
-          }`}
-        >
-          <form className="bg-white flex flex-col items-center justify-center px-[40px] h-full text-center">
-            <h1 className="font-bold text-3xl">Sign In</h1>
-
-            <div className="my-[20px] flex gap-2">
-              <a className="border border-[#ccc] rounded-[20%] flex justify-center items-center w-[40px] h-[40px]"><FaGoogle /></a>
-              <a className="border border-[#ccc] rounded-[20%] flex justify-center items-center w-[40px] h-[40px]"><FaFacebookF /></a>
-              <a className="border border-[#ccc] rounded-[20%] flex justify-center items-center w-[40px] h-[40px]"><FaGithub /></a>
-              <a className="border border-[#ccc] rounded-[20%] flex justify-center items-center w-[40px] h-[40px]"><FaLinkedinIn /></a>
+        {/* ================= SIGN IN FORM (Left Side initially) ================= */}
+        <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-0 z-10 pointer-events-none' : 'opacity-100 z-50'}`}>
+          <div className="flex justify-center mb-4 text-blue-400"><BookOpen size={48} /></div>
+          <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Welcome Back</h2>
+          <p className="text-gray-400 text-sm text-center mb-8">Enter your credentials to access your dashboard.</p>
+          
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Mail size={18} /></div>
+                <input type="text" name="email" value={formData.email} onChange={handleChange} placeholder="Email Address" className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.email ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors`} />
+              </div>
+              {errors.email && <p className="text-red-400 text-xs mt-1 ml-1">{errors.email}</p>}
             </div>
 
-            <span className="text-[12px]">or use your email password</span>
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Lock size={18} /></div>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password" className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.password ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors`} />
+              </div>
+              {errors.password && <p className="text-red-400 text-xs mt-1 ml-1">{errors.password}</p>}
+            </div>
 
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full"
-            >
-              <option value="admin">Admin</option>
-              <option value="instructor">Instructor</option>
-              <option value="student">Student</option>
-            </select>
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Briefcase size={18} /></div>
+                <select name="role" value={formData.role} onChange={handleChange} className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.role ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors appearance-none cursor-pointer`}>
+                  <option value="" disabled>Select destination role</option>
+                  <option value="Student">Student</option>
+                  <option value="Instructor">Instructor</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
+              {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
+            </div>
 
-            <input type="email" placeholder="Email" className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full" />
-            <input type="password" placeholder="Password" className="bg-[#eee] my-[8px] py-[10px] px-[15px] rounded-[8px] w-full" />
-
-            <button
-              type="button"
-              onClick={() => onLogin(role)}
-              className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-[12px] py-[10px] px-[45px] rounded-[8px] mt-[10px]"
-            >
+            {/* ---> UPDATED: Darker Button Colors <--- */}
+            <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5">
               Sign In
             </button>
           </form>
         </div>
-
-        {/* OVERLAY */}
-        <div
-          className={`absolute top-0 left-1/2 w-1/2 h-full overflow-hidden transition-all duration-[600ms] ease-in-out z-[1000] ${
-            isActive ? "-translate-x-full rounded-[0_150px_100px_0]" : "rounded-[150px_0_0_100px]"
-          }`}
-        >
-          <div
-            className={`bg-gradient-to-r from-[#7c3aed] to-[#6d28d9] text-white relative -left-full h-full w-[200%] transition-all duration-[600ms] ${
-              isActive ? "translate-x-1/2" : ""
-            }`}
-          >
-
-            {/* LEFT PANEL */}
-            <div className={`absolute w-1/2 h-full flex flex-col items-center justify-center text-center px-[30px] ${isActive ? "" : "-translate-x-[200%]"}`}>
-              <h1 className="text-3xl font-bold">Welcome Back!</h1>
-              <p className="text-[14px] my-[20px]">Enter your personal details</p>
-              <button
-                onClick={() => setIsActive(false)}
-                className="border border-white px-[45px] py-[10px] rounded-[8px]"
+        
+        {/* ================= THE SLIDING OVERLAY ================= */}
+        <div className={`absolute top-0 left-1/2 w-1/2 h-full overflow-hidden transition-transform duration-700 ease-in-out z-[100] ${isSignUp ? '-translate-x-full' : ''}`}>
+          
+          <div className={`bg-gradient-to-r from-blue-900 to-indigo-950 relative -left-full h-full w-[200%] transform transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-1/2' : 'translate-x-0'}`}>
+            
+            {/* Overlay Left Panel (Active when Sign Up is showing) */}
+            <div className={`absolute top-0 left-0 flex flex-col items-center justify-center w-1/2 h-full px-12 text-center transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-0' : '-translate-x-[20%]'}`}>
+              <h2 className="text-4xl font-bold text-white mb-4">Welcome Back!</h2>
+              <p className="text-blue-200 mb-8 leading-relaxed">Already have an account? Sign in to pick up right where you left off.</p>
+              <button 
+                onClick={() => { setIsSignUp(false); setErrors({}); }} 
+                className="border-2 border-gray-400 text-gray-200 hover:border-white hover:text-blue-900 hover:bg-white px-10 py-3 rounded-full font-bold uppercase tracking-wider transition-colors"
               >
                 Sign In
               </button>
             </div>
 
-            {/* RIGHT PANEL */}
-            <div className={`absolute w-1/2 h-full flex flex-col items-center justify-center text-center px-[30px] right-0 ${isActive ? "translate-x-[200%]" : ""}`}>
-              <h1 className="text-3xl font-bold">Hello, Friend!</h1>
-              <p className="text-[14px] my-[20px]">Register to use all features</p>
-              <button
-                onClick={() => setIsActive(true)}
-                className="border border-white px-[45px] py-[10px] rounded-[8px]"
+            {/* Overlay Right Panel (Active when Sign In is showing) */}
+            <div className={`absolute top-0 right-0 flex flex-col items-center justify-center w-1/2 h-full px-12 text-center transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-[20%]' : 'translate-x-0'}`}>
+              <h2 className="text-4xl font-bold text-white mb-4">Hello, Learner!</h2>
+              <p className="text-blue-200 mb-8 leading-relaxed">Enter your personal details and start your journey with us today.</p>
+              <button 
+                onClick={() => { setIsSignUp(true); setErrors({}); }} 
+                className="border-2 border-gray-400 text-gray-200 hover:border-white hover:text-indigo-900 hover:bg-white px-10 py-3 rounded-full font-bold uppercase tracking-wider transition-colors"
               >
                 Sign Up
               </button>
@@ -120,6 +204,13 @@ function LoginPage({ onLogin }) {
         </div>
 
       </div>
+
+      {/* Mobile Fallback (Stacks vertically on small screens) */}
+      <div className="md:hidden w-full max-w-md bg-[#1f2937] rounded-3xl p-8 shadow-2xl border border-gray-800 z-10">
+         <h2 className="text-2xl font-bold text-center mb-6">Please use a desktop browser for the full animated experience!</h2>
+         <p className="text-gray-400 text-center">Mobile layout coming soon.</p>
+      </div>
+
     </div>
   );
 }
