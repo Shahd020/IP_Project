@@ -15,6 +15,7 @@ function StudentCourses() {
   const courses = [
     // --- IN PROGRESS (4 Courses) ---
     {
+      id: "cyber-security", // <-- ADDED ID
       title: "Cyber Security & Cryptography",
       provider: "Stanford University",
       duration: "10 weeks",
@@ -25,6 +26,7 @@ function StudentCourses() {
       status: "in-progress"
     },
     {
+      id: "cloud-computing", // <-- ADDED ID
       title: "Cloud Computing",
       provider: "Amazon Web Services",
       duration: "6 weeks",
@@ -35,6 +37,7 @@ function StudentCourses() {
       status: "in-progress"
     },
     {
+      id: "game-dev", // <-- ADDED ID
       title: "2D Game Dev with Unity",
       provider: "Harvard University",
       duration: "8 weeks",
@@ -45,6 +48,7 @@ function StudentCourses() {
       status: "in-progress"
     },
     {
+      id: "react", // <-- ADDED ID
       title: "Internet Programming with React",
       provider: "Meta",
       duration: "12 weeks",
@@ -56,163 +60,29 @@ function StudentCourses() {
     },
 
     // --- COMPLETED (12 Courses) ---
-    {
-      title: "UI/UX Design Fundamentals",
-      provider: "Meta",
-      duration: "5 weeks",
-      rating: "4.8 ⭐",
-      image: MetaLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Software Engineering",
-      provider: "Google",
-      duration: "8 weeks",
-      rating: "4.7 ⭐",
-      image: GoogleLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Object-Oriented Design (OOD)",
-      provider: "Stanford University",
-      duration: "6 weeks",
-      rating: "4.9 ⭐",
-      image: StanfordLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Data Structures & Algorithms",
-      provider: "Harvard University",
-      duration: "10 weeks",
-      rating: "4.6 ⭐",
-      image: HarvardLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Intro to Artificial Intelligence",
-      provider: "MIT",
-      duration: "12 weeks",
-      rating: "4.9 ⭐",
-      image: AILogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Operations Research",
-      provider: "Stanford University",
-      duration: "6 weeks",
-      rating: "4.5 ⭐",
-      image: StanfordLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Java Programming Basics",
-      provider: "Google",
-      duration: "4 weeks",
-      rating: "4.8 ⭐",
-      image: GoogleLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Software Project Management",
-      provider: "Meta",
-      duration: "5 weeks",
-      rating: "4.7 ⭐",
-      image: MetaLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Game Cutscene Design",
-      provider: "Harvard University",
-      duration: "3 weeks",
-      rating: "4.9 ⭐",
-      image: HarvardLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Sprite Sheet Creation",
-      provider: "MIT",
-      duration: "2 weeks",
-      rating: "4.6 ⭐",
-      image: AILogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Operating Systems",
-      provider: "Amazon Web Services",
-      duration: "10 weeks",
-      rating: "4.5 ⭐",
-      image: AmazonLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
-    {
-      title: "Supply Chain Tracking Systems",
-      provider: "Amazon Web Services",
-      duration: "4 weeks",
-      rating: "4.8 ⭐",
-      image: AmazonLogo,
-      progressPercent: 100,
-      progressText: "Finished",
-      status: "completed"
-    },
+    { title: "UI/UX Design Fundamentals", provider: "Meta", duration: "5 weeks", rating: "4.8 ⭐", image: MetaLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Software Engineering", provider: "Google", duration: "8 weeks", rating: "4.7 ⭐", image: GoogleLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Object-Oriented Design (OOD)", provider: "Stanford University", duration: "6 weeks", rating: "4.9 ⭐", image: StanfordLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Data Structures & Algorithms", provider: "Harvard University", duration: "10 weeks", rating: "4.6 ⭐", image: HarvardLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Intro to Artificial Intelligence", provider: "MIT", duration: "12 weeks", rating: "4.9 ⭐", image: AILogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Operations Research", provider: "Stanford University", duration: "6 weeks", rating: "4.5 ⭐", image: StanfordLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Java Programming Basics", provider: "Google", duration: "4 weeks", rating: "4.8 ⭐", image: GoogleLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Software Project Management", provider: "Meta", duration: "5 weeks", rating: "4.7 ⭐", image: MetaLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Game Cutscene Design", provider: "Harvard University", duration: "3 weeks", rating: "4.9 ⭐", image: HarvardLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Sprite Sheet Creation", provider: "MIT", duration: "2 weeks", rating: "4.6 ⭐", image: AILogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Operating Systems", provider: "Amazon Web Services", duration: "10 weeks", rating: "4.5 ⭐", image: AmazonLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+    { title: "Supply Chain Tracking Systems", provider: "Amazon Web Services", duration: "4 weeks", rating: "4.8 ⭐", image: AmazonLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
 
     // --- SAVED / NOT STARTED (3 Courses) ---
-    {
-      title: "Advanced Machine Learning",
-      provider: "MIT",
-      duration: "12 weeks",
-      rating: "4.9 ⭐",
-      image: AILogo,
-      progressPercent: 0,
-      progressText: "Not Started",
-      status: "saved"
-    },
-    {
-      title: "3D Modeling for Games",
-      provider: "Meta",
-      duration: "8 weeks",
-      rating: "4.8 ⭐",
-      image: MetaLogo,
-      progressPercent: 0,
-      progressText: "Not Started",
-      status: "saved"
-    },
-    {
-      title: "Blockchain Architecture",
-      provider: "Stanford University",
-      duration: "6 weeks",
-      rating: "4.7 ⭐",
-      image: StanfordLogo,
-      progressPercent: 0,
-      progressText: "Not Started",
-      status: "saved"
-    }
+    { title: "Advanced Machine Learning", provider: "MIT", duration: "12 weeks", rating: "4.9 ⭐", image: AILogo, progressPercent: 0, progressText: "Not Started", status: "saved" },
+    { title: "3D Modeling for Games", provider: "Meta", duration: "8 weeks", rating: "4.8 ⭐", image: MetaLogo, progressPercent: 0, progressText: "Not Started", status: "saved" },
+    { title: "Blockchain Architecture", provider: "Stanford University", duration: "6 weeks", rating: "4.7 ⭐", image: StanfordLogo, progressPercent: 0, progressText: "Not Started", status: "saved" }
   ];
 
   const filteredCourses = courses.filter(course => course.status === activeTab);
   
-  const renderCardButton = (status) => {
+  // Passed courseId into this function to make the link dynamic!
+  const renderCardButton = (status, courseId) => {
     if (status === "completed") {
       return (
         <button className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors duration-200 shadow-md">
@@ -230,7 +100,7 @@ function StudentCourses() {
     } else {
       return (
         <Link 
-          to="/student/courses/game-dev-unity" 
+          to={`/student/courses/${courseId || 'game-dev'}`} // <-- DYNAMIC LINK!
           className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors duration-200 shadow-md"
         >
           Continue
@@ -306,10 +176,11 @@ function StudentCourses() {
 
             <div className="border-t border-gray-700 p-5 flex justify-between items-center mt-auto bg-[#1a2332]">
               <span className="text-gray-400 font-bold text-sm tracking-widest uppercase">
-                {course.status === 'saved' ? 'Wishlist' : 'Own'}
+                {course.status === 'saved' ? 'Wishlist' : 'Enrolled In'}
               </span>
               
-              {renderCardButton(course.status)}
+              {/* Passed the ID down so it links to the right place */}
+              {renderCardButton(course.status, course.id)}
 
             </div>
 
