@@ -1,0 +1,39 @@
+import { useState, useEffect, useCallback } from 'react';
+import apiClient from '../api/axios.js';
+
+/**
+ * Fetches all of the authenticated student's enrollments in one request
+ * and returns them grouped — no extra requests on tab switch.
+ *
+ * Returned enrollment shape (already matches the StudentCourses UI):
+ *   { _id, status, progressPercent, progressText,
+ *     course: { _id, title, provider, duration, rating, thumbnail } }
+ *
+ * @returns {{ enrollments: object[], loading: boolean, error: string|null, refetch: Function }}
+ */
+const useFetchCourses = () => {
+  const [enrollments, setEnrollments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchEnrollments = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiClient.get('/enrollments/my');
+      setEnrollments(res.data.data.enrollments);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to load your courses. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEnrollments();
+  }, [fetchEnrollments]);
+
+  return { enrollments, loading, error, refetch: fetchEnrollments };
+};
+
+export default useFetchCourses;

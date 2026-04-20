@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, Briefcase, ArrowRight, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import useAuth from './hooks/useAuth.js';
 
 function LoginPage({ onLogin }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
-  
+  const { login, register } = useAuth();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,6 +16,7 @@ function LoginPage({ onLogin }) {
   });
 
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -50,21 +53,31 @@ function LoginPage({ onLogin }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      // 1. Tell App.jsx we are logged in so it unlocks the routes
-      if (onLogin) onLogin(formData.role.toLowerCase());
+    setApiError('');
+    if (!validateForm()) return;
 
-      // 2. Navigate based on the selected role!
-      if (formData.role === 'Student') {
-        navigate('/student');
-      } else if (formData.role === 'Instructor') {
-        navigate('/instructor'); 
-      } else if (formData.role === 'Admin') {
-        navigate('/dashboard'); 
+    try {
+      let user;
+      if (isSignUp) {
+        user = await register({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role.toLowerCase(),
+        });
+      } else {
+        user = await login(formData.email, formData.password);
       }
+
+      if (onLogin) onLogin(user.role);
+
+      if (user.role === 'student') navigate('/student');
+      else if (user.role === 'instructor') navigate('/instructor');
+      else navigate('/dashboard');
+    } catch (err) {
+      setApiError(err.response?.data?.message || 'Something went wrong. Please try again.');
     }
   };
 
@@ -121,6 +134,7 @@ function LoginPage({ onLogin }) {
               {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
             </div>
 
+            {apiError && <p className="text-red-400 text-sm text-center">{apiError}</p>}
             {/* ---> UPDATED: Darker Button Colors <--- */}
             <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 mt-2">
               Sign Up
@@ -164,6 +178,7 @@ function LoginPage({ onLogin }) {
               {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
             </div>
 
+            {apiError && <p className="text-red-400 text-sm text-center">{apiError}</p>}
             {/* ---> UPDATED: Darker Button Colors <--- */}
             <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5">
               Sign In

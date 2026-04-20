@@ -7,6 +7,8 @@ import AmazonLogo from '../assets/Logos/Amazon.jpeg';
 import MetaLogo from '../assets/Logos/Meta.jpeg';
 import HarvardLogo from '../assets/Logos/Harvard.webp';
 
+// this page holds the the Video, Forum, Quiz, and Certificate.
+
 // --- MOCK DATABASE FOR COURSE DETAILS ---
 const courseDetailData = {
   "cyber-security": {

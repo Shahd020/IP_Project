@@ -1,86 +1,27 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
-import { ArrowRight, Play, CheckCircle } from "lucide-react"; 
-
-import StanfordLogo from '../assets/Logos/Standford.webp';
-import AmazonLogo from '../assets/Logos/Amazon.jpeg';
-import MetaLogo from '../assets/Logos/Meta.jpeg';
-import GoogleLogo from '../assets/Logos/google.jpeg';
-import HarvardLogo from '../assets/Logos/Harvard.webp';
-import AILogo from '../assets/Logos/AI.webp';
+import { Link } from "react-router-dom";
+import { ArrowRight, Play, CheckCircle } from "lucide-react";
+import useFetchCourses from "../hooks/useFetchCourses.js";
 
 function StudentCourses() {
   const [activeTab, setActiveTab] = useState("in-progress");
+  const { enrollments, loading, error } = useFetchCourses();
 
-  const courses = [
-    // --- IN PROGRESS (4 Courses) ---
-    {
-      id: "cyber-security", // <-- ADDED ID
-      title: "Cyber Security & Cryptography",
-      provider: "Stanford University",
-      duration: "10 weeks",
-      rating: "4.7 ⭐",
-      image: StanfordLogo,
-      progressPercent: 70,
-      progressText: "7/10 Weeks",
-      status: "in-progress"
-    },
-    {
-      id: "cloud-computing", // <-- ADDED ID
-      title: "Cloud Computing",
-      provider: "Amazon Web Services",
-      duration: "6 weeks",
-      rating: "4.6 ⭐",
-      image: AmazonLogo,
-      progressPercent: 33,
-      progressText: "2/6 Weeks",
-      status: "in-progress"
-    },
-    {
-      id: "game-dev", // <-- ADDED ID
-      title: "2D Game Dev with Unity",
-      provider: "Harvard University",
-      duration: "8 weeks",
-      rating: "4.9 ⭐",
-      image: HarvardLogo,
-      progressPercent: 45,
-      progressText: "Module 4",
-      status: "in-progress"
-    },
-    {
-      id: "react", // <-- ADDED ID
-      title: "Internet Programming with React",
-      provider: "Meta",
-      duration: "12 weeks",
-      rating: "4.8 ⭐",
-      image: MetaLogo,
-      progressPercent: 85,
-      progressText: "Module 10",
-      status: "in-progress"
-    },
+  // Map API enrollment shape → what the card UI already expects
+  const courses = enrollments.map((e) => ({
+    id: e.course._id,
+    title: e.course.title,
+    provider: e.course.provider,
+    duration: e.course.duration,
+    rating: e.course.rating ? `${e.course.rating} ⭐` : "N/A",
+    image: e.course.thumbnail || null,
+    progressPercent: e.progressPercent,
+    progressText: e.progressText,
+    status: e.status,
+  }));
 
-    // --- COMPLETED (12 Courses) ---
-    { title: "UI/UX Design Fundamentals", provider: "Meta", duration: "5 weeks", rating: "4.8 ⭐", image: MetaLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Software Engineering", provider: "Google", duration: "8 weeks", rating: "4.7 ⭐", image: GoogleLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Object-Oriented Design (OOD)", provider: "Stanford University", duration: "6 weeks", rating: "4.9 ⭐", image: StanfordLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Data Structures & Algorithms", provider: "Harvard University", duration: "10 weeks", rating: "4.6 ⭐", image: HarvardLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Intro to Artificial Intelligence", provider: "MIT", duration: "12 weeks", rating: "4.9 ⭐", image: AILogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Operations Research", provider: "Stanford University", duration: "6 weeks", rating: "4.5 ⭐", image: StanfordLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Java Programming Basics", provider: "Google", duration: "4 weeks", rating: "4.8 ⭐", image: GoogleLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Software Project Management", provider: "Meta", duration: "5 weeks", rating: "4.7 ⭐", image: MetaLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Game Cutscene Design", provider: "Harvard University", duration: "3 weeks", rating: "4.9 ⭐", image: HarvardLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Sprite Sheet Creation", provider: "MIT", duration: "2 weeks", rating: "4.6 ⭐", image: AILogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Operating Systems", provider: "Amazon Web Services", duration: "10 weeks", rating: "4.5 ⭐", image: AmazonLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
-    { title: "Supply Chain Tracking Systems", provider: "Amazon Web Services", duration: "4 weeks", rating: "4.8 ⭐", image: AmazonLogo, progressPercent: 100, progressText: "Finished", status: "completed" },
+  const filteredCourses = courses.filter((course) => course.status === activeTab);
 
-    // --- SAVED / NOT STARTED (3 Courses) ---
-    { title: "Advanced Machine Learning", provider: "MIT", duration: "12 weeks", rating: "4.9 ⭐", image: AILogo, progressPercent: 0, progressText: "Not Started", status: "saved" },
-    { title: "3D Modeling for Games", provider: "Meta", duration: "8 weeks", rating: "4.8 ⭐", image: MetaLogo, progressPercent: 0, progressText: "Not Started", status: "saved" },
-    { title: "Blockchain Architecture", provider: "Stanford University", duration: "6 weeks", rating: "4.7 ⭐", image: StanfordLogo, progressPercent: 0, progressText: "Not Started", status: "saved" }
-  ];
-
-  const filteredCourses = courses.filter(course => course.status === activeTab);
-  
   // Passed courseId into this function to make the link dynamic!
   const renderCardButton = (status, courseId) => {
     if (status === "completed") {
@@ -136,7 +77,18 @@ function StudentCourses() {
         </button>
       </div>
 
+      {/* Loading / Error states */}
+      {loading && (
+        <div className="text-center py-20 text-gray-400 text-lg">Loading your courses...</div>
+      )}
+      {error && (
+        <div className="text-center py-20 bg-red-900/20 rounded-xl border border-red-700">
+          <p className="text-red-400 text-lg">{error}</p>
+        </div>
+      )}
+
       {/* Course Grid */}
+      {!loading && !error && (
       <div className="grid grid-cols-3 gap-8">
         {filteredCourses.map((course, index) => (
           <div
@@ -188,10 +140,12 @@ function StudentCourses() {
         ))}
       </div>
 
-      {filteredCourses.length === 0 && (
-        <div className="text-center py-20 bg-[#1f2937] rounded-xl border border-gray-800">
-          <p className="text-gray-400 text-lg">No courses found in this category.</p>
-        </div>
+        {filteredCourses.length === 0 && (
+          <div className="col-span-3 text-center py-20 bg-[#1f2937] rounded-xl border border-gray-800">
+            <p className="text-gray-400 text-lg">No courses found in this category.</p>
+          </div>
+        )}
+      </div>
       )}
 
     </div>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"c:/Users/Shahd/Desktop/S2/Internet Programming \\(IP\\)/Project Code/server/src/models\")",
+      "Bash(mkdir -p \"c:/Users/Shahd/Desktop/S2/Internet Programming \\(IP\\)/Project Code/server/src/config\")",
+      "Bash(mkdir -p \"c:/Users/Shahd/Desktop/S2/Internet Programming \\(IP\\)/Project Code/server/src/utils\")",
+      "Bash(mkdir -p \"c:/Users/Shahd/Desktop/S2/Internet Programming \\(IP\\)/Project Code/server/src/middleware\")",
+      "Bash(mkdir -p \"c:/Users/Shahd/Desktop/S2/Internet Programming \\(IP\\)/Project Code/server/src/routes\")"
+    ]
+  }
+}
