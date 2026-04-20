@@ -45,7 +45,7 @@ function LoginPage({ onLogin }) {
       newErrors.password = 'Password must be at least 6 characters.';
     }
 
-    if (!formData.role) {
+    if (isSignUp && !formData.role) {
       newErrors.role = 'Please select a role.';
     }
 
@@ -147,7 +147,7 @@ function LoginPage({ onLogin }) {
           <div className="flex justify-center mb-4 text-blue-400"><BookOpen size={48} /></div>
           <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Welcome Back</h2>
           <p className="text-gray-400 text-sm text-center mb-8">Enter your credentials to access your dashboard.</p>
-          
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <div className="relative">
@@ -165,21 +165,7 @@ function LoginPage({ onLogin }) {
               {errors.password && <p className="text-red-400 text-xs mt-1 ml-1">{errors.password}</p>}
             </div>
 
-            <div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Briefcase size={18} /></div>
-                <select name="role" value={formData.role} onChange={handleChange} className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.role ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors appearance-none cursor-pointer`}>
-                  <option value="" disabled>Select destination role</option>
-                  <option value="Student">Student</option>
-                  <option value="Instructor">Instructor</option>
-                  <option value="Admin">Admin</option>
-                </select>
-              </div>
-              {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
-            </div>
-
             {apiError && <p className="text-red-400 text-sm text-center">{apiError}</p>}
-            {/* ---> UPDATED: Darker Button Colors <--- */}
             <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5">
               Sign In
             </button>

@@ -89,63 +89,60 @@ function StudentCourses() {
 
       {/* Course Grid */}
       {!loading && !error && (
-      <div className="grid grid-cols-3 gap-8">
-        {filteredCourses.map((course, index) => (
-          <div
-            key={index}
-            className="bg-[#1f2937] rounded-xl overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 flex flex-col justify-between"
-          >
-            <div className="flex flex-col flex-1">
-              <img src={course.image} alt={course.title} className="w-full h-40 object-cover" />
-              <div className="p-5 flex-1 flex flex-col">
-                <h3 className="text-lg font-semibold mb-1">{course.title}</h3>
-                <p className="text-gray-400 text-sm mb-2">{course.provider}</p>
-                <div className="flex justify-between text-sm text-gray-300 mb-6">
-                  <span>{course.duration}</span>
-                  <span>{course.rating}</span>
-                </div>
-                
-                <div className="mt-auto">
-                  <div className="flex justify-between items-end text-sm mb-2">
-                    <span className="text-gray-400 font-medium">Progress</span>
-                    <div className="text-right">
-                      <span className="text-white font-bold">{course.progressPercent}%</span>
-                      <span className="text-gray-400 text-xs ml-2">({course.progressText})</span>
+        <>
+          <div className="grid grid-cols-3 gap-8">
+            {filteredCourses.map((course, index) => (
+              <div
+                key={index}
+                className="bg-[#1f2937] rounded-xl overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 flex flex-col justify-between"
+              >
+                <div className="flex flex-col flex-1">
+                  <img src={course.image} alt={course.title} className="w-full h-40 object-cover" />
+                  <div className="p-5 flex-1 flex flex-col">
+                    <h3 className="text-lg font-semibold mb-1">{course.title}</h3>
+                    <p className="text-gray-400 text-sm mb-2">{course.provider}</p>
+                    <div className="flex justify-between text-sm text-gray-300 mb-6">
+                      <span>{course.duration}</span>
+                      <span>{course.rating}</span>
+                    </div>
+
+                    <div className="mt-auto">
+                      <div className="flex justify-between items-end text-sm mb-2">
+                        <span className="text-gray-400 font-medium">Progress</span>
+                        <div className="text-right">
+                          <span className="text-white font-bold">{course.progressPercent}%</span>
+                          <span className="text-gray-400 text-xs ml-2">({course.progressText})</span>
+                        </div>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all duration-500 ${
+                            course.status === 'completed' ? 'bg-purple-500' :
+                            course.status === 'saved' ? 'bg-gray-500' : 'bg-blue-500'
+                          }`}
+                          style={{ width: `${course.progressPercent}%` }}
+                        ></div>
+                      </div>
                     </div>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full transition-all duration-500 ${
-                        course.status === 'completed' ? 'bg-purple-500' : 
-                        course.status === 'saved' ? 'bg-gray-500' : 'bg-blue-500'
-                      }`} 
-                      style={{ width: `${course.progressPercent}%` }}
-                    ></div>
-                  </div>
+                </div>
+
+                <div className="border-t border-gray-700 p-5 flex justify-between items-center mt-auto bg-[#1a2332]">
+                  <span className="text-gray-400 font-bold text-sm tracking-widest uppercase">
+                    {course.status === 'saved' ? 'Wishlist' : 'Enrolled In'}
+                  </span>
+                  {renderCardButton(course.status, course.id)}
                 </div>
               </div>
-            </div>
-
-            <div className="border-t border-gray-700 p-5 flex justify-between items-center mt-auto bg-[#1a2332]">
-              <span className="text-gray-400 font-bold text-sm tracking-widest uppercase">
-                {course.status === 'saved' ? 'Wishlist' : 'Enrolled In'}
-              </span>
-              
-              {/* Passed the ID down so it links to the right place */}
-              {renderCardButton(course.status, course.id)}
-
-            </div>
-
+            ))}
           </div>
-        ))}
-      </div>
 
-        {filteredCourses.length === 0 && (
-          <div className="col-span-3 text-center py-20 bg-[#1f2937] rounded-xl border border-gray-800">
-            <p className="text-gray-400 text-lg">No courses found in this category.</p>
-          </div>
-        )}
-      </div>
+          {filteredCourses.length === 0 && (
+            <div className="text-center py-20 bg-[#1f2937] rounded-xl border border-gray-800">
+              <p className="text-gray-400 text-lg">No courses found in this category.</p>
+            </div>
+          )}
+        </>
       )}
 
     </div>
