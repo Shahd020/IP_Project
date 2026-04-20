@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowLeft, PlayCircle, MessageSquare, CheckCircle, Award,
+<<<<<<< HEAD
   BookmarkPlus, Send, Download, Star, AlertCircle, Loader
 } from "lucide-react";
 import { useCourseById } from "../hooks/useFetchCourses";
@@ -16,11 +17,19 @@ const getFirstVideoUrl = (modules = []) => {
   }
   return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 };
+=======
+  BookmarkPlus, Send, Download, Star, AlertCircle
+} from "lucide-react";
+import useCourseStudy from "../hooks/useCourseStudy.js";
+import useSocket from "../hooks/useSocket.js";
+import useAuth from "../hooks/useAuth.js";
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
 function CourseStudy() {
   const { courseId } = useParams();
   const videoRef = useRef(null);
   const { user } = useAuth();
+<<<<<<< HEAD
   const studentName = user?.name ?? "Student";
 
   const { course, loading, error } = useCourseById(courseId);
@@ -32,10 +41,39 @@ function CourseStudy() {
   const moduleTitle     = activeModule?.title ?? "Module 1";
   const videoUrl        = course ? getFirstVideoUrl(course.modules) : '';
   const videoOverview   = activeModule?.description ?? "Follow along with this lesson.";
+=======
+  const studentName = user?.name || "Student";
+
+  const {
+    course,
+    currentModule,
+    quiz: quizData,
+    forumPosts: initialPosts,
+    setForumPosts,
+    loading,
+    error,
+    submitQuiz: submitQuizApi,
+  } = useCourseStudy(courseId);
+
+  const { socket } = useSocket(courseId);
+
+  // Adapt API data shape to what the rest of the component already uses
+  const courseDisplay = course
+    ? {
+        id: courseId,
+        title: course.title,
+        instructor: course.instructor?.name || "Instructor",
+        moduleTitle: currentModule?.title || "Loading module...",
+        videoUrl: currentModule?.videoUrl || "",
+        videoOverview: currentModule?.videoOverview || "",
+      }
+    : null;
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
   // Layout State
   const [activeTab, setActiveTab] = useState("video");
 
+<<<<<<< HEAD
   // Reset tab when course changes
   useEffect(() => {
     setActiveTab("video");
@@ -49,11 +87,35 @@ function CourseStudy() {
   const [bookmarks, setBookmarks] = useState(() => {
     const saved = localStorage.getItem(`bookmarks_${courseId}`);
     return saved ? JSON.parse(saved) : [];
+=======
+  // Reset UI state when the module changes
+  useEffect(() => {
+    setActiveTab("video");
+    setQuizSubmitted(false);
+    setQuizScore(0);
+    setSelectedAnswers({});
+  }, [currentModule?._id]);
+
+  // Seed forum posts from API on load; Socket.io appends live messages below
+  useEffect(() => {
+    if (initialPosts) setForumPosts(initialPosts);
+  }, [initialPosts, setForumPosts]);
+
+  // 1. VIDEO & BOOKMARKS LOGIC (With Local Storage!)
+  const [bookmarks, setBookmarks] = useState(() => {
+    const savedBookmarks = localStorage.getItem(`bookmarks_${courseId}`);
+    if (savedBookmarks) return JSON.parse(savedBookmarks);
+    return [];
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
   });
   const [newBookmarkText, setNewBookmarkText] = useState("");
 
   useEffect(() => {
+<<<<<<< HEAD
     if (courseId) localStorage.setItem(`bookmarks_${courseId}`, JSON.stringify(bookmarks));
+=======
+    localStorage.setItem(`bookmarks_${courseId}`, JSON.stringify(bookmarks));
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
   }, [bookmarks, courseId]);
 
   const handleAddBookmark = (e) => {
@@ -77,14 +139,51 @@ function CourseStudy() {
     return `${m}:${s}`;
   };
 
+<<<<<<< HEAD
   // 2. FORUM LOGIC (in-memory; Socket.io integration pending)
   const [forumPosts, setForumPosts] = useState([]);
+=======
+  // 2. FORUM LOGIC
+  const [forumPosts, setForumPostsLocal] = useState([]);
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
   const [newPostText, setNewPostText] = useState("");
+
+  // Keep local forum state in sync with hook state
+  useEffect(() => {
+    setForumPostsLocal(initialPosts || []);
+  }, [initialPosts]);
+
+  // Listen for real-time messages from Socket.io
+  useEffect(() => {
+    if (!socket) return;
+    const handler = ({ post }) => {
+      setForumPostsLocal((prev) => {
+        // Deduplicate in case REST and socket deliver the same message
+        if (prev.some((p) => p._id === post._id)) return prev;
+        return [post, ...prev];
+      });
+    };
+    socket.on("new_message", handler);
+    return () => socket.off("new_message", handler);
+  }, [socket]);
 
   const handleAddPost = (e) => {
     e.preventDefault();
     if (!newPostText.trim()) return;
-    setForumPosts([...forumPosts, { id: Date.now(), user: studentName, avatar: "bg-blue-600", text: newPostText, time: "Just now" }]);
+    if (socket?.connected) {
+      // Real-time path: server will broadcast back via new_message
+      socket.emit("send_message", {
+        courseId,
+        moduleId: currentModule?._id,
+        text: newPostText,
+      });
+    } else {
+      // Fallback: optimistic local append (REST path handled by hook)
+      setForumPostsLocal((prev) => [
+        { _id: Date.now(), author: { name: studentName }, text: newPostText, createdAt: new Date().toISOString() },
+        ...prev,
+      ]);
+    }
     setNewPostText("");
   };
 
@@ -99,11 +198,14 @@ function CourseStudy() {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
 
+  const questions = quizData?.questions || [];
+
   const handleAnswerSelect = (qIndex, oIndex) => {
     if (quizSubmitted) return;
     setSelectedAnswers({ ...selectedAnswers, [qIndex]: oIndex });
   };
 
+<<<<<<< HEAD
   const submitQuiz = () => {
     let score = 0;
     demoQuiz.forEach((q, index) => {
@@ -125,6 +227,36 @@ function CourseStudy() {
       <AlertCircle size={20} /> {error}
     </div>
   );
+=======
+  const submitQuiz = async () => {
+    // Build answer map: { questionId: selectedOptionIndex }
+    const answers = {};
+    questions.forEach((q, i) => {
+      if (selectedAnswers[i] !== undefined) answers[q._id] = selectedAnswers[i];
+    });
+    try {
+      const result = await submitQuizApi(answers);
+      setQuizScore(result.score);
+      setQuizSubmitted(true);
+      if (result.passed) setTimeout(() => setActiveTab("certificate"), 1500);
+    } catch {
+      // Fallback: grade client-side using correctAnswer if server returns it
+      setQuizSubmitted(true);
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center py-20 text-gray-400 text-lg">Loading course...</div>;
+  }
+  if (error) {
+    return (
+      <div className="text-center py-20 bg-red-900/20 rounded-xl border border-red-700">
+        <p className="text-red-400 text-lg">{error}</p>
+      </div>
+    );
+  }
+  if (!courseDisplay) return null;
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
   return (
     <div className="max-w-6xl mx-auto pb-12">
@@ -135,13 +267,21 @@ function CourseStudy() {
             <ArrowLeft size={16} /> Back to Courses
           </Link>
           <span>/</span>
+<<<<<<< HEAD
           <span className="text-gray-200">{courseTitle}</span>
+=======
+          <span className="text-gray-200">{courseDisplay.title}</span>
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
           <span>/</span>
           <span className="text-blue-400">Study Room</span>
         </div>
       </div>
 
+<<<<<<< HEAD
       <h1 className="text-3xl font-bold text-white mb-6">{moduleTitle}</h1>
+=======
+      <h1 className="text-3xl font-bold text-white mb-6">{courseDisplay.moduleTitle}</h1>
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
       <div className="flex gap-4 mb-8 border-b border-gray-700 overflow-x-auto">
         <button onClick={() => setActiveTab("video")} className={`pb-3 font-semibold text-sm transition-colors border-b-2 whitespace-nowrap flex items-center gap-2 ${activeTab === "video" ? "border-blue-500 text-blue-400" : "border-transparent text-gray-400 hover:text-gray-200"}`}>
@@ -162,18 +302,31 @@ function CourseStudy() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-black rounded-xl overflow-hidden shadow-xl border border-gray-800">
+<<<<<<< HEAD
               <video
                 key={courseId}
+=======
+              <video 
+                key={courseDisplay.id}
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
                 ref={videoRef}
                 controls
                 className="w-full aspect-video outline-none"
+<<<<<<< HEAD
                 src={videoUrl}
+=======
+                src={courseDisplay.videoUrl} 
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
                 poster="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=1080&auto=format&fit=crop"
               />
             </div>
             <div className="bg-[#1f2937] p-6 rounded-xl border border-gray-800">
               <h2 className="text-xl font-bold text-white mb-2">Lesson Overview</h2>
+<<<<<<< HEAD
               <p className="text-gray-400 text-sm">{videoOverview}</p>
+=======
+              <p className="text-gray-400 text-sm">{courseDisplay.videoOverview}</p>
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
             </div>
           </div>
 
@@ -221,20 +374,24 @@ function CourseStudy() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-[#1f2937] p-6 rounded-xl shadow-xl border border-gray-800 flex flex-col h-[600px]">
             <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-700">
+<<<<<<< HEAD
               <h2 className="text-xl font-bold text-white">Discussion: {courseTitle}</h2>
+=======
+              <h2 className="text-xl font-bold text-white">Discussion: {courseDisplay.title}</h2>
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
               <span className="text-sm text-gray-400">{forumPosts.length} posts</span>
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-6 mb-6 pr-2">
-              {forumPosts.map(post => (
+              {forumPostsLocal.map(post => (
                 <div key={post.id} className="flex gap-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 ${post.avatar}`}>
-                    {post.user.charAt(0)}
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 ${post.author?._id ? "bg-blue-600" : "bg-gray-600"}`}>
+                    {post.author?.name || "User".charAt(0)}
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-gray-200">{post.user}</span>
-                      <span className="text-xs text-gray-500">{post.time}</span>
+                      <span className="font-bold text-gray-200">{post.author?.name || "User"}</span>
+                      <span className="text-xs text-gray-500">{new Date(post.createdAt).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}</span>
                     </div>
                     <p className="text-gray-300 text-sm bg-[#0f172a] p-4 rounded-xl rounded-tl-none border border-gray-700 inline-block">
                       {post.text}
@@ -267,7 +424,11 @@ function CourseStudy() {
             <p className="text-gray-400 mb-8 border-b border-gray-700 pb-6">Pass with 100% to unlock your certificate.</p>
 
             <div className="space-y-8">
+<<<<<<< HEAD
               {demoQuiz.map((q, qIndex) => (
+=======
+              {(questions)((q, qIndex) => (
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
                 <div key={qIndex} className="bg-[#0f172a] p-6 rounded-xl border border-gray-700">
                   <h3 className="text-lg font-semibold text-gray-200 mb-4">
                     <span className="text-blue-500 mr-2">Q{qIndex + 1}.</span> {q.question}
@@ -300,11 +461,19 @@ function CourseStudy() {
             </div>
 
             {quizSubmitted ? (
+<<<<<<< HEAD
               <div className={`mt-8 p-6 rounded-xl border text-center ${quizScore === demoQuiz.length ? 'bg-green-900/20 border-green-500' : 'bg-red-900/20 border-red-500'}`}>
                 <h3 className={`text-2xl font-bold mb-2 ${quizScore === demoQuiz.length ? 'text-green-400' : 'text-red-400'}`}>
                   You scored {quizScore} out of {demoQuiz.length}!
                 </h3>
                 {quizScore === demoQuiz.length ? (
+=======
+              <div className={`mt-8 p-6 rounded-xl border text-center ${quizScore === questions.length ? 'bg-green-900/20 border-green-500' : 'bg-red-900/20 border-red-500'}`}>
+                <h3 className={`text-2xl font-bold mb-2 ${quizScore === questions.length ? 'text-green-400' : 'text-red-400'}`}>
+                  You scored {quizScore} out of {questions.length}!
+                </h3>
+                {quizScore === questions.length ? (
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
                   <p className="text-gray-300">Perfect! Your certificate is now unlocked.</p>
                 ) : (
                   <button onClick={() => { setQuizSubmitted(false); setSelectedAnswers({}); }} className="mt-4 bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-semibold">
@@ -315,9 +484,15 @@ function CourseStudy() {
             ) : (
               <button
                 onClick={submitQuiz}
+<<<<<<< HEAD
                 disabled={Object.keys(selectedAnswers).length < demoQuiz.length}
                 className={`mt-8 w-full py-4 rounded-xl font-bold text-lg transition-colors shadow-lg ${
                   Object.keys(selectedAnswers).length === demoQuiz.length ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+=======
+                disabled={Object.keys(selectedAnswers).length < questions.length}
+                className={`mt-8 w-full py-4 rounded-xl font-bold text-lg transition-colors shadow-lg ${
+                  Object.keys(selectedAnswers).length === questions.length ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
                 }`}
               >
                 Submit Answers
@@ -329,7 +504,11 @@ function CourseStudy() {
 
       {activeTab === "certificate" && (
         <div className="max-w-4xl mx-auto">
+<<<<<<< HEAD
           {quizScore === demoQuiz.length ? (
+=======
+          {quizScore === questions.length ? (
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
             <div className="flex flex-col items-center">
               
               <div id="certificate" className="bg-[#f8f9fa] w-full aspect-[1.414/1] relative p-10 shadow-2xl overflow-hidden rounded-sm flex items-center justify-center text-center">
@@ -352,12 +531,20 @@ function CourseStudy() {
                   <p className="text-gray-600 italic mb-4 text-lg">has successfully completed the course</p>
                   
                   <h3 className="text-3xl text-[#1e3a8a] font-semibold mb-12">
+<<<<<<< HEAD
                     {courseTitle}
+=======
+                    {courseDisplay.title}
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
                   </h3>
 
                   <div className="flex justify-between w-3/4 mt-8 border-t border-gray-400 pt-4">
                     <div>
+<<<<<<< HEAD
                       <p className="text-black font-bold">{instructorName}</p>
+=======
+                      <p className="text-black font-bold">{courseDisplay.instructor}</p>
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
                       <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">Lead Instructor</p>
                     </div>
                     <div>

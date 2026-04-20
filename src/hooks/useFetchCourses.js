@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // src/hooks/useFetchCourses.js
 // Fetches the public course catalog with optional filters.
 // Replaces the hardcoded catalogData object in CourseCatalog.jsx
@@ -80,6 +81,44 @@ export const useCourseById = (courseId) => {
   }, [courseId]);
 
   return { course, loading, error };
+=======
+import { useState, useEffect, useCallback } from 'react';
+import apiClient from '../api/axios.js';
+
+/**
+ * Fetches all of the authenticated student's enrollments in one request
+ * and returns them grouped — no extra requests on tab switch.
+ *
+ * Returned enrollment shape (already matches the StudentCourses UI):
+ *   { _id, status, progressPercent, progressText,
+ *     course: { _id, title, provider, duration, rating, thumbnail } }
+ *
+ * @returns {{ enrollments: object[], loading: boolean, error: string|null, refetch: Function }}
+ */
+const useFetchCourses = () => {
+  const [enrollments, setEnrollments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchEnrollments = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiClient.get('/enrollments/my');
+      setEnrollments(res.data.data.enrollments);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to load your courses. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEnrollments();
+  }, [fetchEnrollments]);
+
+  return { enrollments, loading, error, refetch: fetchEnrollments };
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 };
 
 export default useFetchCourses;

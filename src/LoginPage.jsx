@@ -1,19 +1,38 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, Briefcase, ArrowRight, BookOpen, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import useAuth from './hooks/useAuth';
 
 // Role map: API returns lowercase, navigation needs a path
 const ROLE_PATHS = { student: '/student', instructor: '/instructor', admin: '/dashboard' };
+=======
+import useAuth from './hooks/useAuth.js';
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
 function LoginPage({ onLogin }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
+<<<<<<< HEAD
   const { login, register, authLoading, authError } = useAuth();
+=======
+  const { login, register } = useAuth();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: ''
+  });
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '' });
   const [errors, setErrors] = useState({});
+<<<<<<< HEAD
   const [serverError, setServerError] = useState('');
+=======
+  const [apiError, setApiError] = useState('');
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,16 +53,30 @@ function LoginPage({ onLogin }) {
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters.';
     }
+<<<<<<< HEAD
     if (!formData.role) newErrors.role = 'Please select a role.';
+=======
+
+    if (isSignUp && !formData.role) {
+      newErrors.role = 'Please select a role.';
+    }
+
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     if (!validateForm()) return;
 
     setServerError('');
+=======
+    setApiError('');
+    if (!validateForm()) return;
+
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
     try {
       let user;
       if (isSignUp) {
@@ -54,6 +87,7 @@ function LoginPage({ onLogin }) {
           role: formData.role.toLowerCase(),
         });
       } else {
+<<<<<<< HEAD
         user = await login({ email: formData.email, password: formData.password });
       }
 
@@ -63,6 +97,18 @@ function LoginPage({ onLogin }) {
       navigate(ROLE_PATHS[user.role] ?? '/');
     } catch (err) {
       setServerError(err.message || 'Something went wrong. Please try again.');
+=======
+        user = await login(formData.email, formData.password);
+      }
+
+      if (onLogin) onLogin(user.role);
+
+      if (user.role === 'student') navigate('/student');
+      else if (user.role === 'instructor') navigate('/instructor');
+      else navigate('/dashboard');
+    } catch (err) {
+      setApiError(err.response?.data?.message || 'Something went wrong. Please try again.');
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
     }
   };
 
@@ -122,12 +168,20 @@ function LoginPage({ onLogin }) {
               </div>
               {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
             </div>
+<<<<<<< HEAD
             <button
               type="submit"
               disabled={authLoading}
               className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 disabled:opacity-50 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 mt-2 flex items-center justify-center gap-2"
             >
               {authLoading ? <><Loader size={18} className="animate-spin" /> Creating account…</> : 'Sign Up'}
+=======
+
+            {apiError && <p className="text-red-400 text-sm text-center">{apiError}</p>}
+            {/* ---> UPDATED: Darker Button Colors <--- */}
+            <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 mt-2">
+              Sign Up
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
             </button>
           </form>
         </div>
@@ -136,6 +190,7 @@ function LoginPage({ onLogin }) {
         <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-0 z-10 pointer-events-none' : 'opacity-100 z-50'}`}>
           <div className="flex justify-center mb-4 text-blue-400"><BookOpen size={48} /></div>
           <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Welcome Back</h2>
+<<<<<<< HEAD
           <p className="text-gray-400 text-sm text-center mb-6">Enter your credentials to access your dashboard.</p>
 
           {(serverError || authError) && (
@@ -143,6 +198,9 @@ function LoginPage({ onLogin }) {
               {serverError || authError}
             </div>
           )}
+=======
+          <p className="text-gray-400 text-sm text-center mb-8">Enter your credentials to access your dashboard.</p>
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
@@ -159,6 +217,7 @@ function LoginPage({ onLogin }) {
               </div>
               {errors.password && <p className="text-red-400 text-xs mt-1 ml-1">{errors.password}</p>}
             </div>
+<<<<<<< HEAD
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Briefcase size={18} /></div>
@@ -177,6 +236,12 @@ function LoginPage({ onLogin }) {
               className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 disabled:opacity-50 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
             >
               {authLoading ? <><Loader size={18} className="animate-spin" /> Signing in…</> : 'Sign In'}
+=======
+
+            {apiError && <p className="text-red-400 text-sm text-center">{apiError}</p>}
+            <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5">
+              Sign In
+>>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
             </button>
           </form>
         </div>
