@@ -15,6 +15,7 @@ const errorHandler = require('./middleware/errorHandler');
 // ── Route imports ────────────────────────────────────────────────────────────
 const authRoutes = require('./routes/auth');
 const courseRoutes = require('./routes/courses');
+const moduleRoutes = require('./routes/modules');
 const enrollmentRoutes = require('./routes/enrollments');
 const userRoutes = require('./routes/users');
 const quizRoutes = require('./routes/quiz');
@@ -46,6 +47,7 @@ if (process.env.NODE_ENV === 'development') {
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/auth', authLimiter, authRoutes);   // stricter limit on auth
 app.use('/api/courses', courseRoutes);
+app.use('/api/courses/:courseId/modules', moduleRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/quiz', quizRoutes);

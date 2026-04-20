@@ -1,115 +1,60 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { 
-  ArrowLeft, PlayCircle, MessageSquare, CheckCircle, Award, 
-  BookmarkPlus, Send, Download, Star, AlertCircle 
+import {
+  ArrowLeft, PlayCircle, MessageSquare, CheckCircle, Award,
+  BookmarkPlus, Send, Download, Star, AlertCircle, Loader
 } from "lucide-react";
+import { useCourseById } from "../hooks/useFetchCourses";
+import useAuth from "../hooks/useAuth";
 
-// =========================================================================
-// MOCK DATABASE: Tailored content for your specific courses!
-// =========================================================================
-const courseStudyData = {
-  "cyber-security": {
-    id: "cyber-security",
-    title: "Cyber Security & Cryptography",
-    instructor: "Prof. Dan Boneh",
-    moduleTitle: "Module 3: Public Key Infrastructure",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    videoOverview: "In this lesson, we explore RSA encryption, digital signatures, and how Public Key Infrastructure (PKI) secures modern web traffic.",
-    forumPosts: [
-      { id: 1, user: "Mike T.", avatar: "bg-red-500", text: "Why do we need both public and private keys?", time: "3 hours ago" },
-      { id: 2, user: "Elena R.", avatar: "bg-green-500", text: "Public keys encrypt data that only the private key can decrypt. It's brilliant!", time: "30 mins ago" }
-    ],
-    quiz: [
-      { question: "Which of the following is an asymmetric encryption algorithm?", options: ["AES", "DES", "RSA", "Blowfish"], correctAnswer: 2 },
-      { question: "What is the primary purpose of a digital signature?", options: ["Speeding up downloads", "Non-repudiation and authentication", "Compressing files", "Hiding the sender's IP"], correctAnswer: 1 },
-      { question: "In PKI, what entity issues digital certificates?", options: ["The government", "Certificate Authority (CA)", "The web browser", "The ISP"], correctAnswer: 1 }
-    ]
-  },
-  "cloud-computing": {
-    id: "cloud-computing",
-    title: "Cloud Computing",
-    instructor: "Jeff Barr",
-    moduleTitle: "Week 2: Compute & Networking",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-    videoOverview: "This module covers Amazon EC2 provisioning, VPC configurations, and setting up secure subnets for your cloud infrastructure.",
-    forumPosts: [
-      { id: 1, user: "Sam W.", avatar: "bg-blue-500", text: "Should I place my database in a public or private subnet?", time: "5 hours ago" },
-      { id: 2, user: "Lisa M.", avatar: "bg-orange-500", text: "Always private! Use a NAT Gateway if it needs outbound internet access.", time: "1 hour ago" }
-    ],
-    quiz: [
-      { question: "Which AWS service provides virtual servers in the cloud?", options: ["Amazon S3", "Amazon EC2", "Amazon RDS", "AWS Lambda"], correctAnswer: 1 },
-      { question: "What is a VPC?", options: ["Virtual Private Cloud", "Video Processing Cluster", "Variable Power Control", "Virtual Physical Computer"], correctAnswer: 0 },
-      { question: "Which routing component connects a VPC to the internet?", options: ["NAT Gateway", "Route 53", "Internet Gateway (IGW)", "Elastic IP"], correctAnswer: 2 }
-    ]
-  },
-  "game-dev": {
-    id: "game-dev",
-    title: "2D Game Dev with Unity",
-    instructor: "Dr. Alan Turing",
-    moduleTitle: "Module 4: Character Physics & Animation",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    videoOverview: "In this lesson, we will implement Rigidbody2D to give Kael realistic gravity. Make sure you have your Unity Editor open and follow along carefully with the collision settings.",
-    forumPosts: [
-      { id: 1, user: "Alex J.", avatar: "bg-indigo-500", text: "Does anyone know why my sprite is tearing when moving the camera?", time: "2 hours ago" },
-      { id: 2, user: "Sarah M.", avatar: "bg-purple-500", text: "Alex, make sure you set the camera to Pixel Perfect in the package manager!", time: "1 hour ago" }
-    ],
-    quiz: [
-      { question: "Which component is strictly required to apply gravity to your 2D character?", options: ["BoxCollider2D", "Rigidbody2D", "Transform", "SpriteRenderer"], correctAnswer: 1 },
-      { question: "In Unity C#, which method is called exactly once per frame?", options: ["Start()", "Awake()", "FixedUpdate()", "Update()"], correctAnswer: 3 },
-      { question: "What is the best way to transition a character from 'Idle' to 'Running'?", options: ["Destroy the object", "Change the image manually in code", "Use an Animator Controller with parameters", "Write a Coroutine"], correctAnswer: 2 }
-    ]
-  },
-  "react": {
-    id: "react",
-    title: "Internet Programming with React",
-    instructor: "Mark Zuckerberg",
-    moduleTitle: "Module 10: Routing & Auth",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-    videoOverview: "Learn how to secure your React applications using React Router DOM, protected routes, and authentication contexts.",
-    forumPosts: [
-      { id: 1, user: "Chris L.", avatar: "bg-cyan-500", text: "How do I redirect a user if they aren't logged in?", time: "4 hours ago" },
-      { id: 2, user: "Taylor P.", avatar: "bg-pink-500", text: "Use the <Navigate /> component from react-router-dom inside your protected route wrapper!", time: "2 hours ago" }
-    ],
-    quiz: [
-      { question: "Which hook is used to access URL parameters in React Router?", options: ["useLocation", "useHistory", "useParams", "useUrl"], correctAnswer: 2 },
-      { question: "How do you prevent a full page reload when navigating in a React app?", options: ["Use the <a> tag", "Use window.location", "Use the <Link> component", "Use a <form>"], correctAnswer: 2 },
-      { question: "Which concept allows you to share user authentication state across your entire app?", options: ["Props drilling", "React Context", "Local Storage only", "useEffect"], correctAnswer: 1 }
-    ]
+// Extracts the first video URL from a populated course's modules
+const getFirstVideoUrl = (modules = []) => {
+  for (const mod of modules) {
+    for (const item of (mod.content ?? [])) {
+      if (item.type === 'video' && item.url) return item.url;
+    }
   }
+  return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 };
 
 function CourseStudy() {
-  const { courseId } = useParams(); // Grabs the ID from the URL!
+  const { courseId } = useParams();
   const videoRef = useRef(null);
+  const { user } = useAuth();
+  const studentName = user?.name ?? "Student";
 
-  // Fallback to game-dev if the URL ID doesn't match our database
-  const course = courseStudyData[courseId] || courseStudyData["game-dev"];
-  const studentName = "Student Name"; // In a real app, this would come from user authentication data
+  const { course, loading, error } = useCourseById(courseId);
+
+  // Derived from API course data
+  const courseTitle     = course?.title     ?? "Loading…";
+  const instructorName  = course?.instructor?.name ?? "Instructor";
+  const activeModule    = course?.modules?.[0];
+  const moduleTitle     = activeModule?.title ?? "Module 1";
+  const videoUrl        = course ? getFirstVideoUrl(course.modules) : '';
+  const videoOverview   = activeModule?.description ?? "Follow along with this lesson.";
 
   // Layout State
-  const [activeTab, setActiveTab] = useState("video"); 
+  const [activeTab, setActiveTab] = useState("video");
 
-  // Reset states if the user switches courses
+  // Reset tab when course changes
   useEffect(() => {
     setActiveTab("video");
-    setForumPosts(course.forumPosts);
+    setForumPosts([]);
     setQuizSubmitted(false);
     setQuizScore(0);
     setSelectedAnswers({});
-  }, [course.id, course.forumPosts]);
+  }, [courseId]);
 
   // 1. VIDEO & BOOKMARKS LOGIC (With Local Storage!)
   const [bookmarks, setBookmarks] = useState(() => {
-    const savedBookmarks = localStorage.getItem(`bookmarks_${course.id}`);
-    if (savedBookmarks) return JSON.parse(savedBookmarks);
-    return [];
+    const saved = localStorage.getItem(`bookmarks_${courseId}`);
+    return saved ? JSON.parse(saved) : [];
   });
   const [newBookmarkText, setNewBookmarkText] = useState("");
 
   useEffect(() => {
-    localStorage.setItem(`bookmarks_${course.id}`, JSON.stringify(bookmarks));
-  }, [bookmarks, course.id]);
+    if (courseId) localStorage.setItem(`bookmarks_${courseId}`, JSON.stringify(bookmarks));
+  }, [bookmarks, courseId]);
 
   const handleAddBookmark = (e) => {
     e.preventDefault();
@@ -132,8 +77,8 @@ function CourseStudy() {
     return `${m}:${s}`;
   };
 
-  // 2. FORUM LOGIC
-  const [forumPosts, setForumPosts] = useState(course.forumPosts);
+  // 2. FORUM LOGIC (in-memory; Socket.io integration pending)
+  const [forumPosts, setForumPosts] = useState([]);
   const [newPostText, setNewPostText] = useState("");
 
   const handleAddPost = (e) => {
@@ -143,7 +88,13 @@ function CourseStudy() {
     setNewPostText("");
   };
 
-  // 3. QUIZ LOGIC
+  // 3. QUIZ LOGIC (static fallback — backend quiz API integration pending)
+  const demoQuiz = [
+    { question: "What is a key benefit of component-based architecture?", options: ["Faster compile times", "Reusability and separation of concerns", "Smaller bundle size", "Auto-routing"], correctAnswer: 1 },
+    { question: "Which hook runs code after every render by default?", options: ["useState", "useMemo", "useEffect", "useRef"], correctAnswer: 2 },
+    { question: "What does the 'key' prop help React do?", options: ["Style elements", "Track list item identity during reconciliation", "Pass data to children", "Memoize components"], correctAnswer: 1 },
+  ];
+
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
@@ -155,34 +106,42 @@ function CourseStudy() {
 
   const submitQuiz = () => {
     let score = 0;
-    course.quiz.forEach((q, index) => {
+    demoQuiz.forEach((q, index) => {
       if (selectedAnswers[index] === q.correctAnswer) score += 1;
     });
     setQuizScore(score);
     setQuizSubmitted(true);
-    
-    if (score === course.quiz.length) {
-      setTimeout(() => setActiveTab("certificate"), 1500);
-    }
+    if (score === demoQuiz.length) setTimeout(() => setActiveTab("certificate"), 1500);
   };
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-32 gap-3 text-gray-400">
+      <Loader size={28} className="animate-spin" /> Loading course…
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex items-center gap-3 py-6 px-4 bg-red-900/30 border border-red-700 rounded-xl text-red-300 max-w-2xl mt-12">
+      <AlertCircle size={20} /> {error}
+    </div>
+  );
 
   return (
     <div className="max-w-6xl mx-auto pb-12">
-      
+
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm font-medium text-gray-400">
           <Link to="/student/courses" className="hover:text-blue-400 flex items-center gap-1 transition-colors">
-            <ArrowLeft size={16} />
-            Back to Courses
+            <ArrowLeft size={16} /> Back to Courses
           </Link>
           <span>/</span>
-          <span className="text-gray-200">{course.title}</span>
+          <span className="text-gray-200">{courseTitle}</span>
           <span>/</span>
           <span className="text-blue-400">Study Room</span>
         </div>
       </div>
 
-      <h1 className="text-3xl font-bold text-white mb-6">{course.moduleTitle}</h1>
+      <h1 className="text-3xl font-bold text-white mb-6">{moduleTitle}</h1>
 
       <div className="flex gap-4 mb-8 border-b border-gray-700 overflow-x-auto">
         <button onClick={() => setActiveTab("video")} className={`pb-3 font-semibold text-sm transition-colors border-b-2 whitespace-nowrap flex items-center gap-2 ${activeTab === "video" ? "border-blue-500 text-blue-400" : "border-transparent text-gray-400 hover:text-gray-200"}`}>
@@ -203,18 +162,18 @@ function CourseStudy() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-black rounded-xl overflow-hidden shadow-xl border border-gray-800">
-              <video 
-                key={course.id}
+              <video
+                key={courseId}
                 ref={videoRef}
-                controls 
+                controls
                 className="w-full aspect-video outline-none"
-                src={course.videoUrl} 
+                src={videoUrl}
                 poster="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=1080&auto=format&fit=crop"
               />
             </div>
             <div className="bg-[#1f2937] p-6 rounded-xl border border-gray-800">
               <h2 className="text-xl font-bold text-white mb-2">Lesson Overview</h2>
-              <p className="text-gray-400 text-sm">{course.videoOverview}</p>
+              <p className="text-gray-400 text-sm">{videoOverview}</p>
             </div>
           </div>
 
@@ -262,7 +221,7 @@ function CourseStudy() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-[#1f2937] p-6 rounded-xl shadow-xl border border-gray-800 flex flex-col h-[600px]">
             <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-700">
-              <h2 className="text-xl font-bold text-white">Discussion: {course.title}</h2>
+              <h2 className="text-xl font-bold text-white">Discussion: {courseTitle}</h2>
               <span className="text-sm text-gray-400">{forumPosts.length} posts</span>
             </div>
 
@@ -308,7 +267,7 @@ function CourseStudy() {
             <p className="text-gray-400 mb-8 border-b border-gray-700 pb-6">Pass with 100% to unlock your certificate.</p>
 
             <div className="space-y-8">
-              {course.quiz.map((q, qIndex) => (
+              {demoQuiz.map((q, qIndex) => (
                 <div key={qIndex} className="bg-[#0f172a] p-6 rounded-xl border border-gray-700">
                   <h3 className="text-lg font-semibold text-gray-200 mb-4">
                     <span className="text-blue-500 mr-2">Q{qIndex + 1}.</span> {q.question}
@@ -341,11 +300,11 @@ function CourseStudy() {
             </div>
 
             {quizSubmitted ? (
-              <div className={`mt-8 p-6 rounded-xl border text-center ${quizScore === course.quiz.length ? 'bg-green-900/20 border-green-500' : 'bg-red-900/20 border-red-500'}`}>
-                <h3 className={`text-2xl font-bold mb-2 ${quizScore === course.quiz.length ? 'text-green-400' : 'text-red-400'}`}>
-                  You scored {quizScore} out of {course.quiz.length}!
+              <div className={`mt-8 p-6 rounded-xl border text-center ${quizScore === demoQuiz.length ? 'bg-green-900/20 border-green-500' : 'bg-red-900/20 border-red-500'}`}>
+                <h3 className={`text-2xl font-bold mb-2 ${quizScore === demoQuiz.length ? 'text-green-400' : 'text-red-400'}`}>
+                  You scored {quizScore} out of {demoQuiz.length}!
                 </h3>
-                {quizScore === course.quiz.length ? (
+                {quizScore === demoQuiz.length ? (
                   <p className="text-gray-300">Perfect! Your certificate is now unlocked.</p>
                 ) : (
                   <button onClick={() => { setQuizSubmitted(false); setSelectedAnswers({}); }} className="mt-4 bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-semibold">
@@ -354,11 +313,11 @@ function CourseStudy() {
                 )}
               </div>
             ) : (
-              <button 
+              <button
                 onClick={submitQuiz}
-                disabled={Object.keys(selectedAnswers).length < course.quiz.length}
+                disabled={Object.keys(selectedAnswers).length < demoQuiz.length}
                 className={`mt-8 w-full py-4 rounded-xl font-bold text-lg transition-colors shadow-lg ${
-                  Object.keys(selectedAnswers).length === course.quiz.length ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                  Object.keys(selectedAnswers).length === demoQuiz.length ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                 }`}
               >
                 Submit Answers
@@ -370,7 +329,7 @@ function CourseStudy() {
 
       {activeTab === "certificate" && (
         <div className="max-w-4xl mx-auto">
-          {quizScore === course.quiz.length ? (
+          {quizScore === demoQuiz.length ? (
             <div className="flex flex-col items-center">
               
               <div id="certificate" className="bg-[#f8f9fa] w-full aspect-[1.414/1] relative p-10 shadow-2xl overflow-hidden rounded-sm flex items-center justify-center text-center">
@@ -393,12 +352,12 @@ function CourseStudy() {
                   <p className="text-gray-600 italic mb-4 text-lg">has successfully completed the course</p>
                   
                   <h3 className="text-3xl text-[#1e3a8a] font-semibold mb-12">
-                    {course.title}
+                    {courseTitle}
                   </h3>
-                  
+
                   <div className="flex justify-between w-3/4 mt-8 border-t border-gray-400 pt-4">
                     <div>
-                      <p className="text-black font-bold">{course.instructor}</p>
+                      <p className="text-black font-bold">{instructorName}</p>
                       <p className="text-gray-500 text-xs uppercase tracking-wider mt-1">Lead Instructor</p>
                     </div>
                     <div>
