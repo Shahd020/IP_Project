@@ -1,3 +1,62 @@
+<<<<<<< HEAD
+﻿import mongoose from 'mongoose';
+import { Sentry } from '../config/sentry.js';
+import ApiError from '../utils/ApiError.js';
+=======
+
+// src/middleware/errorHandler.js
+// Global error-handling middleware — must have exactly 4 parameters (err, req, res, next)
+// so Express recognises it as an error handler and not a regular middleware.
+>>>>>>> e924226 (phase 2 lilly testing)
+
+/**
+ * Normalises known Mongoose/driver errors into ApiError instances so
+ * the response formatter below has a consistent shape to work with.
+ *
+ * @param {Error} err
+ * @returns {ApiError}
+ */
+const normaliseError = (err) => {
+  // Mongoose CastError â€” invalid ObjectId in a URL param (e.g. /courses/abc)
+  if (err instanceof mongoose.Error.CastError) {
+    return ApiError.badRequest(`Invalid value for field: ${err.path}`);
+  }
+
+  // Mongoose ValidationError â€” schema-level validation failed
+  if (err instanceof mongoose.Error.ValidationError) {
+    const messages = Object.values(err.errors)
+      .map((e) => e.message)
+      .join(', ');
+    return ApiError.badRequest(messages);
+  }
+
+  // MongoDB duplicate key (E11000) â€” e.g. email already registered
+  if (err.code === 11000) {
+    const field = Object.keys(err.keyValue || {})[0] || 'field';
+    return ApiError.conflict(`${field} already exists`);
+  }
+
+  // JWT errors (malformed token, wrong secret)
+  if (err.name === 'JsonWebTokenError') {
+    return ApiError.unauthorized('Invalid token');
+  }
+
+  // JWT expired
+  if (err.name === 'TokenExpiredError') {
+    return ApiError.unauthorized('Token has expired');
+  }
+
+  // Already an ApiError â€” pass through unchanged
+  if (err instanceof ApiError) return err;
+
+  // Unknown / programmer error
+  return new ApiError(500, 'Internal server error', false);
+};
+
+<<<<<<< HEAD
+=======
+module.exports = errorHandler;
+
 ﻿import mongoose from 'mongoose';
 import { Sentry } from '../config/sentry.js';
 import ApiError from '../utils/ApiError.js';
@@ -46,6 +105,7 @@ const normaliseError = (err) => {
   return new ApiError(500, 'Internal server error', false);
 };
 
+>>>>>>> e924226 (phase 2 lilly testing)
 /**
  * Global error-handling middleware â€” must be the LAST middleware registered
  * in app.js (Express identifies it by the 4-parameter signature).
@@ -82,3 +142,7 @@ const errorHandler = (err, req, res, _next) => {
 };
 
 export default errorHandler;
+<<<<<<< HEAD
+=======
+
+>>>>>>> e924226 (phase 2 lilly testing)

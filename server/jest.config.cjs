@@ -10,6 +10,9 @@ module.exports = {
   // Use Node.js test environment (not jsdom)
   testEnvironment: 'node',
 
+  coverageDirectory: 'coverage',
+
+
   // Disable all transforms so Jest uses native ESM
   transform: {},
 
@@ -20,6 +23,8 @@ module.exports = {
   testMatch: ['<rootDir>/tests/**/*.test.js'],
 
   // Files measured for coverage
+
+
   collectCoverageFrom: [
     'src/**/*.js',
     '!src/server.js',    // entry point — not unit-testable in isolation

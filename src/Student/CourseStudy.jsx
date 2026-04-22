@@ -319,7 +319,15 @@ function CourseStudy() {
             <p className="text-gray-400 mb-8 border-b border-gray-700 pb-6">Pass with 100% to unlock your certificate.</p>
 
             <div className="space-y-8">
+<<<<<<< HEAD
               {(questions)((q, qIndex) => (
+=======
+<<<<<<< HEAD
+              {questions.map((q, qIndex) => (
+=======
+              {(questions)((q, qIndex) => (
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)
                 <div key={qIndex} className="bg-[#0f172a] p-6 rounded-xl border border-gray-700">
                   <h3 className="text-lg font-semibold text-gray-200 mb-4">
                     <span className="text-blue-500 mr-2">Q{qIndex + 1}.</span> {q.question}

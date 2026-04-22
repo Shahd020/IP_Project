@@ -1,3 +1,25 @@
+<<<<<<< HEAD
+﻿import mongoose from 'mongoose';
+=======
+<<<<<<< HEAD
+// src/config/db.js
+const mongoose = require('mongoose');
+>>>>>>> e924226 (phase 2 lilly testing)
+
+/**
+ * Establishes and monitors the Mongoose connection.
+ *
+ * Connection pooling is handled by the MongoDB Node.js driver.
+ * `maxPoolSize: 10` is a sensible default for a small-to-medium academic app;
+ * raise it if you observe connection-wait bottlenecks under load.
+ */
+const connectDB = async () => {
+  const uri = process.env.MONGODB_URI;
+
+<<<<<<< HEAD
+=======
+module.exports = connectDB;
+=======
 ﻿import mongoose from 'mongoose';
 
 /**
@@ -10,6 +32,7 @@
 const connectDB = async () => {
   const uri = process.env.MONGODB_URI;
 
+>>>>>>> e924226 (phase 2 lilly testing)
   if (!uri) {
     throw new Error('MONGODB_URI is not defined in environment variables');
   }
@@ -40,3 +63,7 @@ mongoose.connection.on('reconnected', () => {
 });
 
 export default connectDB;
+<<<<<<< HEAD
+=======
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)

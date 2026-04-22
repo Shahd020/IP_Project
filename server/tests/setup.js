@@ -9,6 +9,11 @@
  *   npm install -D mongodb-memory-server
  */
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> e924226 (phase 2 lilly testing)
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
@@ -20,6 +25,10 @@ process.env.JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
 let mongod;
 
 // ─── Start in-memory MongoDB before the test file's first test ───────────────
+<<<<<<< HEAD
+=======
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)
 beforeAll(async () => {
   // Silence Mongoose connection logs during tests
   mongoose.set('strictQuery', false);

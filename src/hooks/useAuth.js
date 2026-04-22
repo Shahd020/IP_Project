@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 ﻿import { useContext } from 'react';
+=======
+<<<<<<< HEAD
+import { useContext } from 'react';
+=======
+﻿import { useContext } from 'react';
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)
 import { AuthContext } from '../context/AuthContext.jsx';
 
 /**

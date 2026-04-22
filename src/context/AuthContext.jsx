@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 ﻿import React, { createContext, useState, useEffect, useCallback } from 'react';
+=======
+<<<<<<< HEAD
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+=======
+﻿import React, { createContext, useState, useEffect, useCallback } from 'react';
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)
 import apiClient, { setAccessToken } from '../api/axios.js';
 
 export const AuthContext = createContext(null);

@@ -31,11 +31,25 @@ function LoginPage({ onLogin }) {
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters.';
     }
+<<<<<<< HEAD
 
     if (isSignUp && !formData.role) {
       newErrors.role = 'Please select a role.';
     }
 
+=======
+<<<<<<< HEAD
+    if (isSignUp && !formData.role) {
+      newErrors.role = 'Please select a role.';
+    }
+=======
+
+    if (isSignUp && !formData.role) {
+      newErrors.role = 'Please select a role.';
+    }
+
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -80,7 +94,15 @@ function LoginPage({ onLogin }) {
 
       <div className="relative w-full max-w-4xl h-[620px] bg-[#1f2937] rounded-3xl shadow-2xl border border-gray-800 overflow-hidden z-10 hidden md:block">
 
+<<<<<<< HEAD
         {/* â”€â”€ SIGN UP FORM â”€â”€ */}
+=======
+<<<<<<< HEAD
+        {/* SIGN UP FORM */}
+=======
+        {/* â”€â”€ SIGN UP FORM â”€â”€ */}
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)
         <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-100 z-50' : 'opacity-0 z-10 pointer-events-none'}`}>
           <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Create Account</h2>
           <p className="text-gray-400 text-sm text-center mb-6">Join 100K+ students and start learning.</p>
@@ -133,7 +155,15 @@ function LoginPage({ onLogin }) {
           </form>
         </div>
 
+<<<<<<< HEAD
         {/* â”€â”€ SIGN IN FORM â”€â”€ */}
+=======
+<<<<<<< HEAD
+        {/* SIGN IN FORM */}
+=======
+        {/* â”€â”€ SIGN IN FORM â”€â”€ */}
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)
         <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-0 z-10 pointer-events-none' : 'opacity-100 z-50'}`}>
           <div className="flex justify-center mb-4 text-blue-400"><BookOpen size={48} /></div>
           <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Welcome Back</h2>
@@ -162,7 +192,15 @@ function LoginPage({ onLogin }) {
           </form>
         </div>
 
+<<<<<<< HEAD
         {/* â”€â”€ SLIDING OVERLAY â”€â”€ */}
+=======
+<<<<<<< HEAD
+        {/* SLIDING OVERLAY */}
+=======
+        {/* â”€â”€ SLIDING OVERLAY â”€â”€ */}
+>>>>>>> 9e18abd (phase 2 test lilly)
+>>>>>>> e924226 (phase 2 lilly testing)
         <div className={`absolute top-0 left-1/2 w-1/2 h-full overflow-hidden transition-transform duration-700 ease-in-out z-[100] ${isSignUp ? '-translate-x-full' : ''}`}>
           <div className={`bg-gradient-to-r from-blue-900 to-indigo-950 relative -left-full h-full w-[200%] transform transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-1/2' : 'translate-x-0'}`}>
             <div className={`absolute top-0 left-0 flex flex-col items-center justify-center w-1/2 h-full px-12 text-center transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-0' : '-translate-x-[20%]'}`}>
