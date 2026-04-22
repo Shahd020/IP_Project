@@ -1,61 +1,4 @@
-<<<<<<< HEAD
-// src/middleware/errorHandler.js
-// Global error-handling middleware — must have exactly 4 parameters (err, req, res, next)
-// so Express recognises it as an error handler and not a regular middleware.
-
-/**
- * Normalises all thrown errors into a consistent JSON shape:
- *   { message: string, errors?: object }
- *
- * Handles three Mongoose-specific error types before falling through
- * to a generic 500, so callers always receive a meaningful message.
- */
-const errorHandler = (err, _req, res, _next) => {
-  let statusCode = err.statusCode || 500;
-  let message = err.message || 'Internal Server Error';
-
-  // Mongoose bad ObjectId  (e.g. /users/not-a-valid-id)
-  if (err.name === 'CastError') {
-    statusCode = 400;
-    message = `Invalid ${err.path}: ${err.value}`;
-  }
-
-  // Mongoose duplicate key  (e.g. email already registered)
-  if (err.code === 11000) {
-    const field = Object.keys(err.keyValue)[0];
-    statusCode = 409;
-    message = `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
-  }
-
-  // Mongoose validation error  (e.g. required field missing)
-  if (err.name === 'ValidationError') {
-    statusCode = 400;
-    message = Object.values(err.errors)
-      .map((e) => e.message)
-      .join(', ');
-  }
-
-  // JWT errors
-  if (err.name === 'JsonWebTokenError') {
-    statusCode = 401;
-    message = 'Invalid token';
-  }
-  if (err.name === 'TokenExpiredError') {
-    statusCode = 401;
-    message = 'Token expired';
-  }
-
-  // Log server errors in development
-  if (statusCode === 500 && process.env.NODE_ENV === 'development') {
-    console.error(err.stack);
-  }
-
-  res.status(statusCode).json({ message });
-};
-
-module.exports = errorHandler;
-=======
-import mongoose from 'mongoose';
+﻿import mongoose from 'mongoose';
 import { Sentry } from '../config/sentry.js';
 import ApiError from '../utils/ApiError.js';
 
@@ -67,12 +10,12 @@ import ApiError from '../utils/ApiError.js';
  * @returns {ApiError}
  */
 const normaliseError = (err) => {
-  // Mongoose CastError — invalid ObjectId in a URL param (e.g. /courses/abc)
+  // Mongoose CastError â€” invalid ObjectId in a URL param (e.g. /courses/abc)
   if (err instanceof mongoose.Error.CastError) {
     return ApiError.badRequest(`Invalid value for field: ${err.path}`);
   }
 
-  // Mongoose ValidationError — schema-level validation failed
+  // Mongoose ValidationError â€” schema-level validation failed
   if (err instanceof mongoose.Error.ValidationError) {
     const messages = Object.values(err.errors)
       .map((e) => e.message)
@@ -80,7 +23,7 @@ const normaliseError = (err) => {
     return ApiError.badRequest(messages);
   }
 
-  // MongoDB duplicate key (E11000) — e.g. email already registered
+  // MongoDB duplicate key (E11000) â€” e.g. email already registered
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue || {})[0] || 'field';
     return ApiError.conflict(`${field} already exists`);
@@ -96,7 +39,7 @@ const normaliseError = (err) => {
     return ApiError.unauthorized('Token has expired');
   }
 
-  // Already an ApiError — pass through unchanged
+  // Already an ApiError â€” pass through unchanged
   if (err instanceof ApiError) return err;
 
   // Unknown / programmer error
@@ -104,7 +47,7 @@ const normaliseError = (err) => {
 };
 
 /**
- * Global error-handling middleware — must be the LAST middleware registered
+ * Global error-handling middleware â€” must be the LAST middleware registered
  * in app.js (Express identifies it by the 4-parameter signature).
  *
  * Operational errors (isOperational: true) surface their real message.
@@ -139,4 +82,3 @@ const errorHandler = (err, req, res, _next) => {
 };
 
 export default errorHandler;
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1

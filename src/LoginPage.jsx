@@ -1,43 +1,21 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Mail, Lock, User, Briefcase, ArrowRight, BookOpen, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import useAuth from './hooks/useAuth';
-
-// Role map: API returns lowercase, navigation needs a path
-const ROLE_PATHS = { student: '/student', instructor: '/instructor', admin: '/dashboard' };
-=======
 import useAuth from './hooks/useAuth.js';
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
 function LoginPage({ onLogin }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
-<<<<<<< HEAD
-  const { login, register, authLoading, authError } = useAuth();
-=======
   const { login, register } = useAuth();
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: ''
-  });
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '' });
   const [errors, setErrors] = useState({});
-<<<<<<< HEAD
-  const [serverError, setServerError] = useState('');
-=======
   const [apiError, setApiError] = useState('');
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: '' });
-    setServerError('');
+    setApiError('');
   };
 
   const validateForm = () => {
@@ -50,33 +28,23 @@ function LoginPage({ onLogin }) {
     }
     if (!formData.password) {
       newErrors.password = 'Password is required.';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters.';
     }
-<<<<<<< HEAD
-    if (!formData.role) newErrors.role = 'Please select a role.';
-=======
 
     if (isSignUp && !formData.role) {
       newErrors.role = 'Please select a role.';
     }
 
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-    if (!validateForm()) return;
-
-    setServerError('');
-=======
     setApiError('');
     if (!validateForm()) return;
 
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
     try {
       let user;
       if (isSignUp) {
@@ -87,17 +55,6 @@ function LoginPage({ onLogin }) {
           role: formData.role.toLowerCase(),
         });
       } else {
-<<<<<<< HEAD
-        user = await login({ email: formData.email, password: formData.password });
-      }
-
-      // Notify App.jsx so it can unlock admin layout (backward-compatible)
-      if (onLogin) onLogin(user.role);
-
-      navigate(ROLE_PATHS[user.role] ?? '/');
-    } catch (err) {
-      setServerError(err.message || 'Something went wrong. Please try again.');
-=======
         user = await login(formData.email, formData.password);
       }
 
@@ -108,7 +65,6 @@ function LoginPage({ onLogin }) {
       else navigate('/dashboard');
     } catch (err) {
       setApiError(err.response?.data?.message || 'Something went wrong. Please try again.');
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
     }
   };
 
@@ -124,14 +80,14 @@ function LoginPage({ onLogin }) {
 
       <div className="relative w-full max-w-4xl h-[620px] bg-[#1f2937] rounded-3xl shadow-2xl border border-gray-800 overflow-hidden z-10 hidden md:block">
 
-        {/* ── SIGN UP FORM ── */}
+        {/* â”€â”€ SIGN UP FORM â”€â”€ */}
         <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-100 z-50' : 'opacity-0 z-10 pointer-events-none'}`}>
           <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Create Account</h2>
           <p className="text-gray-400 text-sm text-center mb-6">Join 100K+ students and start learning.</p>
 
-          {serverError && (
+          {apiError && (
             <div className="mb-4 bg-red-900/40 border border-red-500 text-red-300 text-sm rounded-lg px-4 py-2 text-center">
-              {serverError}
+              {apiError}
             </div>
           )}
 
@@ -153,7 +109,7 @@ function LoginPage({ onLogin }) {
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Lock size={18} /></div>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password (Min. 6 chars)" className={inputClass('password')} />
+                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password (Min. 8 chars)" className={inputClass('password')} />
               </div>
               {errors.password && <p className="text-red-400 text-xs mt-1 ml-1">{errors.password}</p>}
             </div>
@@ -168,39 +124,20 @@ function LoginPage({ onLogin }) {
               </div>
               {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
             </div>
-<<<<<<< HEAD
-            <button
-              type="submit"
-              disabled={authLoading}
-              className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 disabled:opacity-50 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 mt-2 flex items-center justify-center gap-2"
-            >
-              {authLoading ? <><Loader size={18} className="animate-spin" /> Creating account…</> : 'Sign Up'}
-=======
 
             {apiError && <p className="text-red-400 text-sm text-center">{apiError}</p>}
             {/* ---> UPDATED: Darker Button Colors <--- */}
             <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 mt-2">
               Sign Up
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
             </button>
           </form>
         </div>
 
-        {/* ── SIGN IN FORM ── */}
+        {/* â”€â”€ SIGN IN FORM â”€â”€ */}
         <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-0 z-10 pointer-events-none' : 'opacity-100 z-50'}`}>
           <div className="flex justify-center mb-4 text-blue-400"><BookOpen size={48} /></div>
           <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Welcome Back</h2>
-<<<<<<< HEAD
-          <p className="text-gray-400 text-sm text-center mb-6">Enter your credentials to access your dashboard.</p>
-
-          {(serverError || authError) && (
-            <div className="mb-4 bg-red-900/40 border border-red-500 text-red-300 text-sm rounded-lg px-4 py-2 text-center">
-              {serverError || authError}
-            </div>
-          )}
-=======
           <p className="text-gray-400 text-sm text-center mb-8">Enter your credentials to access your dashboard.</p>
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
@@ -217,49 +154,28 @@ function LoginPage({ onLogin }) {
               </div>
               {errors.password && <p className="text-red-400 text-xs mt-1 ml-1">{errors.password}</p>}
             </div>
-<<<<<<< HEAD
-            <div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Briefcase size={18} /></div>
-                <select name="role" value={formData.role} onChange={handleChange} className={`${inputClass('role')} appearance-none cursor-pointer`}>
-                  <option value="" disabled>Select destination role</option>
-                  <option value="Student">Student</option>
-                  <option value="Instructor">Instructor</option>
-                  <option value="Admin">Admin</option>
-                </select>
-              </div>
-              {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
-            </div>
-            <button
-              type="submit"
-              disabled={authLoading}
-              className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 disabled:opacity-50 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-            >
-              {authLoading ? <><Loader size={18} className="animate-spin" /> Signing in…</> : 'Sign In'}
-=======
 
             {apiError && <p className="text-red-400 text-sm text-center">{apiError}</p>}
             <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5">
               Sign In
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
             </button>
           </form>
         </div>
 
-        {/* ── SLIDING OVERLAY ── */}
+        {/* â”€â”€ SLIDING OVERLAY â”€â”€ */}
         <div className={`absolute top-0 left-1/2 w-1/2 h-full overflow-hidden transition-transform duration-700 ease-in-out z-[100] ${isSignUp ? '-translate-x-full' : ''}`}>
           <div className={`bg-gradient-to-r from-blue-900 to-indigo-950 relative -left-full h-full w-[200%] transform transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-1/2' : 'translate-x-0'}`}>
             <div className={`absolute top-0 left-0 flex flex-col items-center justify-center w-1/2 h-full px-12 text-center transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-0' : '-translate-x-[20%]'}`}>
               <h2 className="text-4xl font-bold text-white mb-4">Welcome Back!</h2>
               <p className="text-blue-200 mb-8 leading-relaxed">Already have an account? Sign in to pick up right where you left off.</p>
-              <button onClick={() => { setIsSignUp(false); setErrors({}); setServerError(''); }} className="border-2 border-gray-400 text-gray-200 hover:border-white hover:text-blue-900 hover:bg-white px-10 py-3 rounded-full font-bold uppercase tracking-wider transition-colors">
+              <button onClick={() => { setIsSignUp(false); setErrors({}); setApiError(''); }} className="border-2 border-gray-400 text-gray-200 hover:border-white hover:text-blue-900 hover:bg-white px-10 py-3 rounded-full font-bold uppercase tracking-wider transition-colors">
                 Sign In
               </button>
             </div>
             <div className={`absolute top-0 right-0 flex flex-col items-center justify-center w-1/2 h-full px-12 text-center transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-[20%]' : 'translate-x-0'}`}>
               <h2 className="text-4xl font-bold text-white mb-4">Hello, Learner!</h2>
               <p className="text-blue-200 mb-8 leading-relaxed">Enter your personal details and start your journey with us today.</p>
-              <button onClick={() => { setIsSignUp(true); setErrors({}); setServerError(''); }} className="border-2 border-gray-400 text-gray-200 hover:border-white hover:text-indigo-900 hover:bg-white px-10 py-3 rounded-full font-bold uppercase tracking-wider transition-colors">
+              <button onClick={() => { setIsSignUp(true); setErrors({}); setApiError(''); }} className="border-2 border-gray-400 text-gray-200 hover:border-white hover:text-indigo-900 hover:bg-white px-10 py-3 rounded-full font-bold uppercase tracking-wider transition-colors">
                 Sign Up
               </button>
             </div>

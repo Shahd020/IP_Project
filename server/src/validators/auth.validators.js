@@ -27,7 +27,7 @@ export const register = [
 
   body('role')
     .optional()
-    .isIn(['student', 'instructor']).withMessage('Role must be student or instructor'),
+    .isIn(['student', 'instructor', 'admin']).withMessage('Role must be student, instructor, or admin'),
 ];
 
 /** POST /api/auth/login */

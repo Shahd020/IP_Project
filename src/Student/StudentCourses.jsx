@@ -1,20 +1,5 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
-import { ArrowRight, Play, CheckCircle, Loader, AlertCircle } from "lucide-react";
-import useEnrollments from "../hooks/useEnrollments";
-
-// Fallback image shown when a course has no thumbnail set yet
-const PLACEHOLDER = "https://placehold.co/400x160/1f2937/94a3b8?text=No+Image";
-
-function StudentCourses() {
-  const [activeTab, setActiveTab] = useState("in-progress");
-  const { enrollments, loading, error } = useEnrollments();
-
-  // 'saved' tab kept for future wishlist feature — shows empty state for now
-  const filteredCourses = enrollments.filter((c) => c.status === activeTab);
-
-=======
 import { ArrowRight, Play, CheckCircle } from "lucide-react";
 import useFetchCourses from "../hooks/useFetchCourses.js";
 
@@ -22,13 +7,13 @@ function StudentCourses() {
   const [activeTab, setActiveTab] = useState("in-progress");
   const { enrollments, loading, error } = useFetchCourses();
 
-  // Map API enrollment shape → what the card UI already expects
+  // Map API enrollment shape â†’ what the card UI already expects
   const courses = enrollments.map((e) => ({
     id: e.course._id,
     title: e.course.title,
     provider: e.course.provider,
     duration: e.course.duration,
-    rating: e.course.rating ? `${e.course.rating} ⭐` : "N/A",
+    rating: e.course.rating ? `${e.course.rating} â­` : "N/A",
     image: e.course.thumbnail || null,
     progressPercent: e.progressPercent,
     progressText: e.progressText,
@@ -38,7 +23,6 @@ function StudentCourses() {
   const filteredCourses = courses.filter((course) => course.status === activeTab);
 
   // Passed courseId into this function to make the link dynamic!
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
   const renderCardButton = (status, courseId) => {
     if (status === "completed") {
       return (
@@ -70,31 +54,6 @@ function StudentCourses() {
 
       {/* Tabs */}
       <div className="flex gap-6 mb-8 border-b border-gray-700">
-<<<<<<< HEAD
-        {[
-          { key: "in-progress", label: "In Progress", active: "border-blue-500 text-blue-400" },
-          { key: "completed",   label: "Completed",   active: "border-purple-500 text-purple-400" },
-          { key: "saved",       label: "Saved / Not Started", active: "border-green-500 text-green-400" },
-        ].map(({ key, label, active }) => (
-          <button
-            key={key}
-            onClick={() => setActiveTab(key)}
-            className={`pb-3 font-semibold text-sm transition-colors border-b-2 ${
-              activeTab === key ? active : "border-transparent text-gray-400 hover:text-gray-200"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* Loading state */}
-      {loading && (
-        <div className="flex items-center justify-center py-20 gap-3 text-gray-400">
-          <Loader size={24} className="animate-spin" />
-          <span>Loading your courses…</span>
-        </div>
-=======
         <button 
           onClick={() => setActiveTab("in-progress")}
           className={`pb-3 font-semibold text-sm transition-colors border-b-2 ${activeTab === "in-progress" ? "border-blue-500 text-blue-400" : "border-transparent text-gray-400 hover:text-gray-200"}`}
@@ -181,7 +140,6 @@ function StudentCourses() {
             </div>
           )}
         </>
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
       )}
 
       {/* Error state */}

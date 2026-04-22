@@ -1,68 +1,17 @@
 {
   "name": "elearning-server",
   "version": "1.0.0",
-<<<<<<< HEAD
-  "description": "Node.js/Express/MongoDB backend for the e-learning platform",
-  "type": "commonjs",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "jest --coverage --runInBand --forceExit",
-    "test:watch": "jest --watch",
-    "lint": "eslint src/ --ext .js",
-    "lint:fix": "eslint src/ --ext .js --fix",
-    "seed": "node src/seeder.js"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coverageDirectory": "coverage",
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/index.js",
-      "!src/config/db.js"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "lines": 80,
-        "functions": 80
-      }
-    },
-    "testMatch": ["**/tests/**/*.test.js"]
-  },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "express-rate-limit": "^7.3.1",
-    "express-validator": "^7.1.0",
-    "helmet": "^7.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.4.1",
-    "morgan": "^1.10.0",
-    "socket.io": "^4.7.5"
-  },
-  "devDependencies": {
-    "@jest/globals": "^29.7.0",
-    "eslint": "^9.5.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jest": "^28.6.0",
-    "jest": "^29.7.0",
-    "nodemon": "^3.1.4",
-    "prettier": "^3.3.2",
-    "supertest": "^7.0.0"
-  }
-=======
   "description": "Node.js/Express/MongoDB backend for the university e-learning platform",
   "main": "src/server.js",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --runInBand --forceExit",
-    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --runInBand --forceExit --coverage",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --forceExit",
+    "test:coverage": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --forceExit --coverage",
     "lint": "eslint src --ext .js",
     "lint:fix": "eslint src --ext .js --fix",
     "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\""
@@ -96,5 +45,4 @@
   "keywords": [],
   "author": "",
   "license": "ISC"
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 }

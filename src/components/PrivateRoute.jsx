@@ -3,9 +3,9 @@ import useAuth from "../hooks/useAuth";
 import { Loader } from "lucide-react";
 
 function PrivateRoute({ roles }) {
-  const { user, authLoading } = useAuth();
+  const { user, initialising } = useAuth();
 
-  if (authLoading) {
+  if (initialising) {
     return (
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center text-gray-400">
         <Loader size={28} className="animate-spin" />

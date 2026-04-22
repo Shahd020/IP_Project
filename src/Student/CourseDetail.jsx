@@ -1,12 +1,9 @@
-import React from "react";
+﻿import React from "react";
 import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, PlayCircle, CheckCircle, Clock, Star, FileText, Award, Loader, AlertCircle } from "lucide-react";
 import { useCourseById } from "../hooks/useFetchCourses";
 import useEnrollments from "../hooks/useEnrollments";
 
-<<<<<<< HEAD
-const PLACEHOLDER = "https://placehold.co/600x240/0f172a/94a3b8?text=No+Preview";
-=======
 import StanfordLogo from '../assets/Logos/Standford.webp';
 import AmazonLogo from '../assets/Logos/Amazon.jpeg';
 import MetaLogo from '../assets/Logos/Meta.jpeg';
@@ -69,7 +66,6 @@ const courseDetailData = {
     resources: [{ name: "React_Router_Docs.pdf", size: "1.1 MB" }]
   }
 };
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
 function CourseDetail() {
   const { courseId } = useParams();
@@ -94,7 +90,7 @@ function CourseDetail() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-32 gap-3 text-gray-400">
-      <Loader size={28} className="animate-spin" /> Loading course…
+      <Loader size={28} className="animate-spin" /> Loading courseâ€¦
     </div>
   );
 
@@ -124,7 +120,7 @@ function CourseDetail() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* ── Left column ── */}
+        {/* â”€â”€ Left column â”€â”€ */}
         <div className="lg:col-span-2 space-y-8">
 
           {/* Header */}
@@ -228,7 +224,7 @@ function CourseDetail() {
 
         </div>
 
-        {/* ── Right sidebar ── */}
+        {/* â”€â”€ Right sidebar â”€â”€ */}
         <div className="lg:col-span-1">
           <div className="bg-[#1f2937] rounded-xl border border-gray-800 shadow-xl overflow-hidden sticky top-8 flex flex-col">
 

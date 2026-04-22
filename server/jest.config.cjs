@@ -14,7 +14,7 @@ module.exports = {
   transform: {},
 
   // Global test setup file (starts in-memory MongoDB, connects Mongoose)
-  setupFilesAfterFramework: ['<rootDir>/tests/setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
 
   // Test file patterns
   testMatch: ['<rootDir>/tests/**/*.test.js'],
