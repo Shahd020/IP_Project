@@ -134,7 +134,7 @@ function CreateCourse() {
         </div>
 
         <div>
-          <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
+          <label className=" text-gray-200 font-medium mb-2 flex items-center gap-2">
             <Upload size={18} /> Thumbnail URL
           </label>
           <input
