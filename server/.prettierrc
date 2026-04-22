@@ -1,17 +1,7 @@
 {
-<<<<<<< HEAD
   "semi": true,
   "singleQuote": true,
   "trailingComma": "es5",
   "printWidth": 100,
   "tabWidth": 2
-=======
-  "singleQuote": true,
-  "semi": true,
-  "trailingComma": "es5",
-  "printWidth": 100,
-  "tabWidth": 2,
-  "arrowParens": "always",
-  "endOfLine": "lf"
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 }

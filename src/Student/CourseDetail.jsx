@@ -4,9 +4,6 @@ import { ArrowLeft, PlayCircle, CheckCircle, Clock, Star, FileText, Award, Loade
 import { useCourseById } from "../hooks/useFetchCourses";
 import useEnrollments from "../hooks/useEnrollments";
 
-<<<<<<< HEAD
-const PLACEHOLDER = "https://placehold.co/600x240/0f172a/94a3b8?text=No+Preview";
-=======
 import StanfordLogo from '../assets/Logos/Standford.webp';
 import AmazonLogo from '../assets/Logos/Amazon.jpeg';
 import MetaLogo from '../assets/Logos/Meta.jpeg';
@@ -69,7 +66,6 @@ const courseDetailData = {
     resources: [{ name: "React_Router_Docs.pdf", size: "1.1 MB" }]
   }
 };
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 
 function CourseDetail() {
   const { courseId } = useParams();
