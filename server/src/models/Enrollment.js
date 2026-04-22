@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿import mongoose from 'mongoose';
 =======
 <<<<<<< HEAD
@@ -81,17 +82,40 @@ const enrollmentSchema = new Schema(
 =======
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+// src/models/Enrollment.js
+const mongoose = require('mongoose');
+
+const enrollmentSchema = new mongoose.Schema(
+  {
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Enrollment must belong to a student'],
+    },
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course',
+      required: [true, 'Enrollment must reference a course'],
+    },
+    // Overall progress 0–100 displayed as the progress bar in StudentCourses.jsx.
+    // Recalculated by enrollmentService whenever a module is marked complete.
+    progress: {
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
       type: Number,
       default: 0,
       min: [0, 'Progress cannot be negative'],
       max: [100, 'Progress cannot exceed 100'],
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     /** Human-readable label displayed on the progress card, e.g. "Module 4" or "7/10 Weeks". */
     progressText: {
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     // Array of Module ObjectIds the student has fully completed.
     // Length / total modules count = progress percentage.
     completedModules: [
@@ -115,6 +139,7 @@ const enrollmentSchema = new Schema(
 <<<<<<< HEAD
 =======
     // Set by enrollmentService when progress reaches 100
+<<<<<<< HEAD
 =======
 
     /** Human-readable label displayed on the progress card, e.g. "Module 4" or "7/10 Weeks". */
@@ -142,11 +167,14 @@ const enrollmentSchema = new Schema(
 =======
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     completedAt: {
       type: Date,
       default: null,
     },
   },
+<<<<<<< HEAD
 <<<<<<< HEAD
   {
     timestamps: true,
@@ -159,6 +187,8 @@ const enrollmentSchema = new Schema(
   }
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
   { timestamps: true }
 >>>>>>> e924226 (phase 2 lilly testing)
 );
@@ -177,6 +207,7 @@ enrollmentSchema.index({ course: 1 });
 enrollmentSchema.pre('save', function (next) {
   if (this.progress === 100 && this.status !== 'completed') {
     this.status = 'completed';
+<<<<<<< HEAD
 =======
   {
     timestamps: true,
@@ -204,12 +235,15 @@ enrollmentSchema.pre('save', function stampCompletion(next) {
 =======
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     this.completedAt = new Date();
   }
   next();
 });
 
 const Enrollment = mongoose.model('Enrollment', enrollmentSchema);
+<<<<<<< HEAD
 <<<<<<< HEAD
 export default Enrollment;
 =======
@@ -220,3 +254,7 @@ module.exports = Enrollment;
 export default Enrollment;
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+
+module.exports = Enrollment;
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868

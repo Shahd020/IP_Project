@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import api from '../api/axiosClient';
+import apiClient from '../api/axios.js';
 
 function useModules(courseId) {
   const [modules, setModules] = useState([]);
@@ -11,8 +11,8 @@ function useModules(courseId) {
     setLoading(true);
     setError('');
     try {
-      const { data } = await api.get(`/courses/${courseId}/modules`);
-      setModules(data);
+      const res = await apiClient.get(`/courses/${courseId}/modules`);
+      setModules(res.data.data.modules || []);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load modules');
     } finally {
@@ -23,13 +23,14 @@ function useModules(courseId) {
   useEffect(() => { fetchModules(); }, [fetchModules]);
 
   const addModule = useCallback(async (moduleData) => {
-    const { data } = await api.post(`/courses/${courseId}/modules`, moduleData);
-    setModules((prev) => [...prev, data]);
-    return data;
+    const res = await apiClient.post(`/courses/${courseId}/modules`, moduleData);
+    const mod = res.data.data.module;
+    setModules((prev) => [...prev, mod]);
+    return mod;
   }, [courseId]);
 
   const removeModule = useCallback(async (moduleId) => {
-    await api.delete(`/courses/${courseId}/modules/${moduleId}`);
+    await apiClient.delete(`/courses/${courseId}/modules/${moduleId}`);
     setModules((prev) => prev.filter((m) => m._id !== moduleId));
   }, [courseId]);
 

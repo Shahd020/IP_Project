@@ -1,7 +1,10 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿import ApiError from '../utils/ApiError.js';
 =======
 
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
 // src/middleware/authorize.js
 // Role-Based Access Control (RBAC) middleware — always used AFTER protect.js.
 >>>>>>> e924226 (phase 2 lilly testing)
@@ -37,6 +40,7 @@ const authorize =
     next();
   };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 export default authorize;
 =======
@@ -78,3 +82,6 @@ const authorize =
 export default authorize;
 
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+module.exports = authorize;
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868

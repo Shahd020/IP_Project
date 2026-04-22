@@ -32,6 +32,7 @@ function LoginPage({ onLogin }) {
       newErrors.password = 'Password must be at least 8 characters.';
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     if (isSignUp && !formData.role) {
       newErrors.role = 'Please select a role.';
@@ -50,6 +51,11 @@ function LoginPage({ onLogin }) {
 
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+    if (isSignUp && !formData.role) {
+      newErrors.role = 'Please select a role.';
+    }
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -95,6 +101,7 @@ function LoginPage({ onLogin }) {
       <div className="relative w-full max-w-4xl h-[620px] bg-[#1f2937] rounded-3xl shadow-2xl border border-gray-800 overflow-hidden z-10 hidden md:block">
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         {/* â”€â”€ SIGN UP FORM â”€â”€ */}
 =======
 <<<<<<< HEAD
@@ -103,6 +110,9 @@ function LoginPage({ onLogin }) {
         {/* â”€â”€ SIGN UP FORM â”€â”€ */}
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+        {/* SIGN UP FORM */}
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
         <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-100 z-50' : 'opacity-0 z-10 pointer-events-none'}`}>
           <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Create Account</h2>
           <p className="text-gray-400 text-sm text-center mb-6">Join 100K+ students and start learning.</p>
@@ -140,21 +150,20 @@ function LoginPage({ onLogin }) {
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Briefcase size={18} /></div>
                 <select name="role" value={formData.role} onChange={handleChange} className={`${inputClass('role')} appearance-none cursor-pointer`}>
                   <option value="" disabled>Select your role</option>
-                  <option value="Student">Student</option>
-                  <option value="Instructor">Instructor</option>
+                  <option value="student">Student</option>
+                  <option value="instructor">Instructor</option>
                 </select>
               </div>
               {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
             </div>
 
-            {apiError && <p className="text-red-400 text-sm text-center">{apiError}</p>}
-            {/* ---> UPDATED: Darker Button Colors <--- */}
             <button type="submit" className="w-full bg-gradient-to-r from-blue-900 to-indigo-950 hover:from-blue-800 hover:to-indigo-900 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg transition-transform hover:-translate-y-0.5 mt-2">
               Sign Up
             </button>
           </form>
         </div>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         {/* â”€â”€ SIGN IN FORM â”€â”€ */}
 =======
@@ -164,6 +173,9 @@ function LoginPage({ onLogin }) {
         {/* â”€â”€ SIGN IN FORM â”€â”€ */}
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+        {/* SIGN IN FORM */}
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
         <div className={`absolute top-0 left-0 h-full w-1/2 p-12 transition-all duration-700 ease-in-out flex flex-col justify-center ${isSignUp ? 'translate-x-full opacity-0 z-10 pointer-events-none' : 'opacity-100 z-50'}`}>
           <div className="flex justify-center mb-4 text-blue-400"><BookOpen size={48} /></div>
           <h2 className="text-3xl font-extrabold text-white mb-2 text-center">Welcome Back</h2>
@@ -193,6 +205,7 @@ function LoginPage({ onLogin }) {
         </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         {/* â”€â”€ SLIDING OVERLAY â”€â”€ */}
 =======
 <<<<<<< HEAD
@@ -201,6 +214,9 @@ function LoginPage({ onLogin }) {
         {/* â”€â”€ SLIDING OVERLAY â”€â”€ */}
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+        {/* SLIDING OVERLAY */}
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
         <div className={`absolute top-0 left-1/2 w-1/2 h-full overflow-hidden transition-transform duration-700 ease-in-out z-[100] ${isSignUp ? '-translate-x-full' : ''}`}>
           <div className={`bg-gradient-to-r from-blue-900 to-indigo-950 relative -left-full h-full w-[200%] transform transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-1/2' : 'translate-x-0'}`}>
             <div className={`absolute top-0 left-0 flex flex-col items-center justify-center w-1/2 h-full px-12 text-center transition-transform duration-700 ease-in-out ${isSignUp ? 'translate-x-0' : '-translate-x-[20%]'}`}>

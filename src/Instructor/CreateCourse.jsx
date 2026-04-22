@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Upload, BookOpen, FileText, Loader, AlertCircle } from "lucide-react";
-import api from "../api/axiosClient";
+import apiClient from "../api/axios.js";
 
 const CATEGORIES = ['Technology', 'Business', 'Design', 'Data Science', 'Health & Fitness', 'Languages'];
 const LEVELS = ['beginner', 'intermediate', 'advanced'];
@@ -26,7 +26,7 @@ function CreateCourse() {
         ...form,
         price: parseFloat(form.price) || 0,
       };
-      await api.post("/courses", payload);
+      await apiClient.post("/courses", payload);
       navigate("/instructor/courses");
     } catch (err) {
       const msg =
@@ -134,7 +134,7 @@ function CreateCourse() {
         </div>
 
         <div>
-          <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
+          <label className=" text-gray-200 font-medium mb-2 flex items-center gap-2">
             <Upload size={18} /> Thumbnail URL
           </label>
           <input

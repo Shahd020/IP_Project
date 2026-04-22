@@ -1,13 +1,17 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
 // src/models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema(
+<<<<<<< HEAD
 =======
 ﻿import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
@@ -26,6 +30,8 @@ const userSchema = new Schema(
 =======
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
   {
     name: {
       type: String,
@@ -35,6 +41,7 @@ const userSchema = new Schema(
       maxlength: [50, 'Name cannot exceed 50 characters'],
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     email: {
       type: String,
@@ -42,10 +49,13 @@ const userSchema = new Schema(
       unique: true,
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     email: {
       type: String,
       required: [true, 'Email is required'],
       unique: true,       // creates a MongoDB index automatically
+<<<<<<< HEAD
 =======
 
     email: {
@@ -54,21 +64,27 @@ const userSchema = new Schema(
       unique: true,
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
       lowercase: true,
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address'],
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 <<<<<<< HEAD
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     password: {
       type: String,
       required: [true, 'Password is required'],
       minlength: [8, 'Password must be at least 8 characters'],
       select: false,
     },
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 =======
@@ -83,6 +99,8 @@ const userSchema = new Schema(
 
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     role: {
       type: String,
       enum: {
@@ -92,10 +110,13 @@ const userSchema = new Schema(
       default: 'student',
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 <<<<<<< HEAD
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     avatar: {
       type: String,
       default: '',
@@ -166,6 +187,7 @@ export default User;
 // Mongoose pluralises 'User' → collection name 'users'
 
 module.exports = User;
+<<<<<<< HEAD
 =======
 
     avatar: {
@@ -235,3 +257,5 @@ const User = mongoose.model('User', userSchema);
 export default User;
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868

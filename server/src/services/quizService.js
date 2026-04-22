@@ -80,4 +80,8 @@ const submitAttempt = async (quizId, studentId, answers) => {
   };
 };
 
-module.exports = { createQuiz, getQuizzesByCourse, getQuizForStudent, submitAttempt };
+const getQuizByModule = async (moduleId) => {
+  return Quiz.findOne({ module: moduleId }).select('-attempts -questions.correctOptionIndex').lean();
+};
+
+module.exports = { createQuiz, getQuizzesByCourse, getQuizForStudent, getQuizByModule, submitAttempt };

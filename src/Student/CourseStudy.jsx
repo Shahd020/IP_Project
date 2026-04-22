@@ -23,6 +23,7 @@ function CourseStudy() {
     loading,
     error,
     submitQuiz: submitQuizApi,
+    completeModule,
   } = useCourseStudy(courseId);
 
   const { socket } = useSocket(courseId);
@@ -159,7 +160,10 @@ function CourseStudy() {
       const result = await submitQuizApi(answers);
       setQuizScore(result.score);
       setQuizSubmitted(true);
-      if (result.passed) setTimeout(() => setActiveTab("certificate"), 1500);
+      if (result.passed) {
+        await completeModule(currentModule?._id);
+        setTimeout(() => setActiveTab("certificate"), 1500);
+      }
     } catch {
       // Fallback: grade client-side using correctAnswer if server returns it
       setQuizSubmitted(true);
@@ -278,8 +282,8 @@ function CourseStudy() {
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-6 mb-6 pr-2">
-              {forumPostsLocal.map(post => (
-                <div key={post.id} className="flex gap-4">
+              {forumPosts.map(post => (
+                <div key={post._id || post.id} className="flex gap-4">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shrink-0 ${post.author?._id ? "bg-blue-600" : "bg-gray-600"}`}>
                     {post.author?.name || "User".charAt(0)}
                   </div>
@@ -320,6 +324,7 @@ function CourseStudy() {
 
             <div className="space-y-8">
 <<<<<<< HEAD
+<<<<<<< HEAD
               {(questions)((q, qIndex) => (
 =======
 <<<<<<< HEAD
@@ -328,6 +333,9 @@ function CourseStudy() {
               {(questions)((q, qIndex) => (
 >>>>>>> 9e18abd (phase 2 test lilly)
 >>>>>>> e924226 (phase 2 lilly testing)
+=======
+              {questions.map((q, qIndex) => (
+>>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
                 <div key={qIndex} className="bg-[#0f172a] p-6 rounded-xl border border-gray-700">
                   <h3 className="text-lg font-semibold text-gray-200 mb-4">
                     <span className="text-blue-500 mr-2">Q{qIndex + 1}.</span> {q.question}

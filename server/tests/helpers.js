@@ -1,65 +1,26 @@
-/**
- * Shared test utilities — imported by every test file.
- * Keeps test files focused on assertions, not plumbing.
- */
+// tests/helpers.js — shared test utilities
+const request = require('supertest');
+const app = require('../src/app');
 
-import request from 'supertest';
-import app from '../src/app.js';
-
-// ─── Seed Data Factories ──────────────────────────────────────────────────────
-
-export const USERS = {
-  student: {
-    name: 'Test Student',
-    email: 'student@test.com',
-    password: 'Password1',
-    role: 'student',
-  },
-  instructor: {
-    name: 'Test Instructor',
-    email: 'instructor@test.com',
-    password: 'Password1',
-    role: 'instructor',
-  },
-  student2: {
-    name: 'Second Student',
-    email: 'student2@test.com',
-    password: 'Password1',
-    role: 'student',
-  },
+const USERS = {
+  student: { name: 'Test Student', email: 'student@example.com', password: 'Password1!', role: 'student' },
+  instructor: { name: 'Test Instructor', email: 'instructor@example.com', password: 'Password1!', role: 'instructor' },
+  admin: { name: 'Test Admin', email: 'admin@example.com', password: 'Password1!', role: 'admin' },
+  student2: { name: 'Second Student', email: 'student2@example.com', password: 'Password1!', role: 'student' },
 };
 
-export const COURSE_PAYLOAD = {
+const COURSE_PAYLOAD = {
   title: 'Advanced Web Development',
-  description: 'A comprehensive course covering modern full-stack web development techniques.',
-  category: 'Web Development',
-  provider: 'Test University',
-  duration: '10 weeks',
+  description: 'A comprehensive course covering modern full-stack web development techniques and practices.',
+  category: 'Technology',
+  level: 'intermediate',
+  price: 99,
   thumbnail: 'https://example.com/thumb.jpg',
 };
 
-export const MODULE_PAYLOAD = {
-  title: 'Module 1: Introduction',
-  order: 1,
-  videoUrl: 'https://example.com/video.mp4',
-  videoOverview: 'An overview of the course structure and tools.',
-};
-
-// ─── Auth Helpers ─────────────────────────────────────────────────────────────
-
-/**
- * Register a user and return their access token + Set-Cookie header.
- *
- * @param {object} userData
- * @returns {{ accessToken: string, cookieHeader: string, user: object }}
- */
-export const registerAndLogin = async (userData) => {
-  const res = await request(app)
-    .post('/api/auth/register')
-    .send(userData);
-
-  expect(res.status).toBe(201);
-
+const registerAndLogin = async (userData) => {
+  const res = await request(app).post('/api/auth/register').send(userData);
+  if (res.status !== 201) throw new Error(`Register failed: ${JSON.stringify(res.body)}`);
   return {
     accessToken: res.body.data.accessToken,
     cookieHeader: res.headers['set-cookie'],
@@ -67,47 +28,15 @@ export const registerAndLogin = async (userData) => {
   };
 };
 
-/**
- * Returns a Supertest Authorization header value for Bearer tokens.
- *
- * @param {string} token
- * @returns {string}
- */
-export const bearer = (token) => `Bearer ${token}`;
+const bearer = (token) => `Bearer ${token}`;
 
-// ─── Resource Helpers ─────────────────────────────────────────────────────────
-
-/**
- * Create a course as an instructor and return the course object.
- *
- * @param {string} instructorToken
- * @param {object} [overrides]
- * @returns {object} Created course
- */
-export const createCourse = async (instructorToken, overrides = {}) => {
+const createCourse = async (instructorToken, overrides = {}) => {
   const res = await request(app)
     .post('/api/courses')
     .set('Authorization', bearer(instructorToken))
     .send({ ...COURSE_PAYLOAD, ...overrides });
-
-  expect(res.status).toBe(201);
+  if (res.status !== 201) throw new Error(`Create course failed: ${JSON.stringify(res.body)}`);
   return res.body.data.course;
 };
 
-/**
- * Enroll a student in a course and return the enrollment.
- *
- * @param {string} studentToken
- * @param {string} courseId
- * @param {'saved'|'in-progress'} [status]
- * @returns {object} Created enrollment
- */
-export const enrollStudent = async (studentToken, courseId, status = 'in-progress') => {
-  // Course must be published first
-  const res = await request(app)
-    .post('/api/enrollments')
-    .set('Authorization', bearer(studentToken))
-    .send({ courseId, status });
-
-  return res;
-};
+module.exports = { USERS, COURSE_PAYLOAD, registerAndLogin, bearer, createCourse };

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import api from '../api/axiosClient';
+import apiClient from '../api/axios.js';
 
 function useInstructorCourses() {
   const [courses, setCourses] = useState([]);
@@ -10,8 +10,8 @@ function useInstructorCourses() {
     setLoading(true);
     setError('');
     try {
-      const { data } = await api.get('/courses/instructor/my');
-      setCourses(data);
+      const res = await apiClient.get('/courses/instructor/my');
+      setCourses(res.data.data.courses || []);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load courses');
     } finally {
@@ -22,7 +22,7 @@ function useInstructorCourses() {
   useEffect(() => { fetchCourses(); }, [fetchCourses]);
 
   const deleteCourse = useCallback(async (courseId) => {
-    await api.delete(`/courses/${courseId}`);
+    await apiClient.delete(`/courses/${courseId}`);
     setCourses((prev) => prev.filter((c) => c._id !== courseId));
   }, []);
 

@@ -10,6 +10,9 @@ const assertOwnership = (course, instructorId, role) => {
 const getModulesByCourse = async (courseId) =>
   Module.find({ course: courseId }).sort('order').lean();
 
+const getModuleById = async (moduleId) =>
+  Module.findById(moduleId).lean();
+
 const addModule = async (courseId, instructorId, role, data) => {
   const course = await Course.findById(courseId).select('instructor');
   if (!course) { const err = new Error('Course not found'); err.statusCode = 404; throw err; }
@@ -34,4 +37,4 @@ const deleteModule = async (moduleId, instructorId, role) => {
   await mod.deleteOne();
 };
 
-module.exports = { getModulesByCourse, addModule, updateModule, deleteModule };
+module.exports = { getModulesByCourse, getModuleById, addModule, updateModule, deleteModule };
