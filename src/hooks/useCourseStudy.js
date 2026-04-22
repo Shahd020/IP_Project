@@ -89,6 +89,17 @@ const useCourseStudy = (courseId) => {
     return res.data.data; // { score, total, percentage, passed }
   }, [currentModuleId]);
 
+  // ─── Mark module complete ──────────────────────────────────────────────────
+  const completeModule = useCallback(async (moduleId) => {
+    if (!enrollment?._id) return;
+    try {
+      const res = await apiClient.patch(`/enrollments/${enrollment._id}/complete-module`, { moduleId });
+      setEnrollment(res.data.data.enrollment);
+    } catch {
+      // Non-critical — progress syncs on next load
+    }
+  }, [enrollment]);
+
   // ─── Add a forum post via REST (fallback when Socket.io is unavailable) ────
   const addForumPost = useCallback(async (text) => {
     const res = await apiClient.post('/forum/posts', {
@@ -112,6 +123,7 @@ const useCourseStudy = (courseId) => {
     loading,
     error,
     submitQuiz,
+    completeModule,
     addForumPost,
   };
 };

@@ -1,20 +1,9 @@
-<<<<<<< HEAD
-// src/hooks/useFetchCourses.js
-// Fetches the public course catalog with optional filters.
-// Replaces the hardcoded catalogData object in CourseCatalog.jsx
-// and the static categories array in Categories.jsx.
-//
-// Usage:
-//   const { courses, loading, error } = useFetchCourses({ category: 'Technology' });
-//   const { course, loading, error } = useCourseById(courseId);
 import { useState, useEffect } from 'react';
-import api from '../api/axiosClient';
+import apiClient from '../api/axios.js';
 
 /**
- * Fetches the published course catalog.
- * Re-fetches automatically when filters change.
- *
- * @param {{ category?: string, level?: string, search?: string }} filters
+ * Fetches the public course catalog with optional filters.
+ * Used by CourseCatalogPage.jsx
  */
 const useFetchCourses = (filters = {}) => {
   const [courses, setCourses] = useState([]);
@@ -22,35 +11,30 @@ const useFetchCourses = (filters = {}) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let cancelled = false; // prevents setState on unmounted component
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
 
-    const fetchCourses = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const { data } = await api.get('/courses', { params: filters });
-        if (!cancelled) setCourses(data);
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.response?.data?.message || 'Failed to load courses');
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
+    const params = new URLSearchParams();
+    if (filters.category) params.set('category', filters.category);
+    if (filters.level)    params.set('level', filters.level);
+    if (filters.search)   params.set('search', filters.search);
 
-    fetchCourses();
+    apiClient.get(`/courses?${params.toString()}`)
+      .then((res) => { if (!cancelled) setCourses(res.data.data.courses); })
+      .catch((err) => { if (!cancelled) setError(err.response?.data?.message || 'Failed to load courses'); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+
     return () => { cancelled = true; };
-  }, [filters.category, filters.level, filters.search]); // eslint-disable-line
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.category, filters.level, filters.search]);
 
   return { courses, loading, error };
 };
 
 /**
- * Fetches a single course by ID with full module details.
- * Used on the course detail / overview page.
- *
- * @param {string|null} courseId
+ * Fetches a single course by ID including its populated modules.
+ * Used by CourseDetail.jsx and CourseCatalog.jsx
  */
 export const useCourseById = (courseId) => {
   const [course, setCourse] = useState(null);
@@ -60,65 +44,18 @@ export const useCourseById = (courseId) => {
   useEffect(() => {
     if (!courseId) return;
     let cancelled = false;
+    setLoading(true);
+    setError(null);
 
-    const fetch = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const { data } = await api.get(`/courses/${courseId}`);
-        if (!cancelled) setCourse(data);
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.response?.data?.message || 'Course not found');
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
+    apiClient.get(`/courses/${courseId}`)
+      .then((res) => { if (!cancelled) setCourse(res.data.data.course); })
+      .catch((err) => { if (!cancelled) setError(err.response?.data?.message || 'Course not found'); })
+      .finally(() => { if (!cancelled) setLoading(false); });
 
-    fetch();
     return () => { cancelled = true; };
   }, [courseId]);
 
   return { course, loading, error };
-=======
-import { useState, useEffect, useCallback } from 'react';
-import apiClient from '../api/axios.js';
-
-/**
- * Fetches all of the authenticated student's enrollments in one request
- * and returns them grouped — no extra requests on tab switch.
- *
- * Returned enrollment shape (already matches the StudentCourses UI):
- *   { _id, status, progressPercent, progressText,
- *     course: { _id, title, provider, duration, rating, thumbnail } }
- *
- * @returns {{ enrollments: object[], loading: boolean, error: string|null, refetch: Function }}
- */
-const useFetchCourses = () => {
-  const [enrollments, setEnrollments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const fetchEnrollments = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await apiClient.get('/enrollments/my');
-      setEnrollments(res.data.data.enrollments);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load your courses. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchEnrollments();
-  }, [fetchEnrollments]);
-
-  return { enrollments, loading, error, refetch: fetchEnrollments };
->>>>>>> 56fac7aa34891492f68c36dd546ab7420c7673a1
 };
 
 export default useFetchCourses;

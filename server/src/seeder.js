@@ -160,17 +160,15 @@ async function seed() {
     await mongoose.connect(process.env.MONGO_URI, { maxPoolSize: 10 });
     console.log('Connected to MongoDB');
 
-    // Wipe existing seed data
-    await Promise.all([
-      User.deleteMany({}),
-      Course.deleteMany({}),
-      Module.deleteMany({}),
-      Enrollment.deleteMany({}),
-    ]);
-    console.log('Collections cleared');
+    // Drop entire database to clear stale indexes from old schema versions
+    await mongoose.connection.db.dropDatabase();
+    console.log('Database dropped');
 
-    // Create users (password hashing handled by the pre-save hook)
-    const createdUsers = await User.create(USERS);
+    // Hash passwords before inserting (User model has no pre-save hook)
+    const hashedUsers = await Promise.all(
+      USERS.map(async (u) => ({ ...u, password: await bcrypt.hash(u.password, 10) }))
+    );
+    const createdUsers = await User.create(hashedUsers);
     console.log(`Created ${createdUsers.length} users`);
 
     const instructors = createdUsers.filter((u) => u.role === 'instructor');

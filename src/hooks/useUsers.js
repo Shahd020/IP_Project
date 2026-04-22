@@ -1,11 +1,5 @@
-// src/hooks/useUsers.js
-// Admin user management — replaces all localStorage logic in ManageUsers.jsx.
-// Provides CRUD operations that call the protected /api/users endpoints.
-//
-// Usage:
-//   const { users, loading, error, addUser, editUser, removeUser } = useUsers();
 import { useState, useEffect, useCallback } from 'react';
-import api from '../api/axiosClient';
+import apiClient from '../api/axios.js';
 
 const useUsers = () => {
   const [users, setUsers] = useState([]);
@@ -16,10 +10,9 @@ const useUsers = () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await api.get('/users');
-      // Normalise role capitalisation for display (API stores lowercase)
+      const res = await apiClient.get('/users');
       setUsers(
-        data.map((u) => ({
+        (res.data.data.users || []).map((u) => ({
           ...u,
           id: u._id,
           role: u.role.charAt(0).toUpperCase() + u.role.slice(1),
@@ -32,21 +25,12 @@ const useUsers = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+  useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
-  /**
-   * Registers a new user via POST /api/auth/register.
-   * Admin creates users directly — they receive a temp password.
-   *
-   * @param {{ name: string, email: string, role: string }} userData
-   */
   const addUser = useCallback(async (userData) => {
     setError(null);
     try {
-      // Admin-created users get a default password they should change
-      await api.post('/auth/register', {
+      await apiClient.post('/auth/register', {
         ...userData,
         role: userData.role.toLowerCase(),
         password: 'changeme123',
@@ -61,23 +45,18 @@ const useUsers = () => {
     }
   }, [fetchUsers]);
 
-  /**
-   * Updates a user's name, email, or role via PATCH /api/users/:id.
-   *
-   * @param {string} userId
-   * @param {{ name?: string, email?: string, role?: string }} updates
-   */
   const editUser = useCallback(async (userId, updates) => {
     setError(null);
     try {
-      const { data } = await api.patch(`/users/${userId}`, {
+      const res = await apiClient.patch(`/users/${userId}`, {
         ...updates,
         role: updates.role?.toLowerCase(),
       });
+      const updated = res.data.data.user;
       setUsers((prev) =>
         prev.map((u) =>
           u.id === userId
-            ? { ...u, ...data, id: data._id, role: data.role.charAt(0).toUpperCase() + data.role.slice(1) }
+            ? { ...u, ...updated, id: updated._id, role: updated.role.charAt(0).toUpperCase() + updated.role.slice(1) }
             : u
         )
       );
@@ -88,15 +67,10 @@ const useUsers = () => {
     }
   }, []);
 
-  /**
-   * Deletes a user via DELETE /api/users/:id.
-   *
-   * @param {string} userId
-   */
   const removeUser = useCallback(async (userId) => {
     setError(null);
     try {
-      await api.delete(`/users/${userId}`);
+      await apiClient.delete(`/users/${userId}`);
       setUsers((prev) => prev.filter((u) => u.id !== userId));
     } catch (err) {
       const msg = err.response?.data?.message || 'Failed to delete user';
