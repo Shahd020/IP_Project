@@ -1,13 +1,7 @@
-import { body } from 'express-validator';
-
-/**
- * Validation chains for the /api/auth endpoints.
- * Each export is an array passed directly into the route definition
- * before the `validate` middleware.
- */
+const { body } = require('express-validator');
 
 /** POST /api/auth/register */
-export const register = [
+const register = [
   body('name')
     .trim()
     .notEmpty().withMessage('Name is required')
@@ -27,11 +21,12 @@ export const register = [
 
   body('role')
     .optional()
-    .isIn(['student', 'instructor', 'admin']).withMessage('Role must be student, instructor, or admin'),
+    .isIn(['student', 'instructor', 'admin'])
+    .withMessage('Role must be student, instructor, or admin'),
 ];
 
 /** POST /api/auth/login */
-export const login = [
+const login = [
   body('email')
     .trim()
     .notEmpty().withMessage('Email is required')
@@ -41,3 +36,8 @@ export const login = [
   body('password')
     .notEmpty().withMessage('Password is required'),
 ];
+
+module.exports = {
+  register,
+  login,
+};

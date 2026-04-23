@@ -1,17 +1,15 @@
-import { Router } from 'express';
-import { body, query } from 'express-validator';
-import forumController from '../controllers/forum.controller.js';
-import validate from '../middleware/validate.js';
-import authenticate from '../middleware/authenticate.js';
+const express = require('express');
+const { body, query } = require('express-validator');
 
-const router = Router();
+const forumController = require('../controllers/forum.controller.js');
+const validate = require('../middleware/validate.js');
+const authenticate = require('../middleware/authenticate.js');
+
+const router = express.Router();
 
 router.use(authenticate);
 
-/**
- * GET /api/forum/course/:courseId?page=1&limit=20
- * Paginated post history for a course (used on initial load + reconnect catch-up).
- */
+// GET /api/forum/course/:courseId
 router.get(
   '/course/:courseId',
   [
@@ -22,16 +20,10 @@ router.get(
   forumController.getByCourse
 );
 
-/**
- * GET /api/forum/module/:moduleId?courseId=...
- * Posts scoped to a specific module.
- */
+// GET /api/forum/module/:moduleId
 router.get('/module/:moduleId', forumController.getByModule);
 
-/**
- * POST /api/forum/posts
- * REST fallback for creating a post (Socket.io is the real-time primary path).
- */
+// POST /api/forum/posts
 router.post(
   '/posts',
   [
@@ -46,10 +38,7 @@ router.post(
   forumController.create
 );
 
-/**
- * DELETE /api/forum/posts/:postId
- * Soft-delete — author or admin only.
- */
+// DELETE /api/forum/posts/:postId
 router.delete('/posts/:postId', forumController.remove);
 
-export default router;
+module.exports = router;

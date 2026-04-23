@@ -1,29 +1,11 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-﻿import mongoose from 'mongoose';
-import { Sentry } from '../config/sentry.js';
-import ApiError from '../utils/ApiError.js';
-=======
-
-// src/middleware/errorHandler.js
-// Global error-handling middleware — must have exactly 4 parameters (err, req, res, next)
-// so Express recognises it as an error handler and not a regular middleware.
->>>>>>> e924226 (phase 2 lilly testing)
-
-/**
- * Normalises known Mongoose/driver errors into ApiError instances so
- * the response formatter below has a consistent shape to work with.
- *
- * @param {Error} err
- * @returns {ApiError}
- */
+const mongoose = require('mongoose');
+const { Sentry } = require('../config/sentry.js');
+const ApiError = require('../utils/ApiError.js');
 const normaliseError = (err) => {
-  // Mongoose CastError â€” invalid ObjectId in a URL param (e.g. /courses/abc)
   if (err instanceof mongoose.Error.CastError) {
     return ApiError.badRequest(`Invalid value for field: ${err.path}`);
   }
 
-  // Mongoose ValidationError â€” schema-level validation failed
   if (err instanceof mongoose.Error.ValidationError) {
     const messages = Object.values(err.errors)
       .map((e) => e.message)
@@ -31,102 +13,32 @@ const normaliseError = (err) => {
     return ApiError.badRequest(messages);
   }
 
-  // MongoDB duplicate key (E11000) â€” e.g. email already registered
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue || {})[0] || 'field';
     return ApiError.conflict(`${field} already exists`);
   }
 
-  // JWT errors (malformed token, wrong secret)
   if (err.name === 'JsonWebTokenError') {
     return ApiError.unauthorized('Invalid token');
   }
 
-  // JWT expired
   if (err.name === 'TokenExpiredError') {
     return ApiError.unauthorized('Token has expired');
   }
 
-  // Already an ApiError â€” pass through unchanged
   if (err instanceof ApiError) return err;
 
-  // Unknown / programmer error
   return new ApiError(500, 'Internal server error', false);
 };
 
-<<<<<<< HEAD
-=======
-module.exports = errorHandler;
-
-﻿import mongoose from 'mongoose';
-import { Sentry } from '../config/sentry.js';
-import ApiError from '../utils/ApiError.js';
-
-/**
- * Normalises known Mongoose/driver errors into ApiError instances so
- * the response formatter below has a consistent shape to work with.
- *
- * @param {Error} err
- * @returns {ApiError}
- */
-const normaliseError = (err) => {
-  // Mongoose CastError â€” invalid ObjectId in a URL param (e.g. /courses/abc)
-  if (err instanceof mongoose.Error.CastError) {
-    return ApiError.badRequest(`Invalid value for field: ${err.path}`);
-  }
-
-  // Mongoose ValidationError â€” schema-level validation failed
-  if (err instanceof mongoose.Error.ValidationError) {
-    const messages = Object.values(err.errors)
-      .map((e) => e.message)
-      .join(', ');
-    return ApiError.badRequest(messages);
-  }
-
-  // MongoDB duplicate key (E11000) â€” e.g. email already registered
-  if (err.code === 11000) {
-    const field = Object.keys(err.keyValue || {})[0] || 'field';
-    return ApiError.conflict(`${field} already exists`);
-  }
-
-  // JWT errors (malformed token, wrong secret)
-  if (err.name === 'JsonWebTokenError') {
-    return ApiError.unauthorized('Invalid token');
-  }
-
-  // JWT expired
-  if (err.name === 'TokenExpiredError') {
-    return ApiError.unauthorized('Token has expired');
-  }
-
-  // Already an ApiError â€” pass through unchanged
-  if (err instanceof ApiError) return err;
-
-  // Unknown / programmer error
-  return new ApiError(500, 'Internal server error', false);
-};
-
->>>>>>> e924226 (phase 2 lilly testing)
-/**
- * Global error-handling middleware â€” must be the LAST middleware registered
- * in app.js (Express identifies it by the 4-parameter signature).
- *
- * Operational errors (isOperational: true) surface their real message.
- * Non-operational errors (bugs) log the stack and return a generic 500
- * so internal implementation details are never exposed to the client.
- *
- * @type {import('express').ErrorRequestHandler}
- */
 // eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, _next) => {
   const apiError = normaliseError(err);
 
-  // Report unexpected errors to Sentry (skip operational errors in dev to reduce noise)
   if (!apiError.isOperational || process.env.NODE_ENV === 'production') {
     Sentry?.captureException(err);
   }
 
-  // Log stack in development for easy debugging
   if (process.env.NODE_ENV !== 'production') {
     console.error(`[${req.method} ${req.originalUrl}]`, err);
   }
@@ -136,71 +48,11 @@ const errorHandler = (err, req, res, _next) => {
     message: apiError.isOperational
       ? apiError.message
       : 'Something went wrong. Please try again later.',
-    ...(process.env.NODE_ENV !== 'production' && !apiError.isOperational && {
-      stack: err.stack,
-    }),
+    ...(process.env.NODE_ENV !== 'production' &&
+      !apiError.isOperational && {
+        stack: err.stack,
+      }),
   });
 };
 
-export default errorHandler;
-<<<<<<< HEAD
-=======
-
->>>>>>> e924226 (phase 2 lilly testing)
-=======
-// src/middleware/errorHandler.js
-// Global error-handling middleware — must have exactly 4 parameters (err, req, res, next)
-// so Express recognises it as an error handler and not a regular middleware.
-
-/**
- * Normalises all thrown errors into a consistent JSON shape:
- *   { message: string, errors?: object }
- *
- * Handles three Mongoose-specific error types before falling through
- * to a generic 500, so callers always receive a meaningful message.
- */
-const errorHandler = (err, _req, res, _next) => {
-  let statusCode = err.statusCode || 500;
-  let message = err.message || 'Internal Server Error';
-
-  // Mongoose bad ObjectId  (e.g. /users/not-a-valid-id)
-  if (err.name === 'CastError') {
-    statusCode = 400;
-    message = `Invalid ${err.path}: ${err.value}`;
-  }
-
-  // Mongoose duplicate key  (e.g. email already registered)
-  if (err.code === 11000) {
-    const field = Object.keys(err.keyValue)[0];
-    statusCode = 409;
-    message = `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
-  }
-
-  // Mongoose validation error  (e.g. required field missing)
-  if (err.name === 'ValidationError') {
-    statusCode = 400;
-    message = Object.values(err.errors)
-      .map((e) => e.message)
-      .join(', ');
-  }
-
-  // JWT errors
-  if (err.name === 'JsonWebTokenError') {
-    statusCode = 401;
-    message = 'Invalid token';
-  }
-  if (err.name === 'TokenExpiredError') {
-    statusCode = 401;
-    message = 'Token expired';
-  }
-
-  // Log server errors in development
-  if (statusCode === 500 && process.env.NODE_ENV === 'development') {
-    console.error(err.stack);
-  }
-
-  res.status(statusCode).json({ success: false, message });
-};
-
 module.exports = errorHandler;
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868

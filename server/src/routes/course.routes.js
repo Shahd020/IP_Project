@@ -1,71 +1,35 @@
-import { Router } from 'express';
-import courseController from '../controllers/course.controller.js';
-import moduleController from '../controllers/module.controller.js';
-import * as courseValidators from '../validators/course.validators.js';
-import validate from '../middleware/validate.js';
-import authenticate from '../middleware/authenticate.js';
-import authorize from '../middleware/authorize.js';
+const express = require('express');
+const router = express.Router();
 
-const router = Router();
+const courseController = require('../controllers/course.controller.js');
+const authenticate = require('../middleware/protect.js');
+const authorize = require('../middleware/authorize.js');
+const validate = require('../middleware/validate.js');
+const { createCourseRules, updateCourseRules } = require('../middleware/validators.js');
 
-// ─── Public ───────────────────────────────────────────────────────────────────
-
-/**
- * GET /api/courses
- * Browse the published course catalog with optional text search + category filter.
- */
-router.get('/', courseValidators.listCourses, validate, courseController.getAll);
-
-/**
- * GET /api/courses/:id
- * Course detail page — modules populated, instructor populated.
- */
-
-// ─── Instructor / Admin ───────────────────────────────────────────────────────
-
-/**
- * GET /api/courses/instructor/my
- * Must be declared BEFORE /:id to avoid "my" being treated as an ObjectId.
- */
-router.get(
-  '/instructor/my',
-  authenticate,
-  authorize('instructor', 'admin'),
-  courseController.getMyCourses
-);
-
+// Public
+router.get('/', courseController.getAll);
 router.get('/:id', courseController.getOne);
 
-/**
- * POST /api/courses
- * Create a new course (draft — isPublished defaults to false).
- */
+// Instructor/Admin
 router.post(
   '/',
   authenticate,
   authorize('instructor', 'admin'),
-  courseValidators.createCourse,
+  createCourseRules,
   validate,
   courseController.create
 );
 
-/**
- * PATCH /api/courses/:id
- * Partial update — only the owner instructor or an admin may call this.
- */
 router.patch(
   '/:id',
   authenticate,
   authorize('instructor', 'admin'),
-  courseValidators.updateCourse,
+  updateCourseRules,
   validate,
   courseController.update
 );
 
-/**
- * DELETE /api/courses/:id
- * Cascade-deletes modules and enrollments.
- */
 router.delete(
   '/:id',
   authenticate,
@@ -73,23 +37,4 @@ router.delete(
   courseController.remove
 );
 
-// ─── Module sub-resource (nested under /api/courses/:courseId/modules) ────────
-
-/**
- * GET /api/courses/:courseId/modules
- */
-router.get('/:courseId/modules', authenticate, moduleController.getByCourse);
-
-/**
- * POST /api/courses/:courseId/modules
- */
-router.post(
-  '/:courseId/modules',
-  authenticate,
-  authorize('instructor', 'admin'),
-  courseValidators.createModule,
-  validate,
-  moduleController.create
-);
-
-export default router;
+module.exports = router;

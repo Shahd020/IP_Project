@@ -1,37 +1,9 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-﻿import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
-// src/models/User.js
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema(
-<<<<<<< HEAD
-=======
-﻿import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-
->>>>>>> e924226 (phase 2 lilly testing)
 const { Schema } = mongoose;
 
-/**
- * Stores hashed passwords â€” plaintext is never persisted.
- * refreshTokens array enables multi-device logout and token rotation.
- * `select: false` on password/refreshTokens prevents them leaking into
- * query results unless explicitly requested with .select('+password').
- */
 const userSchema = new Schema(
-<<<<<<< HEAD
-=======
->>>>>>> 9e18abd (phase 2 test lilly)
->>>>>>> e924226 (phase 2 lilly testing)
-=======
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
   {
     name: {
       type: String,
@@ -40,55 +12,15 @@ const userSchema = new Schema(
       minlength: [2, 'Name must be at least 2 characters'],
       maxlength: [50, 'Name cannot exceed 50 characters'],
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     email: {
       type: String,
       required: [true, 'Email is required'],
       unique: true,
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      unique: true,       // creates a MongoDB index automatically
-<<<<<<< HEAD
-=======
-
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      unique: true,
->>>>>>> 9e18abd (phase 2 test lilly)
->>>>>>> e924226 (phase 2 lilly testing)
-=======
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
       lowercase: true,
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address'],
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
->>>>>>> e924226 (phase 2 lilly testing)
-=======
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      minlength: [8, 'Password must be at least 8 characters'],
-      select: false,
-    },
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-=======
 
     password: {
       type: String,
@@ -97,10 +29,6 @@ const userSchema = new Schema(
       select: false,
     },
 
->>>>>>> 9e18abd (phase 2 test lilly)
->>>>>>> e924226 (phase 2 lilly testing)
-=======
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     role: {
       type: String,
       enum: {
@@ -109,14 +37,7 @@ const userSchema = new Schema(
       },
       default: 'student',
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
->>>>>>> e924226 (phase 2 lilly testing)
-=======
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
     avatar: {
       type: String,
       default: '',
@@ -127,7 +48,6 @@ const userSchema = new Schema(
       default: true,
     },
 
-    /** Array of valid refresh tokens for this user (supports multi-device). */
     refreshTokens: {
       type: [String],
       select: false,
@@ -145,117 +65,30 @@ const userSchema = new Schema(
   }
 );
 
-// â”€â”€â”€ Indexes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 userSchema.index({ role: 1 });
 userSchema.index({ createdAt: -1 });
 
-// â”€â”€â”€ Hooks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-/** Hash password before any save that touches it. */
-userSchema.pre('save', async function hashPassword(next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-// â”€â”€â”€ Instance Methods â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-/**
- * Compare a plaintext candidate against the stored bcrypt hash.
- * @param {string} candidate - The password supplied by the user at login.
- * @returns {Promise<boolean>}
- */
-userSchema.methods.comparePassword = function comparePassword(candidate) {
+userSchema.methods.comparePassword = function (candidate) {
   return bcrypt.compare(candidate, this.password);
 };
 
-/** Remove a specific refresh token (logout from one device). */
-userSchema.methods.revokeRefreshToken = function revokeRefreshToken(token) {
+userSchema.methods.revokeRefreshToken = function (token) {
   this.refreshTokens = this.refreshTokens.filter((t) => t !== token);
   return this.save();
 };
 
-/** Remove all refresh tokens (logout from all devices). */
-userSchema.methods.revokeAllRefreshTokens = function revokeAllRefreshTokens() {
+userSchema.methods.revokeAllRefreshTokens = function () {
   this.refreshTokens = [];
   return this.save();
 };
 
 const User = mongoose.model('User', userSchema);
-<<<<<<< HEAD
-export default User;
-=======
-// Mongoose pluralises 'User' → collection name 'users'
 
 module.exports = User;
-<<<<<<< HEAD
-=======
-
-    avatar: {
-      type: String,
-      default: '',
-    },
-
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
-
-    /** Array of valid refresh tokens for this user (supports multi-device). */
-    refreshTokens: {
-      type: [String],
-      select: false,
-      default: [],
-    },
-  },
-  {
-    timestamps: true,
-    toJSON: {
-      transform(_doc, ret) {
-        delete ret.__v;
-        return ret;
-      },
-    },
-  }
-);
-
-// â”€â”€â”€ Indexes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-userSchema.index({ role: 1 });
-userSchema.index({ createdAt: -1 });
-
-// â”€â”€â”€ Hooks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-/** Hash password before any save that touches it. */
-userSchema.pre('save', async function hashPassword(next) {
-  if (!this.isModified('password')) return next();
-  const salt = await bcrypt.genSalt(12);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-// â”€â”€â”€ Instance Methods â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-/**
- * Compare a plaintext candidate against the stored bcrypt hash.
- * @param {string} candidate - The password supplied by the user at login.
- * @returns {Promise<boolean>}
- */
-userSchema.methods.comparePassword = function comparePassword(candidate) {
-  return bcrypt.compare(candidate, this.password);
-};
-
-/** Remove a specific refresh token (logout from one device). */
-userSchema.methods.revokeRefreshToken = function revokeRefreshToken(token) {
-  this.refreshTokens = this.refreshTokens.filter((t) => t !== token);
-  return this.save();
-};
-
-/** Remove all refresh tokens (logout from all devices). */
-userSchema.methods.revokeAllRefreshTokens = function revokeAllRefreshTokens() {
-  this.refreshTokens = [];
-  return this.save();
-};
-
-const User = mongoose.model('User', userSchema);
-export default User;
->>>>>>> 9e18abd (phase 2 test lilly)
->>>>>>> e924226 (phase 2 lilly testing)
-=======
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868

@@ -1,7 +1,7 @@
 /** @type {import('jest').Config} */
 module.exports = {
   testEnvironment: 'node',
-<<<<<<< HEAD
+
 
   coverageDirectory: 'coverage',
 
@@ -18,9 +18,9 @@ module.exports = {
   // Files measured for coverage
 
 
-=======
+
   coverageDirectory: 'coverage',
->>>>>>> 432d1fd7e21526f0e67bf425c6eced46f0b9c868
+
   collectCoverageFrom: [
     'src/**/*.js',
     // entry points and config — not unit-testable in isolation

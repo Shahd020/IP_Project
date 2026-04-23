@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/node';
+const Sentry = require('@sentry/node');
 
 const initialiseSentry = () => {
   if (!process.env.SENTRY_DSN) return;
@@ -10,4 +10,4 @@ const initialiseSentry = () => {
   });
 };
 
-export { Sentry, initialiseSentry };
+module.exports = { Sentry, initialiseSentry };

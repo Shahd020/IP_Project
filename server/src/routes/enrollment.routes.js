@@ -1,19 +1,17 @@
-import { Router } from 'express';
-import { body, query } from 'express-validator';
-import enrollmentController from '../controllers/enrollment.controller.js';
-import validate from '../middleware/validate.js';
-import authenticate from '../middleware/authenticate.js';
-import authorize from '../middleware/authorize.js';
+const express = require('express');
+const { body, query } = require('express-validator');
 
-const router = Router();
+const enrollmentController = require('../controllers/enrollment.controller.js');
+const validate = require('../middleware/validate.js');
+const authenticate = require('../middleware/authenticate.js');
+const authorize = require('../middleware/authorize.js');
+
+const router = express.Router();
 
 // All enrollment routes require authentication
 router.use(authenticate);
 
-/**
- * GET /api/enrollments/my?status=in-progress
- * Returns the authenticated student's enrollments — replaces StudentCourses mock data.
- */
+// GET /api/enrollments/my
 router.get(
   '/my',
   [
@@ -26,20 +24,14 @@ router.get(
   enrollmentController.getMine
 );
 
-/**
- * GET /api/enrollments/course/:courseId
- * Instructor/admin view — all students enrolled in a course.
- */
+// GET /api/enrollments/course/:courseId
 router.get(
   '/course/:courseId',
   authorize('instructor', 'admin'),
   enrollmentController.getByCourse
 );
 
-/**
- * POST /api/enrollments
- * Enroll in a course or add to wishlist.
- */
+// POST /api/enrollments
 router.post(
   '/',
   authorize('student'),
@@ -54,10 +46,7 @@ router.post(
   enrollmentController.enroll
 );
 
-/**
- * PATCH /api/enrollments/:id/progress
- * Mark a module as completed and recalculate overall progress.
- */
+// PATCH /api/enrollments/:id/progress
 router.patch(
   '/:id/progress',
   authorize('student'),
@@ -69,10 +58,7 @@ router.patch(
   enrollmentController.updateProgress
 );
 
-/**
- * DELETE /api/enrollments/:id
- * Unenroll / remove from wishlist.
- */
+// DELETE /api/enrollments/:id
 router.delete('/:id', authorize('student'), enrollmentController.unenroll);
 
-export default router;
+module.exports = router;

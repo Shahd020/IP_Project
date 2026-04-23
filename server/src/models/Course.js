@@ -1,11 +1,7 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-/**
- * A slug is derived from the title on first save for clean URLs.
- * The text index on title+description powers the course catalog search bar.
- */
 const courseSchema = new Schema(
   {
     title: {
@@ -51,7 +47,6 @@ const courseSchema = new Schema(
       },
     },
 
-    /** The institution or organisation offering this course (e.g. "Stanford University"). */
     provider: {
       type: String,
       required: [true, 'Provider is required'],
@@ -59,21 +54,18 @@ const courseSchema = new Schema(
       maxlength: [100, 'Provider name cannot exceed 100 characters'],
     },
 
-    /** The instructor who owns and manages this course. */
     instructor: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Instructor is required'],
     },
 
-    /** Duration expressed as a human-readable string, e.g. "10 weeks". */
     duration: {
       type: String,
       required: [true, 'Duration is required'],
       trim: true,
     },
 
-    /** Average rating, recalculated via a virtual whenever a new review lands. */
     rating: {
       type: Number,
       default: 0,
@@ -104,15 +96,12 @@ const courseSchema = new Schema(
   }
 );
 
-// â”€â”€â”€ Indexes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-courseSchema.index({ title: 'text', description: 'text' }); // full-text search
+courseSchema.index({ title: 'text', description: 'text' });
 courseSchema.index({ instructor: 1 });
 courseSchema.index({ category: 1 });
 courseSchema.index({ isPublished: 1 });
 courseSchema.index({ createdAt: -1 });
 
-// â”€â”€â”€ Virtuals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-/** Exposes the modules sub-collection without embedding them in the document. */
 courseSchema.virtual('modules', {
   ref: 'Module',
   localField: '_id',
@@ -120,9 +109,7 @@ courseSchema.virtual('modules', {
   options: { sort: { order: 1 } },
 });
 
-// â”€â”€â”€ Hooks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-/** Auto-generate URL-safe slug from title on creation. */
-courseSchema.pre('save', function generateSlug(next) {
+courseSchema.pre('save', function (next) {
   if (!this.isModified('title')) return next();
 
   const base = this.title
@@ -131,10 +118,10 @@ courseSchema.pre('save', function generateSlug(next) {
     .trim()
     .replace(/\s+/g, '-');
 
-  // Append a short timestamp fragment to guarantee uniqueness on duplicates.
   this.slug = `${base}-${Date.now().toString(36)}`;
   next();
 });
 
 const Course = mongoose.model('Course', courseSchema);
-export default Course;
+
+module.exports = Course;

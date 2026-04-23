@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, PlayCircle, CheckCircle, Clock, Star, FileText, Award, Loader, AlertCircle } from "lucide-react";
-import { useCourseById } from "../hooks/useFetchCourses";
+import useFetchCourses from '../hooks/useFetchCourses.js';
 import useEnrollments from "../hooks/useEnrollments";
 
 import StanfordLogo from '../assets/Logos/Standford.webp';

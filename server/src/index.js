@@ -1,6 +1,12 @@
 // src/index.js — entry point
 // Tip (Lab 8): dotenv.config() is called inside app.js before anything else,
 // so process.env is populated by the time we reach this file.
+require('dotenv').config({
+  path: require('path').resolve(__dirname, '../.env')
+});
+
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI); // 👈 ADD THIS
 const http = require('http');
 const app = require('./app');
 const connectDB = require('./config/db');

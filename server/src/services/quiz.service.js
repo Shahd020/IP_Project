@@ -1,14 +1,11 @@
-import Quiz from '../models/Quiz.js';
-import Module from '../models/Module.js';
-import Enrollment from '../models/Enrollment.js';
-import Course from '../models/Course.js';
-import ApiError from '../utils/ApiError.js';
+const Quiz = require('../models/Quiz.js');
+const Module = require('../models/Module.js');
+const Enrollment = require('../models/Enrollment.js');
+const Course = require('../models/Course.js');
+const ApiError = require('../utils/ApiError.js');
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Confirm the requesting user owns the module's parent course.
- */
 const assertModuleOwnership = async (moduleId, userId, userRole) => {
   const module = await Module.findById(moduleId).select('course');
   if (!module) throw ApiError.notFound('Module not found');
@@ -24,28 +21,12 @@ const assertModuleOwnership = async (moduleId, userId, userRole) => {
 
 // ─── Read ─────────────────────────────────────────────────────────────────────
 
-/**
- * Returns quiz questions WITHOUT correctAnswer — safe to send to any authenticated user.
- *
- * @param {string} moduleId
- * @returns {object|null}
- */
 const getQuizForAttempt = async (moduleId) => {
-  return Quiz.findOne({ module: moduleId }); // toJSON transform strips correctAnswer
+  return Quiz.findOne({ module: moduleId });
 };
 
 // ─── Write ────────────────────────────────────────────────────────────────────
 
-/**
- * Create or replace the quiz for a module (idempotent upsert).
- * Only the owning instructor or an admin may call this.
- *
- * @param {string} moduleId
- * @param {{ questions: object[], passingScore?: number }} data
- * @param {string} userId
- * @param {string} userRole
- * @returns {object} Saved quiz document
- */
 const createOrUpdateQuiz = async (moduleId, data, userId, userRole) => {
   await assertModuleOwnership(moduleId, userId, userRole);
 
@@ -59,26 +40,13 @@ const createOrUpdateQuiz = async (moduleId, data, userId, userRole) => {
 
 // ─── Submit ───────────────────────────────────────────────────────────────────
 
-/**
- * Grade a student's quiz submission and update their enrollment on a pass.
- *
- * Fetches the quiz with correctAnswer (bypassing the toJSON transform) so
- * grading happens server-side — the correct answers never reach the client.
- *
- * @param {string} moduleId
- * @param {Record<string, number>} answers  { questionId: selectedOptionIndex }
- * @param {string} studentId
- * @returns {{ score: number, total: number, percentage: number, passed: boolean }}
- */
 const submitQuiz = async (moduleId, answers, studentId) => {
-  // Explicitly select correctAnswer — bypasses select:false
   const quiz = await Quiz.findOne({ module: moduleId }).select('+questions.correctAnswer');
   if (!quiz) throw ApiError.notFound('No quiz found for this module');
 
   const result = quiz.grade(answers);
 
   if (result.passed) {
-    // Find and update the student's enrollment for this module's course
     const module = await Module.findById(moduleId).select('course');
 
     if (module) {
@@ -119,4 +87,8 @@ const submitQuiz = async (moduleId, answers, studentId) => {
   return result;
 };
 
-export default { getQuizForAttempt, createOrUpdateQuiz, submitQuiz };
+module.exports = {
+  getQuizForAttempt,
+  createOrUpdateQuiz,
+  submitQuiz,
+};

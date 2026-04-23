@@ -1,5 +1,5 @@
-import userService from '../services/user.service.js';
-import asyncHandler from '../utils/asyncHandler.js';
+const userService = require('../services/user.service.js');
+const asyncHandler = require('../utils/asyncHandler.js');
 
 // ─── GET /api/users ───────────────────────────────────────────────────────────
 const getAll = asyncHandler(async (req, res) => {
@@ -41,4 +41,4 @@ const toggleActive = asyncHandler(async (req, res) => {
   });
 });
 
-export default { getAll, getOne, update, remove, toggleActive };
+module.exports = { getAll, getOne, update, remove, toggleActive };
