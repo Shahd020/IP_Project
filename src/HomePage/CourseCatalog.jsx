@@ -4,7 +4,7 @@ import {
   ArrowLeft, Star, Clock, CheckCircle, Award, MonitorPlay,
   Infinity as InfinityIcon, Loader, AlertCircle, BookOpen
 } from 'lucide-react';
-import useFetchCourses from '../hooks/useFetchCourses.js';
+import useCourseById from '../hooks/useCourseById.js';
 import useEnrollments from '../hooks/useEnrollments.js';
 import useAuth from '../hooks/useAuth.js';
 

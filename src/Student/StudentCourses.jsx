@@ -1,27 +1,15 @@
 ﻿import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Play, CheckCircle, AlertCircle } from "lucide-react";
-import useFetchCourses from "../hooks/useFetchCourses.js";
+import useEnrollments from "../hooks/useEnrollments.js";
 
 const PLACEHOLDER = "https://placehold.co/400x160/1f2937/94a3b8?text=Course";
 
 function StudentCourses() {
   const [activeTab, setActiveTab] = useState("in-progress");
-  const { enrollments, loading, error } = useFetchCourses();
+  const { enrollments, loading, error } = useEnrollments();
 
-  const courses = enrollments.map((e) => ({
-    id: e.course._id,
-    title: e.course.title,
-    provider: e.course.provider,
-    duration: e.course.duration,
-    rating: e.course.rating ? `${e.course.rating} ⭐` : "N/A",
-    image: e.course.thumbnail || null,
-    progressPercent: e.progressPercent,
-    progressText: e.progressText,
-    status: e.status,
-  }));
-
-  const filteredCourses = courses.filter((c) => c.status === activeTab);
+  const filteredCourses = enrollments.filter((e) => e.status === activeTab);
 
   const renderButton = (status, courseId) => {
     if (status === "completed") {
@@ -61,10 +49,10 @@ function StudentCourses() {
       {!loading && !error && (
         <div className="grid grid-cols-3 gap-6">
           {filteredCourses.map(course => (
-            <div key={course.id} className="bg-gray-800 p-4 rounded">
+            <div key={course.courseId} className="bg-gray-800 p-4 rounded">
               <img src={course.image || PLACEHOLDER} alt="" />
               <h3>{course.title}</h3>
-              {renderButton(course.status, course.id)}
+              {renderButton(course.status, course.courseId)}
             </div>
           ))}
         </div>

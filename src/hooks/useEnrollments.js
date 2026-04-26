@@ -1,29 +1,34 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiClient from '../api/axios.js';
-
-const statusMap = { active: 'in-progress', completed: 'completed' };
+import useAuth from './useAuth.js';
 
 const adaptEnrollment = (e) => ({
   id: e._id,
   courseId: e.course?._id,
   title: e.course?.title ?? 'Untitled',
-  provider: e.course?.instructor?.name ?? 'Unknown Instructor',
+  provider: e.course?.provider ?? e.course?.instructor?.name ?? 'Unknown Instructor',
   duration: e.course?.duration ?? '—',
   rating: e.course?.rating ? `${e.course.rating} ⭐` : '—',
   image: e.course?.thumbnail ?? null,
-  progressPercent: e.progress ?? 0,
-  progressText: e.progress === 100 ? 'Finished' : `${e.progress ?? 0}%`,
-  status: statusMap[e.status] ?? 'in-progress',
+  progressPercent: e.progressPercent ?? 0,
+  progressText: e.progressPercent === 100 ? 'Finished' : `${e.progressPercent ?? 0}%`,
+  status: e.status ?? 'saved',
   completedModules: e.completedModules ?? [],
   raw: e,
 });
 
 const useEnrollments = () => {
+  const { user } = useAuth();
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchEnrollments = useCallback(async () => {
+    if (!user) {
+      setEnrollments([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -34,7 +39,7 @@ const useEnrollments = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => { fetchEnrollments(); }, [fetchEnrollments]);
 
@@ -46,7 +51,7 @@ const useEnrollments = () => {
 
   const completeModule = useCallback(async (enrollmentId, moduleId) => {
     try {
-      const res = await apiClient.patch(`/enrollments/${enrollmentId}/complete-module`, { moduleId });
+      const res = await apiClient.patch(`/enrollments/${enrollmentId}/progress`, { moduleId });
       setEnrollments((prev) =>
         prev.map((e) => (e.id === enrollmentId ? adaptEnrollment(res.data.data.enrollment) : e))
       );
