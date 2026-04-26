@@ -2,8 +2,8 @@
   "name": "elearning-server",
   "version": "1.0.0",
   "description": "Node.js/Express/MongoDB backend for the e-learning platform",
-  "type": "commonjs",
-  "main": "src/index.js",
+  "type": "module",
+  "main": "src/server.js",
   "engines": {
     "node": ">=20"
   },

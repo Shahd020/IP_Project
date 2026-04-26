@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
@@ -77,4 +77,4 @@ enrollmentSchema.pre('save', function (next) {
 
 const Enrollment = mongoose.model('Enrollment', enrollmentSchema);
 
-module.exports = Enrollment;
+export default Enrollment;

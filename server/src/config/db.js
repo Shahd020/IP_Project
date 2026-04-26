@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 /**
  * Establishes and monitors the Mongoose connection.
@@ -33,4 +33,4 @@ mongoose.connection.on('reconnected', () => {
   console.info('MongoDB reconnected');
 });
 
-module.exports = connectDB;
+export default connectDB;

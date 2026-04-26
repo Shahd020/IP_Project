@@ -1,7 +1,6 @@
-// tests/course.test.js
-const request = require('supertest');
-const app = require('../src/app');
-const { USERS, COURSE_PAYLOAD, registerAndLogin, bearer, createCourse } = require('./helpers');
+import request from 'supertest';
+import app from '../src/app.js';
+import { USERS, COURSE_PAYLOAD, registerAndLogin, bearer, createCourse } from './helpers.js';
 
 describe('GET /api/courses (catalog)', () => {
   it('returns empty array when no courses exist', async () => {
@@ -13,11 +12,12 @@ describe('GET /api/courses (catalog)', () => {
 
   it('returns only published courses', async () => {
     const { accessToken } = await registerAndLogin(USERS.instructor);
-    await createCourse(accessToken, { status: 'draft' });
-    await createCourse(accessToken, { status: 'published', title: 'Published Course' });
+    await createCourse(accessToken);                                        // isPublished: false (default)
+    await createCourse(accessToken, { isPublished: true, title: 'Published Course About Web APIs' });
 
     const res = await request(app).get('/api/courses');
-    expect(res.body.data.courses.every((c) => c.status === 'published')).toBe(true);
+    expect(res.status).toBe(200);
+    expect(res.body.data.courses.every((c) => c.isPublished === true)).toBe(true);
   });
 });
 
@@ -72,20 +72,20 @@ describe('PATCH /api/courses/:id', () => {
     const res = await request(app)
       .patch(`/api/courses/${course._id}`)
       .set('Authorization', bearer(accessToken))
-      .send({ title: 'Updated Title' });
+      .send({ title: 'Updated Title About Something Longer' });
     expect(res.status).toBe(200);
-    expect(res.body.data.course.title).toBe('Updated Title');
+    expect(res.body.data.course.title).toBe('Updated Title About Something Longer');
   });
 
   it('another instructor cannot update someone else\'s course', async () => {
     const { accessToken: token1 } = await registerAndLogin(USERS.instructor);
-    const { accessToken: token2 } = await registerAndLogin(USERS.instructor2 || { ...USERS.instructor, email: 'instr2@example.com' });
+    const { accessToken: token2 } = await registerAndLogin({ ...USERS.instructor, email: 'instr2@example.com' });
     const course = await createCourse(token1);
 
     const res = await request(app)
       .patch(`/api/courses/${course._id}`)
       .set('Authorization', bearer(token2))
-      .send({ title: 'Hacked' });
+      .send({ title: 'Hacked Title That Is Long Enough For Validation' });
     expect(res.status).toBe(403);
   });
 });
@@ -98,6 +98,6 @@ describe('DELETE /api/courses/:id', () => {
     const res = await request(app)
       .delete(`/api/courses/${course._id}`)
       .set('Authorization', bearer(accessToken));
-    expect(res.status).toBe(204);
+    expect(res.status).toBe(200);
   });
 });

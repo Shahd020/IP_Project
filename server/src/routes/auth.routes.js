@@ -1,16 +1,15 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+import authController from '../controllers/auth.controller.js';
+import * as authValidators from '../validators/auth.validators.js';
+import validate from '../middleware/validate.js';
+import authenticate from '../middleware/authenticate.js';
 
-const authController = require('../controllers/auth.controller.js');
-const validate = require('../middleware/validate.js');
-const { registerRules, loginRules } = require('../middleware/validators.js');
-const authenticate = require('../middleware/protect.js'); // or authenticate.js (depending on your file name)
+const router = Router();
 
-// Routes
-router.post('/register', registerRules, validate, authController.register);
-router.post('/login', loginRules, validate, authController.login);
+router.post('/register', authValidators.register, validate, authController.register);
+router.post('/login', authValidators.login, validate, authController.login);
 router.post('/refresh', authController.refresh);
 router.post('/logout', authenticate, authController.logout);
 router.get('/me', authenticate, authController.getMe);
 
-module.exports = router;
+export default router;

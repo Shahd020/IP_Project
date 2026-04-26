@@ -1,7 +1,7 @@
-const User = require('../models/User.js');
-const { verifyAccessToken } = require('../utils/jwt.js');
-const ApiError = require('../utils/ApiError.js');
-const asyncHandler = require('../utils/asyncHandler.js');
+import User from '../models/User.js';
+import { verifyAccessToken } from '../utils/jwt.js';
+import ApiError from '../utils/ApiError.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 const authenticate = asyncHandler(async (req, _res, next) => {
   const authHeader = req.headers.authorization;
@@ -28,4 +28,4 @@ const authenticate = asyncHandler(async (req, _res, next) => {
   next();
 });
 
-module.exports = authenticate;
+export default authenticate;

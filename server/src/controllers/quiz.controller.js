@@ -1,5 +1,5 @@
-const quizService = require('../services/quiz.service.js');
-const asyncHandler = require('../utils/asyncHandler.js');
+import quizService from '../services/quiz.service.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 // ─── GET /api/modules/:moduleId/quiz ─────────────────────────────────────────
 const getQuiz = asyncHandler(async (req, res) => {
@@ -28,4 +28,4 @@ const submit = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: result });
 });
 
-module.exports = { getQuiz, createOrUpdate, submit };
+export default { getQuiz, createOrUpdate, submit };

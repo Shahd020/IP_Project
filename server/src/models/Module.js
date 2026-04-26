@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
@@ -66,4 +66,4 @@ moduleSchema.virtual('forumPosts', {
 
 const Module = mongoose.model('Module', moduleSchema);
 
-module.exports = Module;
+export default Module;

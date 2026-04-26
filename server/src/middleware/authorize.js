@@ -1,4 +1,4 @@
-const ApiError = require('../utils/ApiError.js');
+import ApiError from '../utils/ApiError.js';
 
 /**
  * Role-Based Access Control (RBAC) guard
@@ -21,4 +21,4 @@ const authorize =
     next();
   };
 
-module.exports = authorize;
+export default authorize;

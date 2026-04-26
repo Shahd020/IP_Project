@@ -1,5 +1,5 @@
-const ForumPost = require('../models/ForumPost.js');
-const ApiError = require('../utils/ApiError.js');
+import ForumPost from '../models/ForumPost.js';
+import ApiError from '../utils/ApiError.js';
 
 // ─── Read ─────────────────────────────────────────────────────────────────────
 
@@ -41,7 +41,7 @@ const deletePost = async (postId, userId, userRole) => {
   await post.save();
 };
 
-module.exports = {
+export default {
   getPostsByCourse,
   createPost,
   deletePost,

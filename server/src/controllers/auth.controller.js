@@ -1,6 +1,6 @@
-const authService = require('../services/auth.service.js');
-const { refreshCookieOptions } = require('../utils/jwt.js');
-const asyncHandler = require('../utils/asyncHandler.js');
+import authService from '../services/auth.service.js';
+import { refreshCookieOptions } from '../utils/jwt.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 // ─── POST /api/auth/register ──────────────────────────────────────────────────
 const register = asyncHandler(async (req, res) => {
@@ -67,4 +67,4 @@ const getMe = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: { user: req.user } });
 });
 
-module.exports = { register, login, refresh, logout, getMe };
+export default { register, login, refresh, logout, getMe };

@@ -1,5 +1,5 @@
-const enrollmentService = require('../services/enrollment.service.js');
-const asyncHandler = require('../utils/asyncHandler.js');
+import enrollmentService from '../services/enrollment.service.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 // ─── GET /api/enrollments/my ──────────────────────────────────────────────────
 const getMine = asyncHandler(async (req, res) => {
@@ -41,4 +41,4 @@ const unenroll = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: 'Unenrolled successfully' });
 });
 
-module.exports = { getMine, getByCourse, enroll, updateProgress, unenroll };
+export default { getMine, getByCourse, enroll, updateProgress, unenroll };

@@ -1,4 +1,4 @@
-const { body, query } = require('express-validator');
+import { body, query } from 'express-validator';
 
 /** PATCH /api/users/:id */
 const updateUser = [
@@ -43,7 +43,4 @@ const listUsers = [
   query('search').optional().trim().isLength({ max: 100 }),
 ];
 
-module.exports = {
-  updateUser,
-  listUsers,
-};
+export { updateUser, listUsers };

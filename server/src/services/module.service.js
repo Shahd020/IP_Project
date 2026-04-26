@@ -1,7 +1,8 @@
-const Module = require('../models/Module.js');
-const Course = require('../models/Course.js');
-const Quiz = require('../models/Quiz.js');
-const ApiError = require('../utils/ApiError.js');
+import Module from '../models/Module.js';
+import Course from '../models/Course.js';
+import Quiz from '../models/Quiz.js';
+import ApiError from '../utils/ApiError.js';
+import forumService from './forum.service.js';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -26,8 +27,6 @@ const getModulesByCourse = async (courseId) => {
 const getModuleWithDetails = async (moduleId) => {
   const module = await Module.findById(moduleId);
   if (!module) throw ApiError.notFound('Module not found');
-
-  const forumService = require('./forum.service.js');
 
   const [quiz, forumPosts] = await Promise.all([
     Quiz.findOne({ module: moduleId }),
@@ -67,7 +66,7 @@ const deleteModule = async (moduleId, userId, userRole) => {
   ]);
 };
 
-module.exports = {
+export default {
   getModulesByCourse,
   getModuleWithDetails,
   createModule,

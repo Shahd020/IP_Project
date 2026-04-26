@@ -1,5 +1,5 @@
-const forumService = require('../services/forum.service.js');
-const asyncHandler = require('../utils/asyncHandler.js');
+import forumService from '../services/forum.service.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 // ─── GET /api/forum/course/:courseId ─────────────────────────────────────────
 const getByCourse = asyncHandler(async (req, res) => {
@@ -41,4 +41,4 @@ const remove = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: 'Post deleted' });
 });
 
-module.exports = { getByCourse, getByModule, create, remove };
+export default { getByCourse, getByModule, create, remove };

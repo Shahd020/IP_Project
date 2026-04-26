@@ -1,7 +1,7 @@
-const Course = require('../models/Course.js');
-const Module = require('../models/Module.js');
-const Enrollment = require('../models/Enrollment.js');
-const ApiError = require('../utils/ApiError.js');
+import Course from '../models/Course.js';
+import Module from '../models/Module.js';
+import Enrollment from '../models/Enrollment.js';
+import ApiError from '../utils/ApiError.js';
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
@@ -140,7 +140,7 @@ const deleteCourse = async (courseId, userId, userRole) => {
   ]);
 };
 
-module.exports = {
+export default {
   getAllCourses,
   getInstructorCourses,
   getCourseById,

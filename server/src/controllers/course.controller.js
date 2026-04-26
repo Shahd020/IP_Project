@@ -1,5 +1,5 @@
-const courseService = require('../services/course.service.js');
-const asyncHandler = require('../utils/asyncHandler.js');
+import courseService from '../services/course.service.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 // ─── GET /api/courses ─────────────────────────────────────────
 const getAll = asyncHandler(async (req, res) => {
@@ -39,4 +39,4 @@ const remove = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: 'Course deleted' });
 });
 
-module.exports = { getAll, getMyCourses, getOne, create, update, remove };
+export default { getAll, getMyCourses, getOne, create, update, remove };

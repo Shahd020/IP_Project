@@ -1,25 +1,18 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+import moduleController from '../controllers/module.controller.js';
+import quizController from '../controllers/quiz.controller.js';
+import authenticate from '../middleware/authenticate.js';
+import authorize from '../middleware/authorize.js';
 
-const moduleController = require('../controllers/module.controller.js');
-const authenticate = require('../middleware/protect.js'); // or authenticate.js
-const authorize = require('../middleware/authorize.js');
+const router = Router();
 
-// Get modules for a course (public or authenticated depending on your design)
-router.get('/course/:courseId', moduleController.getByCourse);
+// GET /api/modules/course/:courseId — list modules for a course
+router.get('/course/:courseId', authenticate, moduleController.getByCourse);
 
-// Get module details
-router.get('/:moduleId', moduleController.getDetails);
+// GET /api/modules/:moduleId/details — module + quiz + forum posts
+router.get('/:moduleId/details', authenticate, moduleController.getDetails);
 
-// Create module (instructor/admin)
-router.post(
-  '/course/:courseId',
-  authenticate,
-  authorize('instructor', 'admin'),
-  moduleController.create
-);
-
-// Update module
+// PATCH /api/modules/:moduleId
 router.patch(
   '/:moduleId',
   authenticate,
@@ -27,7 +20,7 @@ router.patch(
   moduleController.update
 );
 
-// Delete module
+// DELETE /api/modules/:moduleId
 router.delete(
   '/:moduleId',
   authenticate,
@@ -35,4 +28,18 @@ router.delete(
   moduleController.remove
 );
 
-module.exports = router;
+// GET /api/modules/:moduleId/quiz
+router.get('/:moduleId/quiz', authenticate, quizController.getQuiz);
+
+// POST /api/modules/:moduleId/quiz
+router.post(
+  '/:moduleId/quiz',
+  authenticate,
+  authorize('instructor', 'admin'),
+  quizController.createOrUpdate
+);
+
+// POST /api/modules/:moduleId/quiz/submit
+router.post('/:moduleId/quiz/submit', authenticate, authorize('student'), quizController.submit);
+
+export default router;

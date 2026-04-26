@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
@@ -55,4 +55,4 @@ forumPostSchema.index({ author: 1 });
 
 const ForumPost = mongoose.model('ForumPost', forumPostSchema);
 
-module.exports = ForumPost;
+export default ForumPost;

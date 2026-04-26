@@ -1,14 +1,12 @@
-const express = require('express');
-const { body, query } = require('express-validator');
+import { Router } from 'express';
+import { body, query } from 'express-validator';
+import enrollmentController from '../controllers/enrollment.controller.js';
+import validate from '../middleware/validate.js';
+import authenticate from '../middleware/authenticate.js';
+import authorize from '../middleware/authorize.js';
 
-const enrollmentController = require('../controllers/enrollment.controller.js');
-const validate = require('../middleware/validate.js');
-const authenticate = require('../middleware/authenticate.js');
-const authorize = require('../middleware/authorize.js');
+const router = Router();
 
-const router = express.Router();
-
-// All enrollment routes require authentication
 router.use(authenticate);
 
 // GET /api/enrollments/my
@@ -61,4 +59,4 @@ router.patch(
 // DELETE /api/enrollments/:id
 router.delete('/:id', authorize('student'), enrollmentController.unenroll);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
@@ -124,4 +124,4 @@ courseSchema.pre('save', function (next) {
 
 const Course = mongoose.model('Course', courseSchema);
 
-module.exports = Course;
+export default Course;

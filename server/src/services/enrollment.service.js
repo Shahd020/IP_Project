@@ -1,7 +1,7 @@
-const Enrollment = require('../models/Enrollment.js');
-const Course = require('../models/Course.js');
-const Module = require('../models/Module.js');
-const ApiError = require('../utils/ApiError.js');
+import Enrollment from '../models/Enrollment.js';
+import Course from '../models/Course.js';
+import Module from '../models/Module.js';
+import ApiError from '../utils/ApiError.js';
 
 // ─── Read ─────────────────────────────────────────────────────────────────────
 
@@ -97,7 +97,7 @@ const unenroll = async (enrollmentId, studentId) => {
   await enrollment.deleteOne();
 };
 
-module.exports = {
+export default {
   getStudentEnrollments,
   getCourseEnrollments,
   enrollInCourse,

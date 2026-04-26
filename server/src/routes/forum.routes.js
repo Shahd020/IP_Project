@@ -1,11 +1,10 @@
-const express = require('express');
-const { body, query } = require('express-validator');
+import { Router } from 'express';
+import { body, query } from 'express-validator';
+import forumController from '../controllers/forum.controller.js';
+import validate from '../middleware/validate.js';
+import authenticate from '../middleware/authenticate.js';
 
-const forumController = require('../controllers/forum.controller.js');
-const validate = require('../middleware/validate.js');
-const authenticate = require('../middleware/authenticate.js');
-
-const router = express.Router();
+const router = Router();
 
 router.use(authenticate);
 
@@ -41,4 +40,4 @@ router.post(
 // DELETE /api/forum/posts/:postId
 router.delete('/posts/:postId', forumController.remove);
 
-module.exports = router;
+export default router;

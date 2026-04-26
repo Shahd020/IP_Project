@@ -1,6 +1,6 @@
-const User = require('../models/User.js');
-const { signAccessToken, signRefreshToken, verifyRefreshToken } = require('../utils/jwt.js');
-const ApiError = require('../utils/ApiError.js');
+import User from '../models/User.js';
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
+import ApiError from '../utils/ApiError.js';
 
 /**
  * Builds the safe user payload sent back to the client.
@@ -99,4 +99,4 @@ const logout = async (userId, refreshToken) => {
   await user.revokeRefreshToken(refreshToken);
 };
 
-module.exports = { register, login, refreshTokens, logout };
+export default { register, login, refreshTokens, logout };

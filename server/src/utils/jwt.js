@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 /**
  * Sign a short-lived Access Token
@@ -41,7 +41,7 @@ const refreshCookieOptions = (maxAgeMs = 7 * 24 * 60 * 60 * 1000) => ({
   path: '/api/auth',
 });
 
-module.exports = {
+export {
   signAccessToken,
   signRefreshToken,
   verifyAccessToken,

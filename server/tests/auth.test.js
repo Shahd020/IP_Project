@@ -1,7 +1,6 @@
-// tests/auth.test.js
-const request = require('supertest');
-const app = require('../src/app');
-const { USERS, bearer } = require('./helpers');
+import request from 'supertest';
+import app from '../src/app.js';
+import { USERS, bearer } from './helpers.js';
 
 describe('POST /api/auth/register', () => {
   it('creates a student account and returns accessToken', async () => {
