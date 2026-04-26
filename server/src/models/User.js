@@ -1,14 +1,8 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const { Schema } = mongoose;
 
-/**
- * Stores hashed passwords — plaintext is never persisted.
- * refreshTokens array enables multi-device logout and token rotation.
- * `select: false` on password/refreshTokens prevents them leaking into
- * query results unless explicitly requested with .select('+password').
- */
 const userSchema = new Schema(
   {
     name: {
@@ -54,7 +48,6 @@ const userSchema = new Schema(
       default: true,
     },
 
-    /** Array of valid refresh tokens for this user (supports multi-device). */
     refreshTokens: {
       type: [String],
       select: false,
@@ -72,40 +65,30 @@ const userSchema = new Schema(
   }
 );
 
-// ─── Indexes ──────────────────────────────────────────────────────────────────
 userSchema.index({ role: 1 });
 userSchema.index({ createdAt: -1 });
 
-// ─── Hooks ────────────────────────────────────────────────────────────────────
-/** Hash password before any save that touches it. */
-userSchema.pre('save', async function hashPassword(next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-// ─── Instance Methods ─────────────────────────────────────────────────────────
-/**
- * Compare a plaintext candidate against the stored bcrypt hash.
- * @param {string} candidate - The password supplied by the user at login.
- * @returns {Promise<boolean>}
- */
-userSchema.methods.comparePassword = function comparePassword(candidate) {
+userSchema.methods.comparePassword = function (candidate) {
   return bcrypt.compare(candidate, this.password);
 };
 
-/** Remove a specific refresh token (logout from one device). */
-userSchema.methods.revokeRefreshToken = function revokeRefreshToken(token) {
+userSchema.methods.revokeRefreshToken = function (token) {
   this.refreshTokens = this.refreshTokens.filter((t) => t !== token);
   return this.save();
 };
 
-/** Remove all refresh tokens (logout from all devices). */
-userSchema.methods.revokeAllRefreshTokens = function revokeAllRefreshTokens() {
+userSchema.methods.revokeAllRefreshTokens = function () {
   this.refreshTokens = [];
   return this.save();
 };
 
 const User = mongoose.model('User', userSchema);
-export default User;
+
+module.exports = User;

@@ -7,10 +7,25 @@ EduPlatform is a comprehensive, responsive e-learning platform built with React 
 To view this project locally on your machine, please follow these steps:
 
 1. **Open your terminal** and navigate to the project directory.
-2. **Install the dependencies** by running: npm install
-3. **Start the development server** by running: npm run dev
+2. **Install frontend dependencies** by running: `npm install`
+3. **Install backend dependencies** by running: `cd server && npm install`
+4. **Create environment files** from `.env.example` and `server/.env.example`
+5. **Start the backend** from `server` by running: `npm run dev`
+6. **Start the frontend** from the project root by running: `npm run dev`
 
 Open your browser and go to the localhost link provided in the terminal (usually http://localhost:5173).
+
+## Cloud Hosting
+
+This repository is ready for separate frontend and backend hosting.
+
+- Frontend: deploy the project root to Vercel. Set `VITE_API_URL` to your backend URL, for example `https://your-render-api.onrender.com/api`.
+- Backend: deploy the `server` folder to Render. Use `npm install` as the build command and `npm start` as the start command.
+- Database: create a MongoDB Atlas cluster and set the Render `MONGODB_URI` environment variable.
+- CORS: set Render `CLIENT_ORIGIN` to your Vercel frontend URL.
+- Secrets: set `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` in Render to long random values.
+
+See `docs/PHASE_2_SPECIFICATION.md` for the database design, API routes, and Phase 2 scope.
 
 **Key Features to Review**
 This project goes beyond a standard static layout by implementing complex routing and role-based views. When grading, please be sure to test the following features:

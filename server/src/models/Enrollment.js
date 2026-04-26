@@ -1,17 +1,7 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-/**
- * Enrollment is the join table between User (student) and Course.
- * Status mirrors the three tabs in StudentCourses.jsx:
- *   'saved'       → Wishlist / Not Started
- *   'in-progress' → Continue button shown
- *   'completed'   → Review button shown; completedAt is set
- *
- * completedModules tracks granular progress so the frontend can compute
- * progressPercent server-side rather than guessing from dates.
- */
 const enrollmentSchema = new Schema(
   {
     student: {
@@ -35,7 +25,6 @@ const enrollmentSchema = new Schema(
       default: 'saved',
     },
 
-    /** 0–100 integer; recomputed by the service layer on every module completion. */
     progressPercent: {
       type: Number,
       default: 0,
@@ -43,26 +32,22 @@ const enrollmentSchema = new Schema(
       max: [100, 'Progress cannot exceed 100'],
     },
 
-    /** Human-readable label displayed on the progress card, e.g. "Module 4" or "7/10 Weeks". */
     progressText: {
       type: String,
       default: 'Not Started',
       maxlength: [50, 'Progress text too long'],
     },
 
-    /** IDs of modules the student has watched/completed. Avoids N+1 when rendering progress. */
     completedModules: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Module' }],
       default: [],
     },
 
-    /** Set to true only when the student has passed the quiz for the final module. */
     quizPassed: {
       type: Boolean,
       default: false,
     },
 
-    /** Timestamp of when status transitioned to 'completed'. */
     completedAt: {
       type: Date,
       default: null,
@@ -79,15 +64,11 @@ const enrollmentSchema = new Schema(
   }
 );
 
-// ─── Indexes ──────────────────────────────────────────────────────────────────
-// Unique compound: one enrollment record per student–course pair.
 enrollmentSchema.index({ student: 1, course: 1 }, { unique: true });
 enrollmentSchema.index({ student: 1, status: 1 });
 enrollmentSchema.index({ course: 1 });
 
-// ─── Hooks ────────────────────────────────────────────────────────────────────
-/** Auto-stamp completedAt when the status flips to 'completed'. */
-enrollmentSchema.pre('save', function stampCompletion(next) {
+enrollmentSchema.pre('save', function (next) {
   if (this.isModified('status') && this.status === 'completed' && !this.completedAt) {
     this.completedAt = new Date();
   }
@@ -95,4 +76,5 @@ enrollmentSchema.pre('save', function stampCompletion(next) {
 });
 
 const Enrollment = mongoose.model('Enrollment', enrollmentSchema);
-export default Enrollment;
+
+module.exports = Enrollment;

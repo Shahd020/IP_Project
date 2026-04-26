@@ -1,11 +1,7 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 /**
  * Establishes and monitors the Mongoose connection.
- *
- * Connection pooling is handled by the MongoDB Node.js driver.
- * `maxPoolSize: 10` is a sensible default for a small-to-medium academic app;
- * raise it if you observe connection-wait bottlenecks under load.
  */
 const connectDB = async () => {
   const uri = process.env.MONGODB_URI;
@@ -25,12 +21,10 @@ const connectDB = async () => {
     console.info(`MongoDB connected: ${conn.connection.host}`);
   } catch (err) {
     console.error(`MongoDB connection error: ${err.message}`);
-    // Exit so the process manager (nodemon / PM2) can restart with back-off.
     process.exit(1);
   }
 };
 
-// ─── Connection Event Listeners ───────────────────────────────────────────────
 mongoose.connection.on('disconnected', () => {
   console.warn('MongoDB disconnected');
 });
@@ -39,4 +33,4 @@ mongoose.connection.on('reconnected', () => {
   console.info('MongoDB reconnected');
 });
 
-export default connectDB;
+module.exports = connectDB;

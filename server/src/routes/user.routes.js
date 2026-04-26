@@ -1,19 +1,16 @@
-import { Router } from 'express';
-import userController from '../controllers/user.controller.js';
-import * as userValidators from '../validators/user.validators.js';
-import validate from '../middleware/validate.js';
-import authenticate from '../middleware/authenticate.js';
-import authorize from '../middleware/authorize.js';
+const express = require('express');
 
-const router = Router();
+const userController = require('../controllers/user.controller.js');
+const userValidators = require('../validators/user.validators.js');
+const validate = require('../middleware/validate.js');
+const authenticate = require('../middleware/authenticate.js');
+const authorize = require('../middleware/authorize.js');
+
+const router = express.Router();
 
 router.use(authenticate);
 
-/**
- * GET /api/users
- * Admin only — paginated list with optional role/search filters.
- * Powers ManageUsers.jsx dashboard.
- */
+// GET /api/users
 router.get(
   '/',
   authorize('admin'),
@@ -22,17 +19,10 @@ router.get(
   userController.getAll
 );
 
-/**
- * GET /api/users/:id
- * Admins may view any user; other roles only their own (enforced in service).
- */
+// GET /api/users/:id
 router.get('/:id', userController.getOne);
 
-/**
- * PATCH /api/users/:id
- * Admins may change any field. Students/instructors may only update
- * name and avatar on their own profile (service enforces this).
- */
+// PATCH /api/users/:id
 router.patch(
   '/:id',
   userValidators.updateUser,
@@ -40,20 +30,14 @@ router.patch(
   userController.update
 );
 
-/**
- * PATCH /api/users/:id/toggle-active
- * Admin only — activate or deactivate an account.
- */
+// PATCH /api/users/:id/toggle-active
 router.patch(
   '/:id/toggle-active',
   authorize('admin'),
   userController.toggleActive
 );
 
-/**
- * DELETE /api/users/:id
- * Admin only — hard delete with cascade.
- */
+// DELETE /api/users/:id
 router.delete('/:id', authorize('admin'), userController.remove);
 
-export default router;
+module.exports = router;

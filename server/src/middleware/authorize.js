@@ -1,17 +1,7 @@
-import ApiError from '../utils/ApiError.js';
+const ApiError = require('../utils/ApiError.js');
 
 /**
- * Role-Based Access Control (RBAC) guard — factory that returns a middleware.
- *
- * Must always come AFTER authenticate() in the middleware chain so
- * that req.user is already populated.
- *
- * Usage examples:
- *   router.post('/courses', authenticate, authorize('instructor', 'admin'), createCourse);
- *   router.delete('/users/:id', authenticate, authorize('admin'), deleteUser);
- *
- * @param {...string} roles - One or more allowed roles (student | instructor | admin).
- * @returns {import('express').RequestHandler}
+ * Role-Based Access Control (RBAC) guard
  */
 const authorize =
   (...roles) =>
@@ -31,4 +21,4 @@ const authorize =
     next();
   };
 
-export default authorize;
+module.exports = authorize;

@@ -1,15 +1,7 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-/**
- * ForumPost represents a single message in a course discussion thread.
- * Posts are always scoped to a Course, and optionally to a specific Module
- * (e.g. the question lives on "Module 3" rather than the whole course).
- *
- * Socket.io emits new documents in real-time; the REST API provides
- * paginated history on initial load and reconnection catch-up.
- */
 const forumPostSchema = new Schema(
   {
     course: {
@@ -18,7 +10,6 @@ const forumPostSchema = new Schema(
       required: [true, 'Forum post must belong to a course'],
     },
 
-    /** Optional — null means it is a course-level thread, not module-specific. */
     module: {
       type: Schema.Types.ObjectId,
       ref: 'Module',
@@ -39,7 +30,6 @@ const forumPostSchema = new Schema(
       maxlength: [2000, 'Post cannot exceed 2000 characters'],
     },
 
-    /** Soft-delete — hides the post from the UI without losing audit history. */
     isDeleted: {
       type: Boolean,
       default: false,
@@ -59,12 +49,10 @@ const forumPostSchema = new Schema(
   }
 );
 
-// ─── Indexes ──────────────────────────────────────────────────────────────────
-// Primary query pattern: "give me the last N posts for this course, newest first"
 forumPostSchema.index({ course: 1, createdAt: -1 });
-// Secondary pattern: "give me posts for this specific module"
 forumPostSchema.index({ module: 1, createdAt: -1 });
 forumPostSchema.index({ author: 1 });
 
 const ForumPost = mongoose.model('ForumPost', forumPostSchema);
-export default ForumPost;
+
+module.exports = ForumPost;

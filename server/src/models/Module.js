@@ -1,12 +1,7 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-/**
- * A Module is a single lesson/week inside a Course.
- * `order` determines display sequence; the Course virtual sorts by it.
- * The Quiz and ForumPost models both reference Module for scoped queries.
- */
 const moduleSchema = new Schema(
   {
     course: {
@@ -23,20 +18,18 @@ const moduleSchema = new Schema(
       maxlength: [150, 'Title cannot exceed 150 characters'],
     },
 
-    /** 1-based position of this module within the course. */
     order: {
       type: Number,
       required: [true, 'Module order is required'],
       min: [1, 'Order must be at least 1'],
     },
 
-    videoUrl: {
+    description: {
       type: String,
       trim: true,
       default: '',
     },
 
-    /** Short plain-text summary shown below the video player. */
     videoOverview: {
       type: String,
       trim: true,
@@ -44,7 +37,6 @@ const moduleSchema = new Schema(
       default: '',
     },
 
-    /** Total video length in seconds — used to compute estimated watch time. */
     videoDurationSeconds: {
       type: Number,
       default: 0,
@@ -56,11 +48,8 @@ const moduleSchema = new Schema(
   }
 );
 
-// ─── Indexes ──────────────────────────────────────────────────────────────────
-// Compound unique index: a course cannot have two modules at the same position.
 moduleSchema.index({ course: 1, order: 1 }, { unique: true });
 
-// ─── Virtuals ─────────────────────────────────────────────────────────────────
 moduleSchema.virtual('quiz', {
   ref: 'Quiz',
   localField: '_id',
@@ -76,4 +65,5 @@ moduleSchema.virtual('forumPosts', {
 });
 
 const Module = mongoose.model('Module', moduleSchema);
-export default Module;
+
+module.exports = Module;

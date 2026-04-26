@@ -1,7 +1,7 @@
-import { body, query } from 'express-validator';
+const { body, query } = require('express-validator');
 
-/** PATCH /api/users/:id — update any field (admin) or name/avatar (own profile) */
-export const updateUser = [
+/** PATCH /api/users/:id */
+const updateUser = [
   body('name')
     .optional()
     .trim()
@@ -32,8 +32,8 @@ export const updateUser = [
     .withMessage('Avatar URL is too long'),
 ];
 
-/** GET /api/users — list query params */
-export const listUsers = [
+/** GET /api/users */
+const listUsers = [
   query('page').optional().isInt({ min: 1 }),
   query('limit').optional().isInt({ min: 1, max: 100 }),
   query('role')
@@ -42,3 +42,8 @@ export const listUsers = [
     .withMessage('Invalid role filter'),
   query('search').optional().trim().isLength({ max: 100 }),
 ];
+
+module.exports = {
+  updateUser,
+  listUsers,
+};
