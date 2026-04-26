@@ -41,8 +41,14 @@ function LoginPage({ onLogin }) {
     
     if (!formData.password) {
       newErrors.password = 'Password is required.';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
+    } else if (isSignUp) {
+      if (formData.password.length < 8) {
+        newErrors.password = 'Password must be at least 8 characters.';
+      } else if (!/[A-Z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one uppercase letter.';
+      } else if (!/[0-9]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one number.';
+      }
     }
 
     if (isSignUp && !formData.role) {
@@ -77,7 +83,7 @@ function LoginPage({ onLogin }) {
       else if (user.role === 'instructor') navigate('/instructor');
       else navigate('/dashboard');
     } catch (err) {
-      setApiError(err.response?.data?.message || 'Something went wrong. Please try again.');
+      setApiError(err.response?.data?.message || err.message || 'Something went wrong. Please try again.');
     }
   };
 
@@ -116,7 +122,7 @@ function LoginPage({ onLogin }) {
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Lock size={18} /></div>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password (Min. 6 chars)" className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.password ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors`} />
+                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password (Min. 8 chars, uppercase, number)" className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.password ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors`} />
               </div>
               {errors.password && <p className="text-red-400 text-xs mt-1 ml-1">{errors.password}</p>}
             </div>
@@ -126,9 +132,9 @@ function LoginPage({ onLogin }) {
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500"><Briefcase size={18} /></div>
                 <select name="role" value={formData.role} onChange={handleChange} className={`w-full bg-[#0f172a] text-white pl-11 pr-4 py-3 rounded-xl border ${errors.role ? 'border-red-500' : 'border-gray-700 focus:border-blue-500'} focus:outline-none transition-colors appearance-none cursor-pointer`}>
                   <option value="" disabled>Select your role</option>
-                  <option value="Student">Student</option>
-                  <option value="Instructor">Instructor</option>
-                  <option value="Admin">Admin</option>
+                  <option value="student">Student</option>
+                  <option value="instructor">Instructor</option>
+                  <option value="admin">Admin</option>
                 </select>
               </div>
               {errors.role && <p className="text-red-400 text-xs mt-1 ml-1">{errors.role}</p>}
