@@ -3,15 +3,17 @@ import apiClient from '../api/axios.js';
 
 /**
  * Fetches everything CourseStudy.jsx needs for one course:
- *   - course metadata (title, instructor name, modules list)
+ *   - course metadata (title, instructor, ordered modules list)
+ *   - the student's enrollment (for completedModules + progress)
  *   - the "current" module (first incomplete, or last if all done)
  *   - that module's quiz (questions only — correct answers stay server-side)
  *   - that module's recent forum posts
  *
- * Exposes setCurrentModuleId so the component can let the student
- * jump to any module in the sidebar without a full page reload.
- *
- * @param {string} courseId  MongoDB ObjectId from URL params
+ * Exposes:
+ *   setCurrentModuleId  — jump to any module without a page reload
+ *   submitQuiz          — grade answers server-side, update enrollment on pass
+ *   addForumPost        — REST fallback when Socket.io is unavailable
+ *   markModuleComplete  — call when a student finishes watching a video
  */
 const useCourseStudy = (courseId) => {
   const [course, setCourse] = useState(null);
@@ -39,15 +41,18 @@ const useCourseStudy = (courseId) => {
         const fetchedCourse = courseRes.data.data.course;
         const myEnrollments = enrollRes.data.data.enrollments;
         const myEnrollment = myEnrollments.find(
-          (e) => e.course._id === courseId || e.course === courseId
+          (e) => (e.course?._id || e.course) === courseId
         );
 
         setCourse(fetchedCourse);
         setEnrollment(myEnrollment || null);
 
-        // Determine which module to show first
+        // Determine starting module: first incomplete, fallback to last
         const modules = fetchedCourse.modules || [];
-        if (modules.length === 0) return;
+        if (modules.length === 0) {
+          setLoading(false);
+          return;
+        }
 
         const completedIds = myEnrollment?.completedModules?.map(String) || [];
         const firstIncomplete = modules.find((m) => !completedIds.includes(String(m._id)));
@@ -84,22 +89,70 @@ const useCourseStudy = (courseId) => {
   }, [currentModuleId]);
 
   // ─── Submit Quiz ───────────────────────────────────────────────────────────
-  const submitQuiz = useCallback(async (answers) => {
-    const res = await apiClient.post(`/modules/${currentModuleId}/quiz/submit`, { answers });
-    return res.data.data; // { score, total, percentage, passed }
-  }, [currentModuleId]);
+  const submitQuiz = useCallback(
+    async (answers) => {
+      const res = await apiClient.post(`/modules/${currentModuleId}/quiz/submit`, { answers });
+      const result = res.data.data; // { score, total, percentage, passed }
+
+      // Refresh enrollment so completedModules + progress are up to date
+      if (result.passed) {
+        try {
+          const enrollRes = await apiClient.get('/enrollments/my');
+          const updated = enrollRes.data.data.enrollments.find(
+            (e) => (e.course?._id || e.course) === courseId
+          );
+          if (updated) setEnrollment(updated);
+        } catch { /* non-critical */ }
+      }
+
+      return result;
+    },
+    [currentModuleId, courseId]
+  );
+
+  // ─── Mark module complete (called when video finishes) ────────────────────
+  const markModuleComplete = useCallback(
+    async (moduleId) => {
+      if (!enrollment?._id || !moduleId) return;
+
+      // Already completed — skip the API call
+      const alreadyDone = enrollment.completedModules
+        ?.map(String)
+        .includes(String(moduleId));
+      if (alreadyDone) return;
+
+      try {
+        const order = course?.modules?.find(
+          (m) => String(m._id) === String(moduleId)
+        )?.order;
+        const progressText = order ? `Module ${order} complete` : 'In progress';
+
+        const res = await apiClient.patch(`/enrollments/${enrollment._id}/progress`, {
+          moduleId,
+          progressText,
+        });
+        setEnrollment(res.data.data.enrollment);
+      } catch (err) {
+        console.warn('[useCourseStudy] markModuleComplete failed:', err.message);
+      }
+    },
+    [enrollment, course]
+  );
 
   // ─── Add a forum post via REST (fallback when Socket.io is unavailable) ────
-  const addForumPost = useCallback(async (text) => {
-    const res = await apiClient.post('/forum/posts', {
-      courseId,
-      moduleId: currentModuleId,
-      text,
-    });
-    const newPost = res.data.data.post;
-    setForumPosts((prev) => [newPost, ...prev]);
-    return newPost;
-  }, [courseId, currentModuleId]);
+  const addForumPost = useCallback(
+    async (text) => {
+      const res = await apiClient.post('/forum/posts', {
+        courseId,
+        moduleId: currentModuleId,
+        text,
+      });
+      const newPost = res.data.data.post;
+      setForumPosts((prev) => [newPost, ...prev]);
+      return newPost;
+    },
+    [courseId, currentModuleId]
+  );
 
   return {
     course,
@@ -112,6 +165,7 @@ const useCourseStudy = (courseId) => {
     loading,
     error,
     submitQuiz,
+    markModuleComplete,
     addForumPost,
   };
 };

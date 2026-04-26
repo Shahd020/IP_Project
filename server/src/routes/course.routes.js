@@ -16,17 +16,11 @@ const router = Router();
  */
 router.get('/', courseValidators.listCourses, validate, courseController.getAll);
 
-/**
- * GET /api/courses/:id
- * Course detail page — modules populated, instructor populated.
- */
-router.get('/:id', courseController.getOne);
-
 // ─── Instructor / Admin ───────────────────────────────────────────────────────
 
 /**
  * GET /api/courses/instructor/my
- * Must be declared BEFORE /:id to avoid "my" being treated as an ObjectId.
+ * MUST be declared BEFORE /:id — otherwise Express matches "instructor" as an ObjectId.
  */
 router.get(
   '/instructor/my',
@@ -34,6 +28,12 @@ router.get(
   authorize('instructor', 'admin'),
   courseController.getMyCourses
 );
+
+/**
+ * GET /api/courses/:id
+ * Course detail page — modules populated, instructor populated.
+ */
+router.get('/:id', courseController.getOne);
 
 /**
  * POST /api/courses

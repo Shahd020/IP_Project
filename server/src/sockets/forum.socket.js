@@ -1,6 +1,5 @@
 import { verifyAccessToken } from '../utils/jwt.js';
 import ForumPost from '../models/ForumPost.js';
-import User from '../models/User.js';
 
 /**
  * Registers all Socket.io event handlers for the real-time course forum.

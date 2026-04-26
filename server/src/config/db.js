@@ -22,7 +22,7 @@ const connectDB = async () => {
 
   try {
     const conn = await mongoose.connect(uri, options);
-    console.log(`MongoDB connected: ${conn.connection.host}`);
+    console.info(`MongoDB connected: ${conn.connection.host}`);
   } catch (err) {
     console.error(`MongoDB connection error: ${err.message}`);
     // Exit so the process manager (nodemon / PM2) can restart with back-off.

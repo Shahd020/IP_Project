@@ -56,7 +56,6 @@ const normaliseError = (err) => {
  *
  * @type {import('express').ErrorRequestHandler}
  */
-// eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, _next) => {
   const apiError = normaliseError(err);
 

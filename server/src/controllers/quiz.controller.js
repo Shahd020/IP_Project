@@ -9,13 +9,13 @@ const getQuiz = asyncHandler(async (req, res) => {
 
 // ─── POST /api/modules/:moduleId/quiz ────────────────────────────────────────
 const createOrUpdate = asyncHandler(async (req, res) => {
-  const quiz = await quizService.createOrUpdateQuiz(
+  const { quiz, created } = await quizService.createOrUpdateQuiz(
     req.params.moduleId,
     req.body,
     req.user._id,
     req.user.role
   );
-  res.status(200).json({ success: true, message: 'Quiz saved', data: { quiz } });
+  res.status(created ? 201 : 200).json({ success: true, message: 'Quiz saved', data: { quiz } });
 });
 
 // ─── POST /api/modules/:moduleId/quiz/submit ──────────────────────────────────

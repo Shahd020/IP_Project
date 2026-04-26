@@ -41,9 +41,14 @@ const getAllUsers = async ({ page = 1, limit = 20, role, search } = {}) => {
 
 /**
  * @param {string} userId
+ * @param {string} requesterId
+ * @param {string} requesterRole
  * @returns {object}
  */
-const getUserById = async (userId) => {
+const getUserById = async (userId, requesterId, requesterRole) => {
+  if (requesterRole !== 'admin' && userId.toString() !== requesterId.toString()) {
+    throw ApiError.forbidden('You may only view your own profile');
+  }
   const user = await User.findById(userId);
   if (!user) throw ApiError.notFound('User not found');
   return user;

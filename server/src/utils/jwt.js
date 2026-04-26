@@ -51,8 +51,10 @@ export const verifyRefreshToken = (token) =>
  */
 export const refreshCookieOptions = (maxAgeMs = 7 * 24 * 60 * 60 * 1000) => ({
   httpOnly: true,
+  // In development on localhost, 'lax' + non-secure works correctly.
+  // In production, 'none' + secure is required for cross-origin requests.
   secure: process.env.NODE_ENV === 'production',
-  sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   maxAge: maxAgeMs,
   path: '/api/auth',
 });

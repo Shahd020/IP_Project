@@ -55,13 +55,12 @@ const quizSchema = new Schema(
     },
 
     /**
-     * Minimum percentage of correct answers to pass.
-     * The CourseStudy UI currently requires 100%; stored here so
-     * instructors can lower it per quiz in the future.
+     * Minimum percentage of correct answers to pass (default 80%).
+     * Certificate is unlocked when this threshold is met or exceeded.
      */
     passingScore: {
       type: Number,
-      default: 100,
+      default: 80,
       min: [1, 'Passing score must be at least 1%'],
       max: [100, 'Passing score cannot exceed 100%'],
     },

@@ -7,10 +7,11 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --runInBand --forceExit",
-    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --runInBand --forceExit --coverage",
-    "lint": "eslint src --ext .js",
-    "lint:fix": "eslint src --ext .js --fix",
+    "seed": "node src/seeder.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit --coverage",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\""
   },
   "dependencies": {
@@ -41,5 +42,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "mongodbMemoryServer": {
+    "systemBinary": "C:\\Program Files\\MongoDB\\Server\\7.0\\bin\\mongod.exe",
+    "version": "7.0.0"
+  }
 }

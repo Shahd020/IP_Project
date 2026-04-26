@@ -37,8 +37,12 @@ app.use(
 );
 
 // ─── Rate Limiting ────────────────────────────────────────────────────────────
+// Disabled in the test environment so supertest suites don't exhaust the budget.
+const skipInTest = () => process.env.NODE_ENV === 'test';
+
 /** Applied to ALL /api routes — general protection. */
 const globalLimiter = rateLimit({
+  skip: skipInTest,
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
   standardHeaders: true,
@@ -48,6 +52,7 @@ const globalLimiter = rateLimit({
 
 /** Tighter limit on auth endpoints to prevent brute-force. */
 const authLimiter = rateLimit({
+  skip: skipInTest,
   windowMs: 15 * 60 * 1000,
   max: 10,
   standardHeaders: true,

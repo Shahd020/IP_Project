@@ -1,4 +1,4 @@
-import { body, param, query } from 'express-validator';
+import { body, query } from 'express-validator';
 
 const CATEGORIES = [
   'Web Development', 'Data Science', 'Machine Learning', 'Cyber Security',

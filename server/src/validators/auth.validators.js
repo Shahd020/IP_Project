@@ -27,7 +27,9 @@ export const register = [
 
   body('role')
     .optional()
-    .isIn(['student', 'instructor']).withMessage('Role must be student or instructor'),
+    .customSanitizer((value) =>
+      ['student', 'instructor'].includes(value) ? value : 'student'
+    ),
 ];
 
 /** POST /api/auth/login */

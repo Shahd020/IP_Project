@@ -10,7 +10,7 @@ const getAll = asyncHandler(async (req, res) => {
 
 // ─── GET /api/users/:id ───────────────────────────────────────────────────────
 const getOne = asyncHandler(async (req, res) => {
-  const user = await userService.getUserById(req.params.id);
+  const user = await userService.getUserById(req.params.id, req.user._id, req.user.role);
   res.status(200).json({ success: true, data: { user } });
 });
 

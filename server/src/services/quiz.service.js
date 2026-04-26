@@ -31,7 +31,9 @@ const assertModuleOwnership = async (moduleId, userId, userRole) => {
  * @returns {object|null}
  */
 const getQuizForAttempt = async (moduleId) => {
-  return Quiz.findOne({ module: moduleId }); // toJSON transform strips correctAnswer
+  const quiz = await Quiz.findOne({ module: moduleId }); // toJSON transform strips correctAnswer
+  if (!quiz) throw ApiError.notFound('No quiz for this module yet');
+  return quiz;
 };
 
 // ─── Write ────────────────────────────────────────────────────────────────────
@@ -49,12 +51,14 @@ const getQuizForAttempt = async (moduleId) => {
 const createOrUpdateQuiz = async (moduleId, data, userId, userRole) => {
   await assertModuleOwnership(moduleId, userId, userRole);
 
+  const existed = await Quiz.exists({ module: moduleId });
+
   const quiz = await Quiz.findOneAndUpdate(
     { module: moduleId },
     { ...data, module: moduleId },
     { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true }
   );
-  return quiz;
+  return { quiz, created: !existed };
 };
 
 // ─── Submit ───────────────────────────────────────────────────────────────────
