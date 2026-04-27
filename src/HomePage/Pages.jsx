@@ -1,152 +1,98 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { User } from "lucide-react";
+import React, { useState } from "react";
+import PublicNavbar from "../components/PublicNavbar.jsx";
+import PublicFooter from "../components/PublicFooter.jsx";
+import { ChevronDown, ChevronUp } from "lucide-react";
+
+const PAGES = [
+  {
+    title: "About Us",
+    icon: "👥",
+    summary: "Learn about our mission, vision, and the team behind EduPlatform",
+    detail: "EduPlatform was founded in 2021 with a single mission: make world-class education accessible to everyone, everywhere. Our team of educators, engineers, and designers believe that learning should be engaging, practical, and affordable. Today we serve 500 000+ students across 120 countries.",
+  },
+  {
+    title: "Our Instructors",
+    icon: "👨‍🏫",
+    summary: "Meet our expert instructors and course creators",
+    detail: "All EduPlatform instructors are vetted industry professionals with at least three years of hands-on experience in their field. They go through a rigorous onboarding process including demo lessons, peer review, and student-satisfaction benchmarking before their courses go live.",
+  },
+  {
+    title: "Student Success Stories",
+    icon: "🎓",
+    summary: "Read inspiring stories from our successful students",
+    detail: "\"I landed my first junior dev role within 3 months of finishing the Web Development bootcamp!\" — Sara K.\n\n\"The Data Science path gave me the confidence to negotiate a 30 % salary raise.\" — James T.\n\nJoin thousands of alumni who have transformed their careers through EduPlatform courses.",
+  },
+  {
+    title: "Career Center",
+    icon: "💼",
+    summary: "Find job opportunities and career guidance",
+    detail: "Our Career Center gives you access to 500+ partner employers, a résumé review service, mock interview sessions, and a job-board filtered specifically for EduPlatform graduates. Students who complete at least one certificate have a 4× higher response rate from recruiters.",
+  },
+  {
+    title: "Help & Support",
+    icon: "🆘",
+    summary: "Get help with your learning journey",
+    detail: "Need help? Our support team is available Monday–Friday 9 am–6 pm UTC. You can reach us at support@eduplatform.com, via the live chat bubble on every page, or by submitting a ticket in your student dashboard. Average first-response time is under 2 hours.",
+  },
+  {
+    title: "Privacy Policy",
+    icon: "🔒",
+    summary: "Learn about how we protect your data",
+    detail: "We take your privacy seriously. EduPlatform never sells your personal data. We collect only what is necessary to deliver and improve the service. All data is encrypted in transit (TLS 1.3) and at rest (AES-256). You can request a full export or deletion of your data at any time from your account settings.",
+  },
+];
 
 function Pages() {
-  const pages = [
-    {
-      title: "About Us",
-      description: "Learn about our mission, vision, and the team behind EduPlatform",
-      icon: "👥",
-      link: "/about"
-    },
-    {
-      title: "Our Instructors",
-      description: "Meet our expert instructors and course creators",
-      icon: "👨‍🏫",
-      link: "/instructors"
-    },
-    {
-      title: "Student Success Stories",
-      description: "Read inspiring stories from our successful students",
-      icon: "🎓",
-      link: "/success-stories"
-    },
-    {
-      title: "Career Center",
-      description: "Find job opportunities and career guidance",
-      icon: "💼",
-      link: "/careers"
-    },
-    {
-      title: "Help & Support",
-      description: "Get help with your learning journey",
-      icon: "🆘",
-      link: "/help"
-    },
-    {
-      title: "Privacy Policy",
-      description: "Learn about how we protect your data",
-      icon: "🔒",
-      link: "/privacy"
-    }
-  ];
+  const [expanded, setExpanded] = useState(null);
+  const toggle = (i) => setExpanded((prev) => (prev === i ? null : i));
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white pt-20">
+      <PublicNavbar activePage="/pages" />
 
-     
-
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1f2937] shadow border-b border-gray-800">
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center px-10 py-4">
-          <div className="justify-self-start text-xl font-bold text-white tracking-wide">
-            <Link to="/">
-              <span className="text-blue-500">Edu</span>Platform
-            </Link>
-          </div>
-
-          <div className="justify-self-center flex gap-8 text-gray-300 font-medium">
-            <Link to="/" className="hover:text-blue-400 transition-colors">Home</Link>
-            <Link to="/categories" className="hover:text-blue-400 transition-colors">Categories</Link>
-            <Link to="/pages" className="hover:text-blue-400 transition-colors text-blue-400">Pages</Link>
-            <Link to="/blog" className="hover:text-blue-400 transition-colors">Blog</Link>
-            <Link to="/contact" className="hover:text-blue-400 transition-colors">Contact</Link>
-          </div>
-
-          <div className="justify-self-end flex items-center gap-6 text-gray-300">
-            <Link
-              to="/login"
-              className="flex items-center gap-2 hover:text-blue-400 font-medium transition-colors bg-gray-800 px-4 py-2 rounded-lg border border-gray-700"
-            >
-              <User size={18} />
-              Login
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <div className="px-20 py-20 text-center">
-        <h1 className="text-4xl font-bold mb-4">Pages</h1>
-        <p className="text-gray-400 max-w-2xl mx-auto">
+      {/* Hero */}
+      <div className="px-6 sm:px-10 lg:px-20 py-16 sm:py-20 text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4">Pages</h1>
+        <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
           Explore all the important pages and resources available on our platform
         </p>
       </div>
 
-      {/* Pages Grid */}
-      <div className="px-20 pb-20">
-        <div className="grid grid-cols-3 gap-8">
-          {pages.map((page, index) => (
+      {/* Grid */}
+      <div className="px-6 sm:px-10 lg:px-20 pb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {PAGES.map((page, i) => (
             <div
-              key={index}
-              className="bg-[#1f2937] rounded-xl p-6 hover:scale-105 transition-transform duration-300 cursor-pointer"
+              key={i}
+              className="bg-[#1f2937] rounded-xl border border-gray-800 overflow-hidden flex flex-col"
             >
-              <div className="text-4xl mb-4">{page.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{page.title}</h3>
-              <p className="text-gray-400 mb-4">{page.description}</p>
-              <Link
-                to={page.link}
-                className="text-blue-400 hover:text-blue-300 font-medium"
-              >
-                Learn More →
-              </Link>
+              <div className="p-6 flex flex-col flex-1">
+                <div className="text-4xl mb-4">{page.icon}</div>
+                <h3 className="text-xl font-bold mb-2 text-white">{page.title}</h3>
+                <p className="text-gray-400 text-sm mb-5 flex-1 leading-relaxed">{page.summary}</p>
+                <button
+                  onClick={() => toggle(i)}
+                  className="flex items-center gap-1.5 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors self-start"
+                >
+                  {expanded === i ? (
+                    <>Show Less <ChevronUp size={16} /></>
+                  ) : (
+                    <>Learn More <ChevronDown size={16} /></>
+                  )}
+                </button>
+              </div>
+
+              {expanded === i && (
+                <div className="px-6 pb-6 border-t border-gray-700 pt-4">
+                  <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">{page.detail}</p>
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-[#1f2937] px-20 py-12">
-        <div className="grid grid-cols-4 gap-8">
-          <div>
-          
-            <p className="text-gray-400">
-              Empowering learners worldwide with quality education and cutting-edge courses.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white">About Us</a></li>
-              <li><a href="#" className="hover:text-white">Courses</a></li>
-              <li><a href="#" className="hover:text-white">Instructors</a></li>
-              <li><a href="#" className="hover:text-white">Contact</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Support</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white">Help Center</a></li>
-              <li><a href="#" className="hover:text-white">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white">FAQ</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Connect</h4>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white text-xl">📘</a>
-              <a href="#" className="text-gray-400 hover:text-white text-xl">🐦</a>
-              <a href="#" className="text-gray-400 hover:text-white text-xl">📷</a>
-              <a href="#" className="text-gray-400 hover:text-white text-xl">💼</a>
-            </div>
-          </div>
-        </div>
-        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 EduPlatform. All rights reserved.</p>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

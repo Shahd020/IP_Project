@@ -41,6 +41,12 @@ const moduleSchema = new Schema(
       type: Number,
       default: 0,
     },
+
+    videoUrl: {
+      type: String,
+      trim: true,
+      default: '',
+    },
   },
   {
     timestamps: true,

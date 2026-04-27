@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-// Imported LayoutDashboard for the new Dashboard link
 import { Home, LayoutDashboard, Menu, BookOpen, Layers } from "lucide-react";
+import ProfileDropdown from "../components/ProfileDropdown.jsx";
 
 function StudentLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -10,11 +10,16 @@ function StudentLayout() {
   return (
     <div className="flex min-h-screen bg-[#0f172a] text-white overflow-x-hidden">
 
-      {/* The One True Sidebar */}
+      {/* Profile always floats top-right, outside the sidebar */}
+      <div className="fixed top-4 right-5 z-[150]">
+        <ProfileDropdown />
+      </div>
+
+      {/* Sidebar */}
       <div className={`fixed top-0 left-0 h-screen ${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300 flex flex-col`}>
-        <div className="flex justify-between items-center mb-10">
+        <div className={`flex items-center mb-10 ${sidebarOpen ? 'justify-between' : 'justify-center'}`}>
           {sidebarOpen && <h1 className="text-xl font-bold">Student</h1>}
-          <button onClick={() => setSidebarOpen(!sidebarOpen)}>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray-400 hover:text-white">
             <Menu size={20} />
           </button>
         </div>
@@ -46,8 +51,8 @@ function StudentLayout() {
         </nav>
       </div>
 
-      {/* Main Content Area */}
-      <div className={`flex-1 min-w-0 p-8 overflow-y-auto transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
+      {/* Main Content Area — pr-20 clears the fixed profile button */}
+      <div className={`flex-1 min-w-0 px-6 sm:px-8 pt-8 pb-8 pr-20 overflow-y-auto transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
         <Outlet />
       </div>
 

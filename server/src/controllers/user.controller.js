@@ -41,4 +41,10 @@ const toggleActive = asyncHandler(async (req, res) => {
   });
 });
 
-export default { getAll, getOne, update, remove, toggleActive };
+// ─── DELETE /api/users/me ─────────────────────────────────────────────────────
+const deleteMe = asyncHandler(async (req, res) => {
+  await userService.deleteUser(req.user._id.toString(), req.user._id.toString());
+  res.status(200).json({ success: true, message: 'Account deleted successfully' });
+});
+
+export default { getAll, getOne, update, remove, toggleActive, deleteMe };

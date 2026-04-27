@@ -65,11 +65,14 @@ const handleEventClick = (info) => {
         <div className="w-64 bg-[#1f2937] p-6 rounded-xl">
           <h2 className="text-lg font-semibold mb-4">Events</h2>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
+            {events.length === 0 && (
+              <p className="text-gray-500 text-sm">No events yet. Click a date to add one.</p>
+            )}
             {events.map((event, index) => (
-              <div key={index} className="bg-green-400 text-black p-3 rounded-lg">
-                <p className="font-semibold">{event.title}</p>
-                <p className="text-sm">{event.date}</p>
+              <div key={index} className="bg-blue-900/40 border border-blue-700/50 p-3 rounded-lg">
+                <p className="font-semibold text-white text-sm">{event.title}</p>
+                <p className="text-xs text-blue-300 mt-0.5">{event.date}</p>
               </div>
             ))}
           </div>

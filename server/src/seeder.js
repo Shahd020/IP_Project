@@ -76,6 +76,8 @@ const seed = async () => {
         ratingCount: 2340,
         isPublished: true,
         thumbnail: 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=600&auto=format&fit=crop',
+        price: 49.99,
+        level: 'intermediate',
       },
       {
         title: 'Machine Learning Fundamentals',
@@ -92,6 +94,8 @@ const seed = async () => {
         ratingCount: 1820,
         isPublished: true,
         thumbnail: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&auto=format&fit=crop',
+        price: 39.99,
+        level: 'intermediate',
       },
       {
         title: 'Cyber Security Essentials',
@@ -108,6 +112,8 @@ const seed = async () => {
         ratingCount: 987,
         isPublished: true,
         thumbnail: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&auto=format&fit=crop',
+        price: 44.99,
+        level: 'intermediate',
       },
       {
         title: 'UI/UX Design Masterclass',
@@ -124,6 +130,8 @@ const seed = async () => {
         ratingCount: 1230,
         isPublished: true,
         thumbnail: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop',
+        price: 29.99,
+        level: 'beginner',
       },
       {
         title: 'Cloud Computing with AWS',
@@ -135,10 +143,81 @@ const seed = async () => {
         provider: 'Cloud Academy',
         instructor: alice._id,
         duration: '9 weeks',
-        rating: 0,
-        ratingCount: 0,
-        isPublished: false, // draft — not visible in catalog
+        rating: 4.5,
+        ratingCount: 743,
+        isPublished: true,
         thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop',
+        price: 54.99,
+        level: 'advanced',
+      },
+      {
+        title: 'Data Science with Python',
+        description:
+          'Explore the full data science workflow — data wrangling with Pandas, exploratory analysis, ' +
+          'statistics, and visualisation with Matplotlib and Seaborn. Build real dashboards, ' +
+          'statistical models, and predictive analytics projects. No prior data science experience needed; ' +
+          'basic Python knowledge is helpful.',
+        category: 'Data Science',
+        provider: 'DataCamp Pro',
+        instructor: alice._id,
+        duration: '8 weeks',
+        rating: 4.7,
+        ratingCount: 1540,
+        isPublished: true,
+        thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop',
+        price: 34.99,
+        level: 'beginner',
+      },
+      {
+        title: 'Game Development with Unity',
+        description:
+          'Build 2D and 3D games from scratch using Unity and C#. Learn physics, collision detection, ' +
+          'animation, UI systems, and audio. Publish a fully playable platformer and a top-down ' +
+          'shooter by the end of the course. No prior game dev experience required.',
+        category: 'Game Development',
+        provider: 'GameCraft Studio',
+        instructor: bob._id,
+        duration: '10 weeks',
+        rating: 4.6,
+        ratingCount: 892,
+        isPublished: true,
+        thumbnail: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop',
+        price: 39.99,
+        level: 'beginner',
+      },
+      {
+        title: 'Mobile Development with React Native',
+        description:
+          'Build cross-platform iOS and Android apps with React Native and Expo. Master navigation, ' +
+          'state management with Redux Toolkit, camera, location, and push notifications. ' +
+          'Deploy your first app to both app stores. Prior React knowledge is recommended.',
+        category: 'Mobile Development',
+        provider: 'AppLaunch Academy',
+        instructor: alice._id,
+        duration: '9 weeks',
+        rating: 4.8,
+        ratingCount: 1120,
+        isPublished: true,
+        thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&auto=format&fit=crop',
+        price: 44.99,
+        level: 'intermediate',
+      },
+      {
+        title: 'Blockchain & Web3 Development',
+        description:
+          'Understand blockchain fundamentals, smart contracts, and decentralised applications. ' +
+          'Write Solidity contracts, deploy on Ethereum testnets, and build a complete DeFi app ' +
+          'with MetaMask integration using ethers.js. Solid JavaScript and programming fundamentals required.',
+        category: 'Blockchain',
+        provider: 'Web3 Labs',
+        instructor: bob._id,
+        duration: '11 weeks',
+        rating: 4.4,
+        ratingCount: 560,
+        isPublished: true,
+        thumbnail: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?w=600&auto=format&fit=crop',
+        price: 49.99,
+        level: 'advanced',
       },
     ]);
     console.info(`Created ${courses.length} courses`);
@@ -804,7 +883,7 @@ const seed = async () => {
         ],
       },
 
-      // ── Course 4: Cloud Computing / AWS (draft) ────────────────────────────
+      // ── Course 4: Cloud Computing / AWS ───────────────────────────────────
       {
         courseIndex: 4,
         modules: [
@@ -918,6 +997,146 @@ const seed = async () => {
                 ],
                 correctAnswer: 1,
               },
+            ],
+          },
+        ],
+      },
+
+      // ── Course 5: Data Science ────────────────────────────────────────────
+      {
+        courseIndex: 5,
+        modules: [
+          {
+            title: 'Python for Data Analysis',
+            order: 1,
+            videoUrl: VIDEOS[0],
+            videoOverview: 'NumPy arrays, Pandas DataFrames, data cleaning, merging, groupby, and pivot tables. Work with a real-world dataset end-to-end.',
+            videoDurationSeconds: 596,
+            questions: [
+              { question: 'Which Pandas method removes rows with missing values?', options: ['fillna()', 'dropna()', 'isnull()', 'replace()'], correctAnswer: 1 },
+              { question: 'What does df.groupby("col").mean() return?', options: ['A scalar', 'A grouped DataFrame with per-group means', 'A list', 'An error'], correctAnswer: 1 },
+              { question: 'Which NumPy function creates an array of zeros?', options: ['np.empty()', 'np.ones()', 'np.zeros()', 'np.full()'], correctAnswer: 2 },
+              { question: 'What is broadcasting in NumPy?', options: ['Sending arrays over a network', 'Applying operations between arrays of different shapes by stretching the smaller one', 'Converting arrays to lists', 'Printing arrays'], correctAnswer: 1 },
+              { question: 'Which method sorts a DataFrame by column values?', options: ['df.order()', 'df.sort_values()', 'df.rank()', 'df.arrange()'], correctAnswer: 1 },
+            ],
+          },
+          {
+            title: 'Data Visualisation & Statistics',
+            order: 2,
+            videoUrl: VIDEOS[1],
+            videoOverview: 'Create compelling charts with Matplotlib and Seaborn. Understand descriptive statistics, distributions, correlation, and hypothesis testing.',
+            videoDurationSeconds: 612,
+            questions: [
+              { question: 'Which chart type best shows the distribution of a single numeric variable?', options: ['Bar chart', 'Scatter plot', 'Histogram', 'Pie chart'], correctAnswer: 2 },
+              { question: 'What does a p-value below 0.05 typically indicate?', options: ['The null hypothesis is true', 'The result is statistically significant at the 5% level', 'The sample size is too small', 'There is no correlation'], correctAnswer: 1 },
+              { question: 'What does the Pearson correlation coefficient measure?', options: ['Causal relationships', 'The linear relationship strength between two numeric variables', 'Variance within a dataset', 'Outlier count'], correctAnswer: 1 },
+              { question: 'Which Seaborn function plots the relationship between two variables with a regression line?', options: ['sns.barplot()', 'sns.boxplot()', 'sns.lmplot()', 'sns.heatmap()'], correctAnswer: 2 },
+              { question: 'What is the interquartile range (IQR)?', options: ['Max minus Min', 'The difference between the 75th and 25th percentiles', 'The standard deviation times 1.5', 'The median squared'], correctAnswer: 1 },
+            ],
+          },
+        ],
+      },
+
+      // ── Course 6: Game Development ────────────────────────────────────────
+      {
+        courseIndex: 6,
+        modules: [
+          {
+            title: 'Unity Basics & C# Scripting',
+            order: 1,
+            videoUrl: VIDEOS[2],
+            videoOverview: 'Navigate the Unity editor, understand GameObjects and Components, and write your first C# scripts to move a character and respond to keyboard input.',
+            videoDurationSeconds: 540,
+            questions: [
+              { question: 'What is a GameObject in Unity?', options: ['A C# class', 'The base entity in a Unity scene that holds components', 'A physics layer', 'A UI element'], correctAnswer: 1 },
+              { question: 'Which method is called once per frame in a Unity MonoBehaviour?', options: ['Start()', 'Awake()', 'Update()', 'OnEnable()'], correctAnswer: 2 },
+              { question: 'How do you move a Rigidbody smoothly in Unity?', options: ['Transform.Translate()', 'Rigidbody.AddForce()', 'Collider.Move()', 'Camera.Follow()'], correctAnswer: 1 },
+              { question: 'What is a Prefab in Unity?', options: ['A particle effect', 'A reusable, pre-configured GameObject template stored as an asset', 'A shader', 'A build configuration'], correctAnswer: 1 },
+              { question: 'Which Unity component detects physical collisions?', options: ['Animator', 'AudioSource', 'Collider', 'Canvas'], correctAnswer: 2 },
+            ],
+          },
+          {
+            title: 'Building a 2D Platformer',
+            order: 2,
+            videoUrl: VIDEOS[3],
+            videoOverview: 'Implement player movement, jumping, platforms, enemies, collectibles, a score UI, and scene transitions. Export a finished platformer build.',
+            videoDurationSeconds: 720,
+            questions: [
+              { question: 'Which Unity component handles sprite-based 2D animations?', options: ['Animation Controller', 'Animator', 'SpriteRenderer', 'Timeline'], correctAnswer: 1 },
+              { question: 'How do you prevent a player from jumping infinitely in a platformer?', options: ['Limit Rigidbody velocity', 'Use a grounded check with raycasting or trigger colliders', 'Disable gravity', 'Use a coroutine delay'], correctAnswer: 1 },
+              { question: 'Which layer collision setting prevents two objects from colliding?', options: ['Physics > Layer Collision Matrix (uncheck their layers)', 'Rigidbody.isKinematic = true', 'Collider.isTrigger = true', 'Tag filtering'], correctAnswer: 0 },
+              { question: 'What does SceneManager.LoadScene() do?', options: ['Exports the current scene', 'Loads a new scene by name or index', 'Saves game data', 'Creates a new camera'], correctAnswer: 1 },
+              { question: 'How do you display score in Unity UI?', options: ['TextMesh in world space only', 'A Canvas Text/TMP component updated via script', 'Debug.Log()', 'PlayerPrefs'], correctAnswer: 1 },
+            ],
+          },
+        ],
+      },
+
+      // ── Course 7: Mobile Development ──────────────────────────────────────
+      {
+        courseIndex: 7,
+        modules: [
+          {
+            title: 'React Native & Expo Fundamentals',
+            order: 1,
+            videoUrl: VIDEOS[4],
+            videoOverview: 'Set up Expo, understand the React Native component tree, StyleSheet API, Flexbox layout, and core components: View, Text, Image, ScrollView, FlatList.',
+            videoDurationSeconds: 580,
+            questions: [
+              { question: 'Which component is the mobile equivalent of a <div> in React Native?', options: ['Box', 'View', 'Container', 'Section'], correctAnswer: 1 },
+              { question: 'How do you handle touch events in React Native?', options: ['onClick', 'onPress via TouchableOpacity or Pressable', 'addEventListener', 'onTap'], correctAnswer: 1 },
+              { question: 'Which API manages navigation between screens in React Native?', options: ['React Router', 'React Navigation', 'Expo Router (built on React Navigation)', 'Both B and C'], correctAnswer: 3 },
+              { question: 'What does StyleSheet.create() do?', options: ['Applies CSS to native elements', 'Validates and optimises style objects for performance', 'Imports external CSS files', 'Creates a styled-component'], correctAnswer: 1 },
+              { question: 'Which component efficiently renders large lists in React Native?', options: ['ScrollView with many children', 'FlatList', 'SectionList only', 'VirtualizedList directly'], correctAnswer: 1 },
+            ],
+          },
+          {
+            title: 'Device APIs & App Store Deployment',
+            order: 2,
+            videoUrl: VIDEOS[0],
+            videoOverview: 'Access camera, GPS, push notifications, and AsyncStorage. Configure app.json for production, build with EAS Build, and submit to Google Play and the App Store.',
+            videoDurationSeconds: 640,
+            questions: [
+              { question: 'Which Expo API accesses the device camera?', options: ['expo-media', 'expo-camera', 'expo-image-picker (also works)', 'Both B and C'], correctAnswer: 3 },
+              { question: 'Where should you store small key-value data locally in React Native?', options: ['SQLite only', 'AsyncStorage or MMKV', 'localStorage', 'Redux only'], correctAnswer: 1 },
+              { question: 'What is EAS Build?', options: ['An Expo CI runner', 'Expo Application Services cloud build for iOS and Android', 'A testing framework', 'An app analytics tool'], correctAnswer: 1 },
+              { question: 'Which permission must you declare to use GPS on Android?', options: ['ACCESS_INTERNET', 'ACCESS_FINE_LOCATION', 'READ_EXTERNAL_STORAGE', 'CAMERA'], correctAnswer: 1 },
+              { question: 'What file defines app name, icon, and build config in Expo?', options: ['package.json', 'metro.config.js', 'app.json / app.config.js', 'babel.config.js'], correctAnswer: 2 },
+            ],
+          },
+        ],
+      },
+
+      // ── Course 8: Blockchain ──────────────────────────────────────────────
+      {
+        courseIndex: 8,
+        modules: [
+          {
+            title: 'Blockchain Fundamentals & Solidity',
+            order: 1,
+            videoUrl: VIDEOS[1],
+            videoOverview: 'How blockchains achieve consensus, what smart contracts are, and how to write your first Solidity contract — data types, functions, mappings, events, and access control.',
+            videoDurationSeconds: 620,
+            questions: [
+              { question: 'What is a smart contract?', options: ['A legal document on the internet', 'Self-executing code stored on the blockchain', 'A type of cryptocurrency', 'An API endpoint'], correctAnswer: 1 },
+              { question: 'What is "gas" in Ethereum?', options: ['A native cryptocurrency', 'A unit measuring computation cost for executing transactions', 'A storage mechanism', 'A consensus algorithm'], correctAnswer: 1 },
+              { question: 'Which Solidity visibility modifier restricts access to within the contract only?', options: ['public', 'external', 'internal', 'private'], correctAnswer: 3 },
+              { question: 'What does the "payable" keyword in Solidity enable?', options: ['The function can be called by any address', 'The function can receive Ether', 'The function can be overridden', 'The function runs automatically'], correctAnswer: 1 },
+              { question: 'Which consensus mechanism does Ethereum currently use?', options: ['Proof of Work', 'Proof of Stake', 'Delegated Proof of Stake', 'Proof of Authority'], correctAnswer: 1 },
+            ],
+          },
+          {
+            title: 'Building a DeFi App with ethers.js',
+            order: 2,
+            videoUrl: VIDEOS[2],
+            videoOverview: 'Connect MetaMask, interact with deployed contracts using ethers.js, read on-chain state, send transactions, listen for events, and build a token swap UI.',
+            videoDurationSeconds: 690,
+            questions: [
+              { question: 'Which ethers.js class connects to an Ethereum provider?', options: ['ethers.Wallet', 'ethers.Contract', 'ethers.providers.Web3Provider', 'ethers.utils'], correctAnswer: 2 },
+              { question: 'What is an ABI in Ethereum development?', options: ['A private key format', 'Application Binary Interface — describes a contract\'s functions and events', 'A gas optimisation tool', 'A type of address'], correctAnswer: 1 },
+              { question: 'What does MetaMask inject into the browser?', options: ['An ethers.js instance', 'The window.ethereum provider object', 'A Web3.js library', 'A Solidity compiler'], correctAnswer: 1 },
+              { question: 'What is an ERC-20 token?', options: ['A non-fungible token standard', 'A fungible token standard on Ethereum defining a common interface', 'An Ethereum Request for Comments about wallets', 'A gas token'], correctAnswer: 1 },
+              { question: 'What is a "view" function in Solidity?', options: ['A function that emits events', 'A read-only function that does not modify state and costs no gas when called externally', 'A payable function', 'A function that self-destructs the contract'], correctAnswer: 1 },
             ],
           },
         ],

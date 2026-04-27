@@ -4,11 +4,11 @@ import {
   Home,
   LayoutDashboard,
   BookOpen,
-  Folder,
   FileText,
   ClipboardList,
   Menu
 } from "lucide-react";
+import ProfileDropdown from "../components/ProfileDropdown.jsx";
 
 function InstructorLayout() {
 
@@ -16,6 +16,11 @@ function InstructorLayout() {
 
   return (
     <div className="bg-[#0f172a] min-h-screen text-white">
+
+      {/* Profile always floats top-right, outside the sidebar */}
+      <div className="fixed top-4 right-5 z-[150]">
+        <ProfileDropdown />
+      </div>
 
       {/* Sidebar */}
       <div
@@ -25,18 +30,11 @@ function InstructorLayout() {
       >
 
         {/* Header */}
-        <div className="flex justify-between items-center mb-10">
-
-          {sidebarOpen && (
-            <h1 className="text-xl font-bold">
-              Instructor
-            </h1>
-          )}
-
-          <button onClick={() => setSidebarOpen(!sidebarOpen)}>
+        <div className={`flex items-center mb-10 ${sidebarOpen ? 'justify-between' : 'justify-center'}`}>
+          {sidebarOpen && <h1 className="text-xl font-bold">Instructor</h1>}
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray-400 hover:text-white">
             <Menu size={20} />
           </button>
-
         </div>
 
         {/* Navigation */}
@@ -76,9 +74,9 @@ function InstructorLayout() {
 
       </div>
 
-      {/* Page Content */}
+      {/* Page Content — pr-20 clears the fixed profile button */}
       <div
-        className={`transition-all duration-300 p-10 ${
+        className={`transition-all duration-300 px-6 sm:px-10 pt-10 pb-10 pr-20 ${
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >

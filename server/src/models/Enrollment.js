@@ -56,11 +56,13 @@ const enrollmentSchema = new Schema(
   {
     timestamps: true,
     toJSON: {
+      virtuals: true,
       transform(_doc, ret) {
         delete ret.__v;
         return ret;
       },
     },
+    toObject: { virtuals: true },
   }
 );
 
@@ -73,6 +75,11 @@ enrollmentSchema.pre('save', function (next) {
     this.completedAt = new Date();
   }
   next();
+});
+
+// Certificate is earned when the student passes the quiz (score ≥ 80%) AND completes the course.
+enrollmentSchema.virtual('hasCertificate').get(function () {
+  return this.quizPassed === true && this.status === 'completed';
 });
 
 const Enrollment = mongoose.model('Enrollment', enrollmentSchema);

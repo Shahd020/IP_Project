@@ -114,24 +114,24 @@ function Flashcards() {
       {/* --- GRID VIEW (Shows when NOT studying) --- */}
       {!activeSet && (
         <>
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold">Flashcard Sets</h1>
-            
-            <div className="relative">
-              <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-              <input 
-                type="text" 
-                placeholder="Search sets..." 
-                className="bg-[#1f2937] text-white pl-10 pr-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:border-blue-500 transition-colors w-64"
+          <div className="flex flex-wrap justify-between items-center gap-3 mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold">Flashcard Sets</h1>
+
+            <div className="relative w-full sm:w-56">
+              <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
+              <input
+                type="text"
+                placeholder="Search sets..."
+                className="w-full bg-[#1f2937] text-white pl-9 pr-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:border-blue-500 transition-colors text-sm"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
             {flashcardSets.map((set, index) => (
-              <div 
-                key={index} 
-                className="bg-[#1f2937] rounded-xl p-5 border border-gray-800 shadow-lg hover:border-gray-600 transition-colors flex flex-col justify-between h-[220px]"
+              <div
+                key={index}
+                className="bg-[#1f2937] rounded-xl p-5 border border-gray-800 shadow-lg hover:border-gray-600 transition-colors flex flex-col justify-between min-h-[200px]"
               >
                 <div>
                   <div className="flex justify-between items-start mb-2">
@@ -184,7 +184,7 @@ function Flashcards() {
           </div>
 
           {/* The Flashcard */}
-          <div className="relative w-full h-[400px] [perspective:1000px] mb-8 group">
+          <div className="relative w-full h-[280px] sm:h-[360px] lg:h-[400px] [perspective:1000px] mb-8 group">
             <div 
               className={`w-full h-full transition-all duration-500 [transform-style:preserve-3d] cursor-pointer ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}
               onClick={() => setIsFlipped(!isFlipped)}
@@ -193,7 +193,7 @@ function Flashcards() {
               {/* Front of Card (Dark) */}
               <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] bg-[#1f2937] border border-gray-700 rounded-2xl p-10 flex flex-col items-center justify-center shadow-2xl">
                 <span className="absolute top-6 left-6 text-gray-500 text-sm font-medium tracking-widest uppercase">Term</span>
-                <p className="text-2xl text-center leading-relaxed text-gray-100 font-medium">
+                <p className="text-base sm:text-xl lg:text-2xl text-center leading-relaxed text-gray-100 font-medium">
                   {activeSet.cards[currentCardIndex].front}
                 </p>
                 <span className="absolute bottom-6 text-gray-500 text-sm font-medium">Click to flip</span>
@@ -202,7 +202,7 @@ function Flashcards() {
               {/* Back of Card (Subtle Dark Purple) */}
               <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-[#2d1b4e] to-[#170b24] border border-[#3b2363] rounded-2xl p-10 flex flex-col items-center justify-center shadow-2xl">
                 <span className="absolute top-6 left-6 text-purple-400 text-sm font-medium tracking-widest uppercase">Definition</span>
-                <p className="text-3xl font-medium text-center text-purple-50 leading-relaxed">
+                <p className="text-xl sm:text-2xl lg:text-3xl font-medium text-center text-purple-50 leading-relaxed">
                   {activeSet.cards[currentCardIndex].back}
                 </p>
               </div>

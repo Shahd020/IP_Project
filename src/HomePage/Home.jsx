@@ -1,41 +1,28 @@
 import { Link } from "react-router-dom";
-import { User, ArrowRight } from "lucide-react"; 
+import { ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import PublicNavbar from "../components/PublicNavbar.jsx";
+import PublicFooter from "../components/PublicFooter.jsx";
+import apiClient from "../api/axios.js";
 
-import wideBookHero from '../assets/Logos/wide_book_hero.png'; 
-import webDevelopmentIcon from '../assets/Logos/webDevelopment.jpeg';
-import machineLearningIcon from '../assets/Logos/MachineLearning .jpeg';
-import dataScienceIcon from '../assets/Logos/DataScience.jpeg';
+import wideBookHero from '../assets/Logos/wide_book_hero.png';
+
+const CARD_COLORS = ['text-blue-400', 'text-green-400', 'text-purple-400'];
+const PLACEHOLDER = 'https://placehold.co/400x160/1f2937/94a3b8?text=Course';
 
 function Home() {
+  const [featuredCourses, setFeaturedCourses] = useState([]);
+
+  useEffect(() => {
+    apiClient.get('/courses?limit=3')
+      .then((res) => setFeaturedCourses((res.data.data.courses || []).slice(0, 3)))
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0f172a] text-white overflow-hidden pt-20">
 
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-10 py-4 bg-[#1f2937] shadow border-b border-gray-800">
-        
-        {/* Logo Placeholder */}
-        <div className="text-xl font-bold text-white tracking-wide">
-          <span className="text-blue-500">Edu</span>Platform
-        </div>
-
-        {/* Nav Links */}
-        <div className="flex gap-8 text-gray-300 font-medium">
-          <Link to="/" className="hover:text-blue-400 transition-colors">Home</Link>
-          <Link to="/categories" className="hover:text-blue-400 transition-colors">Categories</Link>
-          <Link to="/pages" className="hover:text-blue-400 transition-colors">Pages</Link>
-          <Link to="/blog" className="hover:text-blue-400 transition-colors">Blog</Link>
-          <Link to="/contact" className="hover:text-blue-400 transition-colors">Contact</Link>
-        </div>
-
-        {/* Right Icons */}
-        <div className="flex items-center gap-6 text-gray-300">
-          <Link to="/login" className="flex items-center gap-2 hover:text-blue-400 font-medium transition-colors bg-gray-800 px-4 py-2 rounded-lg border border-gray-700">
-            <User size={18} />
-            Login
-          </Link>
-        </div>
-
-      </nav>
+      <PublicNavbar activePage="/" />
 
 
       {/* HERO SECTION */}
@@ -124,81 +111,44 @@ function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          {/* Card 1: Web Development */}
-          <div className="bg-[#1f2937] rounded-2xl p-6 hover:-translate-y-2 transition-transform duration-300 border border-gray-800 shadow-xl flex flex-col">
-           <div className="w-full h-40 rounded-xl mb-6 overflow-hidden shadow-inner">
-    <img 
-      src={webDevelopmentIcon} 
-      alt="Web Development" 
-      className="w-full h-full object-cover"
-    />
-  </div>
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-xl font-bold text-white">Web Development</h3>
-              <span className="text-yellow-400 font-bold flex items-center gap-1 text-sm">4.8 ⭐</span>
-            </div>
-            
-            <p className="text-gray-400 mb-6 text-sm flex-1">Master HTML, CSS, JavaScript, and modern frameworks to build responsive websites.</p>
-            
-            <div className="flex justify-between items-center border-t border-gray-700 pt-5 mt-auto">
-              <span className="text-2xl font-extrabold text-white">$89.99</span>
-              <Link to="/course/web-dev" className="group flex items-center gap-1.5 text-blue-400 hover:text-blue-300 font-bold transition-colors">
-                Explore Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </div>
+          {featuredCourses.map((course, i) => (
+            <div
+              key={course._id}
+              className="bg-[#1f2937] rounded-2xl p-6 hover:-translate-y-2 transition-transform duration-300 border border-gray-800 shadow-xl flex flex-col"
+            >
+              <div className="w-full h-40 rounded-xl mb-6 overflow-hidden shadow-inner">
+                <img
+                  src={course.thumbnail || PLACEHOLDER}
+                  alt={course.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.target.src = PLACEHOLDER; }}
+                />
+              </div>
 
-          {/* Card 2: Machine Learning */}
-          <div className="bg-[#1f2937] rounded-2xl p-6 hover:-translate-y-2 transition-transform duration-300 border border-gray-800 shadow-xl flex flex-col">
-            <div className="w-full h-40 rounded-xl mb-6 overflow-hidden shadow-inner">
-    <img 
-      src={machineLearningIcon} 
-      alt="Machine Learning" 
-      className="w-full h-full object-cover"
-    />
-  </div>
-            
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-xl font-bold text-white">Machine Learning</h3>
-              <span className="text-yellow-400 font-bold flex items-center gap-1 text-sm">4.9 ⭐</span>
-            </div>
-            
-            <p className="text-gray-400 mb-6 text-sm flex-1">Learn AI fundamentals, neural networks, and build intelligent prediction systems.</p>
-            
-            <div className="flex justify-between items-center border-t border-gray-700 pt-5 mt-auto">
-              <span className="text-2xl font-extrabold text-white">$129.99</span>
-              <Link to="/course/machine-learning" className="group flex items-center gap-1.5 text-green-400 hover:text-green-300 font-bold transition-colors">
-                Explore Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </div>
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="text-xl font-bold text-white">{course.title}</h3>
+                {course.rating > 0 && (
+                  <span className="text-yellow-400 font-bold flex items-center gap-1 text-sm shrink-0">
+                    {course.rating.toFixed(1)} ⭐
+                  </span>
+                )}
+              </div>
 
-          {/* Card 3: Data Science */}
-          <div className="bg-[#1f2937] rounded-2xl p-6 hover:-translate-y-2 transition-transform duration-300 border border-gray-800 shadow-xl flex flex-col">
-                  <div className="w-full h-40 rounded-xl mb-6 overflow-hidden shadow-inner">
-    <img 
-      src={dataScienceIcon} 
-      alt="Data Science" 
-      className="w-full h-full object-cover"
-    />
-  </div>
-            
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-xl font-bold text-white">Data Science</h3>
-              <span className="text-yellow-400 font-bold flex items-center gap-1 text-sm">4.7 ⭐</span>
-            </div>
-            
-            <p className="text-gray-400 mb-6 text-sm flex-1">Analyze massive datasets, clean data, and extract valuable business insights.</p>
-            
-            <div className="flex justify-between items-center border-t border-gray-700 pt-5 mt-auto">
-              <span className="text-2xl font-extrabold text-white">$99.99</span>
-              <Link to="/course/data-science" className="group flex items-center gap-1.5 text-purple-400 hover:text-purple-300 font-bold transition-colors">
-                Explore Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </div>
+              <p className="text-gray-400 mb-6 text-sm flex-1 line-clamp-2">{course.description}</p>
 
+              <div className="flex justify-between items-center border-t border-gray-700 pt-5 mt-auto">
+                <span className="text-2xl font-extrabold text-white">
+                  {course.price > 0 ? `$${course.price.toFixed(2)}` : 'Free'}
+                </span>
+                <Link
+                  to={`/course/${course._id}`}
+                  className={`group flex items-center gap-1.5 ${CARD_COLORS[i]} hover:opacity-80 font-bold transition-colors`}
+                >
+                  Explore Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* ---> MASTER EXPLORE BUTTON <--- */}
@@ -249,53 +199,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-[#1f2937] px-20 py-16 border-t border-gray-800">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="col-span-1">
-            <div className="text-2xl font-bold text-white mb-6">
-              <span className="text-blue-500">Edu</span>Platform
-            </div>
-            <p className="text-gray-400 leading-relaxed text-sm pr-4">
-              Empowering learners worldwide with quality education and cutting-edge courses to master the skills of tomorrow.
-            </p>
-          </div>
-          
-          <div>
-            <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Quick Links</h4>
-            <ul className="space-y-3 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-blue-400 transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Courses</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Instructors</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Contact</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Support</h4>
-            <ul className="space-y-3 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">FAQ</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Connect</h4>
-            <div className="flex space-x-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-colors">📘</a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-400 hover:text-white transition-colors">🐦</a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-pink-600 hover:text-white transition-colors">📷</a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-800 hover:text-white transition-colors">💼</a>
-            </div>
-          </div>
-        </div>
-        
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-sm text-gray-500">
-          <p>&copy; {new Date().getFullYear()} EduPlatform. All rights reserved.</p>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

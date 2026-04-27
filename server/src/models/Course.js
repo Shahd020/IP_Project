@@ -88,6 +88,21 @@ const courseSchema = new Schema(
       type: Boolean,
       default: false,
     },
+
+    price: {
+      type: Number,
+      default: 0,
+      min: [0, 'Price cannot be negative'],
+    },
+
+    level: {
+      type: String,
+      enum: {
+        values: ['beginner', 'intermediate', 'advanced'],
+        message: '{VALUE} is not a valid level',
+      },
+      default: 'beginner',
+    },
   },
   {
     timestamps: true,

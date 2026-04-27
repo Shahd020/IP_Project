@@ -21,6 +21,9 @@ router.patch('/:id', updateUserRules, validate, userController.update);
 // PATCH /api/users/:id/toggle-active
 router.patch('/:id/toggle-active', authorize('admin'), userController.toggleActive);
 
+// DELETE /api/users/me  (self-service account deletion — must be before /:id)
+router.delete('/me', userController.deleteMe);
+
 // DELETE /api/users/:id
 router.delete('/:id', authorize('admin'), userController.remove);
 

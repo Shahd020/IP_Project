@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useAuth from "./hooks/useAuth";
 import { LayoutDashboard, Home, Users, FileText, Calendar as CalendarIcon, HelpCircle, Menu } from "lucide-react";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import ProfileDropdown from "./components/ProfileDropdown.jsx";
 
 import LoginPage from "./LoginPage";
 import ManageUsers from "./Admin/ManageUsers";
@@ -24,6 +25,7 @@ import StudentCourses from "./Student/StudentCourses";
 import CourseDetail from "./Student/CourseDetail";
 import CourseStudy from "./Student/CourseStudy";
 import Flashcards from "./Student/Flashcards";
+import Checkout from "./Student/Checkout";
 
 /* INSTRUCTOR */
 import InstructorLayout from "./Instructor/InstructorLayout";
@@ -42,10 +44,16 @@ function AdminShell() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   return (
     <div className="flex min-h-screen bg-[#0f172a] text-white">
+
+      {/* Profile always floats top-right, outside the sidebar */}
+      <div className="fixed top-4 right-5 z-[150]">
+        <ProfileDropdown />
+      </div>
+
       <div className={`fixed top-0 left-0 h-screen ${sidebarOpen ? "w-64" : "w-20"} bg-[#1f2937] p-6 transition-all duration-300`}>
-        <div className="flex justify-between items-center mb-10">
+        <div className={`flex items-center mb-10 ${sidebarOpen ? 'justify-between' : 'justify-center'}`}>
           {sidebarOpen && <h1 className="text-xl font-bold">Admin</h1>}
-          <button onClick={() => setSidebarOpen(!sidebarOpen)}><Menu size={20} /></button>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray-400 hover:text-white"><Menu size={20} /></button>
         </div>
         <nav className="space-y-6">
           <Link to="/Home"      className="flex items-center gap-3 hover:text-blue-400"><Home size={18} />{sidebarOpen && "Home"}</Link>
@@ -56,7 +64,7 @@ function AdminShell() {
           <Link to="/help"      className="flex items-center gap-3 hover:text-blue-400"><HelpCircle size={18} />{sidebarOpen && "Help"}</Link>
         </nav>
       </div>
-      <div className={`flex-1 min-w-0 p-8 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
+      <div className={`flex-1 min-w-0 px-6 sm:px-8 pt-8 pb-8 pr-20 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
         <Outlet />
       </div>
     </div>
@@ -88,6 +96,7 @@ function App() {
 
       {/* ── Student routes ───────────────────────────────────────── */}
       <Route element={<PrivateRoute roles={["student"]} />}>
+        <Route path="/checkout/:courseId" element={<Checkout />} />
         <Route path="/student" element={<StudentLayout />}>
           <Route index                              element={<Student />} />
           <Route path="courses"                     element={<StudentCourses />} />

@@ -76,19 +76,19 @@ function Student() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <div
               key={index}
-              className="bg-[#1f2937] p-6 rounded-xl shadow-lg border border-gray-800 flex items-center gap-5 hover:border-gray-700 transition-colors"
+              className="bg-[#1f2937] p-5 rounded-xl shadow-lg border border-gray-800 flex items-center gap-4 hover:border-gray-700 transition-colors min-w-0"
             >
-              <div className={`p-4 rounded-xl ${stat.bgColor} ${stat.color}`}>
-                <Icon size={28} />
+              <div className={`p-3 rounded-xl shrink-0 ${stat.bgColor} ${stat.color}`}>
+                <Icon size={24} />
               </div>
-              <div>
-                <p className="text-gray-400 text-sm font-medium mb-1">{stat.title}</p>
+              <div className="min-w-0">
+                <p className="text-gray-400 text-sm font-medium mb-1 leading-tight">{stat.title}</p>
                 <h3 className="text-2xl font-bold text-white">{stat.value}</h3>
                 <p className="text-xs text-gray-500 mt-1">{stat.trend}</p>
               </div>

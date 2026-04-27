@@ -24,6 +24,10 @@ function CourseOverview() {
 
   const handleEnroll = async () => {
     if (!user) { navigate('/login'); return; }
+    if (price > 0) {
+      navigate(`/checkout/${courseId}`);
+      return;
+    }
     setEnrolling(true);
     setEnrollError(null);
     try {
@@ -164,7 +168,10 @@ function CourseOverview() {
                     disabled={enrolling}
                     className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white py-3.5 rounded-xl font-bold text-lg mb-3 transition-colors"
                   >
-                    {enrolling ? <><Loader size={18} className="animate-spin" /> Enrolling…</> : 'Enroll Now — Free'}
+                    {enrolling
+                      ? <><Loader size={18} className="animate-spin" /> Enrolling…</>
+                      : price > 0 ? `Enroll — $${price.toFixed(2)}` : 'Enroll Now — Free'
+                    }
                   </button>
                   {enrollError && <p className="text-red-400 text-sm text-center mb-3">{enrollError}</p>}
                 </>
