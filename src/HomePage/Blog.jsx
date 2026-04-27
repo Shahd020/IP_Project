@@ -21,7 +21,7 @@ const POSTS = [
   {
     id: 2,
     title: "Top 10 In-Demand Tech Skills in 2026",
-    summary: "Stay ahead in your career by mastering these essential technology skills that employers are paying premium rates for.",
+    summary: "Stay ahead in your career by mastering these essential technology skills that employers are paying for.",
     date: "April 3, 2026",
     tag: "Career",
     body: [
