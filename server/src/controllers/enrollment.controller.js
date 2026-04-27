@@ -35,10 +35,16 @@ const updateProgress = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: { enrollment } });
 });
 
+// ─── PATCH /api/enrollments/:id/start ────────────────────────────────────────
+const startCourse = asyncHandler(async (req, res) => {
+  const enrollment = await enrollmentService.startCourse(req.params.id, req.user._id);
+  res.status(200).json({ success: true, data: { enrollment } });
+});
+
 // ─── DELETE /api/enrollments/:id ─────────────────────────────────────────────
 const unenroll = asyncHandler(async (req, res) => {
   await enrollmentService.unenroll(req.params.id, req.user._id);
   res.status(200).json({ success: true, message: 'Unenrolled successfully' });
 });
 
-export default { getMine, getByCourse, enroll, updateProgress, unenroll };
+export default { getMine, getByCourse, enroll, updateProgress, startCourse, unenroll };

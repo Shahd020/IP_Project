@@ -12,7 +12,7 @@ const getStudentEnrollments = async (studentId, status) => {
   return Enrollment.find(filter)
     .populate({
       path: 'course',
-      select: 'title provider duration rating thumbnail slug category',
+      select: 'title provider duration rating thumbnail slug category description',
       populate: { path: 'instructor', select: 'name' },
     })
     .sort({ updatedAt: -1 })
@@ -91,6 +91,16 @@ const updateProgress = async (enrollmentId, studentId, { moduleId, progressText 
   return enrollment;
 };
 
+const startCourse = async (enrollmentId, studentId) => {
+  const enrollment = await Enrollment.findOne({ _id: enrollmentId, student: studentId });
+  if (!enrollment) throw ApiError.notFound('Enrollment not found');
+  if (enrollment.status !== 'saved') throw ApiError.badRequest('Course is already started');
+  enrollment.status = 'in-progress';
+  enrollment.progressText = 'Just started';
+  await enrollment.save();
+  return enrollment;
+};
+
 const unenroll = async (enrollmentId, studentId) => {
   const enrollment = await Enrollment.findOne({ _id: enrollmentId, student: studentId });
   if (!enrollment) throw ApiError.notFound('Enrollment not found');
@@ -102,5 +112,6 @@ export default {
   getCourseEnrollments,
   enrollInCourse,
   updateProgress,
+  startCourse,
   unenroll,
 };

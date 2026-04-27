@@ -6,9 +6,10 @@ const adaptEnrollment = (e) => ({
   id: e._id,
   courseId: e.course?._id,
   title: e.course?.title ?? 'Untitled',
+  description: e.course?.description ?? '',
   provider: e.course?.provider ?? e.course?.instructor?.name ?? 'Unknown Instructor',
   duration: e.course?.duration ?? '—',
-  rating: e.course?.rating ? `${e.course.rating} ⭐` : '—',
+  rating: e.course?.rating ?? null,
   image: e.course?.thumbnail ?? null,
   progressPercent: e.progressPercent ?? 0,
   progressText: e.progressPercent === 100 ? 'Finished' : `${e.progressPercent ?? 0}%`,
@@ -60,7 +61,13 @@ const useEnrollments = () => {
     }
   }, []);
 
-  return { enrollments, loading, error, enroll, completeModule, refetch: fetchEnrollments };
+  const startCourse = useCallback(async (enrollmentId) => {
+    const res = await apiClient.patch(`/enrollments/${enrollmentId}/start`);
+    await fetchEnrollments();
+    return res.data.data.enrollment;
+  }, [fetchEnrollments]);
+
+  return { enrollments, loading, error, enroll, startCourse, completeModule, refetch: fetchEnrollments };
 };
 
 export default useEnrollments;

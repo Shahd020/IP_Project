@@ -56,6 +56,9 @@ router.patch(
   enrollmentController.updateProgress
 );
 
+// PATCH /api/enrollments/:id/start
+router.patch('/:id/start', authorize('student'), enrollmentController.startCourse);
+
 // DELETE /api/enrollments/:id
 router.delete('/:id', authorize('student'), enrollmentController.unenroll);
 
